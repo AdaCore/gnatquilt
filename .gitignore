@@ -1,0 +1,6 @@
+*.sw?
+*.pyc
+/build/
+/thirdparties/download
+/thirdparties/tooling
+/thirdparties/python
