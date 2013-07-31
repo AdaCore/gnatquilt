@@ -1,5 +1,5 @@
 /** @const */ var ptoolset = {};
-/** @const */ var ptoolset.report = {
+/** @const */ ptoolset.report = {
     "sources": [
         {
             "coverage_level": "stmt+mcdc",
