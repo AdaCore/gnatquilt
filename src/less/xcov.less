@@ -16,6 +16,7 @@
 body {
   color: @xcov-font-color;
   font:  @xcov-font-size @xcov-font-family;
+  font-weight: normal;
 }
 
 img, iframe { border: 0; }
@@ -23,7 +24,10 @@ img, iframe { border: 0; }
 table {
   border-spacing:  0;
   border-collapse: collapse;
+
+  margin-bottom: 30px;
 }
 
 @import "report";
+@import "sources";
 @import "traces";

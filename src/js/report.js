@@ -11,7 +11,8 @@ goog.require('goog.array');
 goog.require('goog.asserts');
 goog.require('goog.debug.Logger');
 
-goog.require('xcov.Trace');
+goog.require('xcov.SourceFile');
+goog.require('xcov.TraceFile');
 
 
 /***************
@@ -31,17 +32,76 @@ xcov.Report = function() {
 
   /**
    * @type {goog.debug.Logger} An custom instance of the logger for this class.
+   * @const
    * @private
    */
   this.logger_ = goog.debug.Logger.getLogger('xcov.Report');
 
   /**
-   * @type {Array.<!xcov.Trace>}
+   * @type {?string} Coverage level for this report.
+   * @private
+   */
+  this.coverageLevel_ = null;
+
+  /**
+   * @type {Array.<!xcov.TraceFile>}
+   * @const
    * @private
    */
   this.traces_ = [];
+
+  /**
+   * @type {Array.<!xcov.SourceFile>}
+   * @const
+   * @private
+   */
+  this.sources_ = [];
 };
 goog.inherits(xcov.Report, goog.Disposable);
+
+
+/********************************
+ * xcov.Report.getCoverageLevel *
+ ********************************/
+
+
+/**
+ * @return {string} The level specified by the coverage report. Returns an empty
+ *    string if the report as not been previously analysed.
+ */
+xcov.Report.prototype.getCoverageLevel = function() {
+  return this.coverageLevel_ || '';
+};
+
+
+/*************************
+ * xcov.Report.getTraces *
+ *************************/
+
+
+/**
+ * @return {Array.<!xcov.TraceFile>} The list of trace object read from the
+ *    coverage report. Returns an empty array if the report as not been
+ *    analized yet.
+ */
+xcov.Report.prototype.getTraces = function() {
+  return this.traces_;
+};
+
+
+/**************************
+ * xcov.Report.getSources *
+ **************************/
+
+
+/**
+ * @return {Array.<!xcov.SourceFile>} The list of source object read from the
+ *    coverage report. Returns an empty array if the report as not been
+ *    analyzed yet.
+ */
+xcov.Report.prototype.getSources = function() {
+  return this.sources_;
+};
 
 
 /***********************
@@ -63,16 +123,23 @@ xcov.Report.prototype.analyze = function(input) {
     return false;
   }
 
+  goog.asserts.assert('coverage_level' in input,
+      'missing "coverage_level" attribute');
+  this.coverageLevel_ = input['coverage_level'];
+
   goog.asserts.assert('traces' in input, 'missing "traces" attribute');
-  this.analyseTraces_(input['traces']);
+  this.analyseTracesAttr_(input['traces']);
+
+  goog.asserts.assert('sources' in input, 'missing "sources" attribute');
+  this.analyseSourcesAttr_(input['sources']);
 
   return true;
 };
 
 
-/******************************
- * xcov.Report.analyseTraces_ *
- ******************************/
+/**********************************
+ * xcov.Report.analyseTracesAttr_ *
+ **********************************/
 
 
 /**
@@ -82,7 +149,7 @@ xcov.Report.prototype.analyze = function(input) {
  *    the JSON report.
  * @private
  */
-xcov.Report.prototype.analyseTraces_ = function(traces) {
+xcov.Report.prototype.analyseTracesAttr_ = function(traces) {
   goog.array.forEach(traces, function(trace) {
     goog.asserts.assert('filename' in trace,
         'missing "filename" attribute of trace');
@@ -100,10 +167,52 @@ xcov.Report.prototype.analyseTraces_ = function(traces) {
     /** @const */ var date = new Date(trace['date']);
 
     goog.asserts.assert('tag' in trace,
-        'missing "tags" attribute of trace');
+        'missing "tag" attribute of trace');
 
-    /** @const */ var tags = trace['tag'].toString().split(' ');
+    /** @const */ var tag = trace['tag'];
 
-    this.traces_.push(new xcov.Trace(filename, program, date, tags));
+    this.traces_.push(new xcov.TraceFile(filename, program, date, tag));
+  }, this /* opt_obj */);
+};
+
+
+/***********************************
+ * xcov.Report.analyseSourcesAttr_ *
+ ***********************************/
+
+
+/**
+ * Subroutine that handles the 'sources' field from the JSON report.
+ *
+ * @param {Array.<!Object>} sources The JSON value for the 'sourcces' attribute
+ *    of the JSON report.
+ * @private
+ */
+xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
+  goog.array.forEach(sources, function(source) {
+    goog.asserts.assert('filename' in source,
+        'missing "filename" attribute of source');
+
+    goog.asserts.assert('coverage_level' in source,
+        'missing "coverage_level" attribute of source');
+
+    /** @const */ var sourceFile =
+        new xcov.SourceFile(source['filename'], source['coverage_level']);
+
+    goog.array.forEach(source['mappings'], function(mapping) {
+      goog.asserts.assert('coverage' in mapping,
+          'missing "coverage" attribute of mapping');
+
+      goog.asserts.assert('line' in mapping,
+          'missing "line" attribute of mapping');
+
+      /** @const */ var line = mapping['line'];
+      /** @const */ var sourceLine =
+          new xcov.SourceLine(line['number'], mapping['coverage'], line['src']);
+
+      sourceFile.addLine(sourceLine);
+    }, this /* opt_obj */);
+
+    this.sources_.push(sourceFile);
   }, this /* opt_obj */);
 };
