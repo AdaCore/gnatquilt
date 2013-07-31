@@ -2,8 +2,8 @@ import json
 import os
 import xml.sax.handler
 
-(COVERED, PARTIALLY_COVERED, NOT_COVERED, EXEMPTED_NO_VIOLATION,
- EXEMPTED_WITH_VIOLATION) = ('+', '!', '-', '#', '*')
+(NO_CODE, COVERED, PARTIALLY_COVERED, NOT_COVERED, EXEMPTED_NO_VIOLATION,
+ EXEMPTED_WITH_VIOLATION) = ('.', '+', '!', '-', '#', '*')
 
 class Trace(object):
     """Represents a trace object as read in the XML file.
@@ -180,8 +180,13 @@ class SourceMapping(object):
         This mechanism is used for dumping the object in JSON format.
         """
 
+        # It seems that only one line is specified for each mapping. Tentatively
+        # simplify the generated JSON given this axiom.
+        assert len(self.lines) == 1
+
         return {
-            'lines': [l.toJSON() for l in self.lines],
+            'coverage': self.coverage,
+            'line': self.lines[0].toJSON(),
             'statements': [s.toJSON() for s in self.statements],
             'decisions': [d.toJSON() for d in self.decisions]
         }
@@ -220,6 +225,7 @@ class XmlReportHandler(xml.sax.handler.ContentHandler):
 
         self.report_dir = report_dir
 
+        self.coverage_level = None
         self.traces = []
         self.sources = []
 
@@ -232,7 +238,10 @@ class XmlReportHandler(xml.sax.handler.ContentHandler):
     def startElement(self, name, attributes):
         """Signals the start of an element in non-namespace mode."""
 
-        if name == 'trace':
+        if name == 'coverage_report':
+            self.coverage_level = attributes['coverage_level']
+
+        elif name == 'trace':
             self.traces.append(XmlReportHandler._createTrace(attributes))
 
         elif name == 'line':
@@ -404,6 +413,7 @@ class XmlReportHandler(xml.sax.handler.ContentHandler):
         """Returns a JSON-serialized string representation of this object."""
 
         return json.dumps({
+            'coverage_level': self.coverage_level,
             'traces': [t.toJSON() for t in self.traces],
             'sources': [s.toJSON() for s in self.sources]
         })
