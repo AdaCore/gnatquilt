@@ -35,7 +35,6 @@ xcov.analyze = function(input) {
   /** @const */ var report = new xcov.Report();
 
   if (report.analyze(input)) {
-    console.log(report.traces_);
     report.generate(goog.dom.getDomHelper());
   }
 };
