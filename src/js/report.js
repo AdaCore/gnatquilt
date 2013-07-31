@@ -21,9 +21,7 @@ goog.require('xcov.Trace');
 
 
 /**
- * A coverage report object. It is capable of analyzing a JSON coverage report
- * and generate the HTML report from it. That report is directly injected into
- * the current HTML page.
+ * A coverage report object. It is capable of analyzing a JSON coverage report.
  *
  * @constructor
  * @extends {goog.Disposable}
@@ -108,20 +106,4 @@ xcov.Report.prototype.analyseTraces_ = function(traces) {
 
     this.traces_.push(new xcov.Trace(filename, program, date, tags));
   }, this /* opt_obj */);
-};
-
-
-/************************
- * xcov.Report.generate *
- ************************/
-
-
-/**
- * Generates the report corresponding to a previous analysis. Do nothing if
- * {@code xcov.Report#analyze} as not been previously called.
- *
- * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
- */
-xcov.Report.prototype.generate = function(opt_domHelper) {
-  // ???
 };

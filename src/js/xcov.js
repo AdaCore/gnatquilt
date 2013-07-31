@@ -7,10 +7,12 @@
 
 goog.provide('xcov');
 
+goog.require('goog.debug.ErrorHandler');  // Fix closure missing import
 goog.require('goog.dom');
 
 goog.require('xcov.Report');
 goog.require('xcov.logging');
+goog.require('xcov.ui.Report');
 
 
 /****************
@@ -35,7 +37,8 @@ xcov.analyze = function(input) {
   /** @const */ var report = new xcov.Report();
 
   if (report.analyze(input)) {
-    report.generate(goog.dom.getDomHelper());
+    /** @const */ var ui = new xcov.ui.Report(report, goog.dom.getDomHelper());
+    ui.render();
   }
 };
 
