@@ -1,0 +1,544 @@
+<?xml version="1.0" ?>
+<!DOCTYPE source SYSTEM "annotations-xml.dtd">
+<source file="frontends_qualified.ads" coverage_level="stmt+mcdc">
+ <src_mapping coverage=".">
+  <src>
+   <line num="1" exempted="FALSE" src="------------------------------------------------------------------------------"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="2" exempted="FALSE" src="--                             M O D E L I N G                              --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="3" exempted="FALSE" src="--                                                                          --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="4" exempted="FALSE" src="--                     Copyright (C) 2010-2013, AdaCore                     --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="5" exempted="FALSE" src="--                                                                          --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="6" exempted="FALSE" src="-- This library is free software;  you can redistribute it and/or modify it --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="7" exempted="FALSE" src="-- under terms of the  GNU General Public License  as published by the Free --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="8" exempted="FALSE" src="-- Software  Foundation;  either version 3,  or (at your  option) any later --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="9" exempted="FALSE" src="-- version. This library is distributed in the hope that it will be useful, --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="10" exempted="FALSE" src="-- but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="11" exempted="FALSE" src="-- TABILITY or FITNESS FOR A PARTICULAR PURPOSE.                            --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="12" exempted="FALSE" src="--                                                                          --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="13" exempted="FALSE" src="-- As a special exception under Section 7 of GPL version 3, you are granted --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="14" exempted="FALSE" src="-- additional permissions described in the GCC Runtime Library Exception,   --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="15" exempted="FALSE" src="-- version 3.1, as published by the Free Software Foundation.               --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="16" exempted="FALSE" src="--                                                                          --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="17" exempted="FALSE" src="-- You should have received a copy of the GNU General Public License and    --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="18" exempted="FALSE" src="-- a copy of the GCC Runtime Library Exception along with this program;     --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="19" exempted="FALSE" src="-- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="20" exempted="FALSE" src="-- &lt;http://www.gnu.org/licenses/&gt;.                                          --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="21" exempted="FALSE" src="--                                                                          --"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="22" exempted="FALSE" src="------------------------------------------------------------------------------"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="23" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="24" exempted="FALSE" src="--  This package provides initialization support for the various main"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="25" exempted="FALSE" src="--  units, including the qualifiable code generator."/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="26" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="27" exempted="FALSE" src="with GNATCOLL.VFS; use GNATCOLL.VFS;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="28" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="29" exempted="FALSE" src="package Frontends_Qualified is"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="30" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="31" exempted="FALSE" src="   --  Command line arguments"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="32" exempted="FALSE" src="   Clean_Existing : Boolean := False;"/>
+  </src>
+
+  <statement id="61066" text="Clean_Exi..." coverage="+">
+   <src>
+    <line num="32" column_begin="4" column_end="4" src="   Clean_Existing : Boolean := False"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="33" exempted="FALSE" src="   Incremental_Overwrite :  Boolean := False;"/>
+  </src>
+
+  <statement id="61067" text="Increment..." coverage="+">
+   <src>
+    <line num="33" column_begin="4" column_end="4" src="   Incremental_Overwrite :  Boolean := False"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="34" exempted="FALSE" src="   Settings_File : Virtual_File;"/>
+  </src>
+
+  <statement id="61068" text="Settings_..." coverage="+">
+   <src>
+    <line num="34" column_begin="4" column_end="4" src="   Settings_File : Virtual_File"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="35" exempted="FALSE" src="   Output_Dir    : Virtual_File;"/>
+  </src>
+
+  <statement id="61069" text="Output_Di..." coverage="+">
+   <src>
+    <line num="35" column_begin="4" column_end="4" src="   Output_Dir    : Virtual_File"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="36" exempted="FALSE" src="   Matlab_File   : Virtual_File;"/>
+  </src>
+
+  <statement id="61070" text="Matlab_Fi..." coverage="+">
+   <src>
+    <line num="36" column_begin="4" column_end="4" src="   Matlab_File   : Virtual_File"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="37" exempted="FALSE" src="   Typing_File   : Virtual_File;"/>
+  </src>
+
+  <statement id="61071" text="Typing_Fi..." coverage="+">
+   <src>
+    <line num="37" column_begin="4" column_end="4" src="   Typing_File   : Virtual_File"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="38" exempted="FALSE" src="   Input_File    : Virtual_File;"/>
+  </src>
+
+  <statement id="61072" text="Input_Fil..." coverage="+">
+   <src>
+    <line num="38" column_begin="4" column_end="4" src="   Input_File    : Virtual_File"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="39" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="40" exempted="FALSE" src="   procedure Setup;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="41" exempted="FALSE" src="   --  Setup the application."/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="42" exempted="FALSE" src="   --  In the qualifiable context, we do not parse the command line, nor any"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="43" exempted="FALSE" src="   --  external settings file."/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="44" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="45" exempted="FALSE" src="   procedure Tear_Down;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="46" exempted="FALSE" src="   --  Close all opened resources."/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="47" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage="+">
+  <src>
+   <line num="48" exempted="FALSE" src="   Invalid_Argument : exception;"/>
+  </src>
+
+  <statement id="61073" text="Invalid_A..." coverage="+">
+   <src>
+    <line num="48" column_begin="4" column_end="4" src="   Invalid_Argument : exception"/>
+   </src>
+
+  </statement>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="49" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="50" exempted="FALSE" src="   procedure Parse_Command_Line;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="51" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="52" exempted="FALSE" src="   procedure Validate_Arguments;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="53" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="54" exempted="FALSE" src="   function Ensure_Output_Dir"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="55" exempted="FALSE" src="     (Input_File : Virtual_File;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="56" exempted="FALSE" src="      Output_Dir : Virtual_File;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="57" exempted="FALSE" src="      Clean_Existing, Incremental_Overwrite : Boolean := False)"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="58" exempted="FALSE" src="      return Virtual_File;"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="59" exempted="FALSE" src="   --  Returns a valid Virtual_File for use as an output directory based on the"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="60" exempted="FALSE" src="   --  arguments. If Output_Dir is specified, we try to use it, otherwise, we"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="61" exempted="FALSE" src="   --  derive an output directory name by appending &quot;_generated&quot; to Input_File."/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="62" exempted="FALSE" src="   --  If the output directory (user-specified or derived) already exists,"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="63" exempted="FALSE" src="   --  Clean_Existing indicates that it should be cleaned before generation,"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="64" exempted="FALSE" src="   --  and Incremental_Overwrite indicates that it should be left as is, and"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="65" exempted="FALSE" src="   --  files will be overwritten as they are generated. An exception is raised"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="66" exempted="FALSE" src="   --  in case of errors (conflicting flags, exisiting output dir without any"/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="67" exempted="FALSE" src="   --  flags...)."/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="68" exempted="FALSE" src=""/>
+  </src>
+
+ </src_mapping>
+
+ <src_mapping coverage=".">
+  <src>
+   <line num="69" exempted="FALSE" src="end Frontends_Qualified;"/>
+  </src>
+
+ </src_mapping>
+
+</source>
+

@@ -7,15 +7,16 @@
     <title>XCov Report - Non-compiled Mode</title>
 
     <!-- LESS root file -->
-    <link rel="stylesheet/less" type="text/css" href="less/xcov.less" />
+    <link rel="stylesheet/less" type="text/css" href="../../src/less/xcov.less" />
 
     <!-- LESS JIT compiler -->
-    <script type="text/javascript" src="../thirdparties/tooling/dist/less-1.4.1.min.js"></script>
+    <script type="text/javascript" src="../../../thirdparties/tooling/dist/less-1.4.1.min.js"></script>
 
     <!-- XCov application -->
-    <script type="text/javascript" src="../thirdparties/tooling/closure/closure/goog/base.js"></script>
-    <script type="text/javascript" src="../build/xcov-deps.js"></script>
-    <script type="text/javascript" src="js/xcov.js"></script>
+    <script type="text/javascript" src="../../../thirdparties/tooling/closure/closure/goog/base.js"></script>
+    <script type="text/javascript" src="../../../build/xcov-deps.js"></script>
+    <script type="text/javascript" src="ptoolset-report.js"></script>
+    <script type="text/javascript" src="../../src/js/xcov.js"></script>
   </head>
 
   <body>
@@ -28,7 +29,7 @@
       </div>
     </noscript>
 
-    <script>xcov.analyse();</script>
+    <script>xcov.analyse(ptoolset.report);</script>
 
   </body>
 </html>

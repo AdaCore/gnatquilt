@@ -1,0 +1,1484 @@
+<html lang="en">
+<head>
+  <title>Coverage of eml-traversers.adb</title>
+  <link rel="stylesheet" type="text/css" href="xcov.css">
+  <script language="JavaScript" type="text/javascript">
+    function flip(atr) {
+      var details = atr.nextSibling.nextSibling;
+      if (details.style.display == "none")
+        details.style.display = "";
+      else
+        details.style.display = "none";
+    }
+  </script>
+</head>
+<body>
+<h4 align="right"><a href="index.html"> index </a></h4>
+<h1 align="center">eml-traversers.adb</h1>
+<h2 align="center">Coverage level: stmt+mcdc</h2>
+<hr/>
+<table class="SumTable"><tr>
+    <tr>
+      <td class="SumHead"> total lines of relevance</td>
+      <td class="SumHead"> fully covered</td>
+      <td class="SumHead"> partially covered</td>
+      <td class="SumHead"> not covered</td>
+      <td class="SumHead"> exempted, no violation</td>
+      <td class="SumHead"> exempted</td>
+      <td class="SumHead"> visual summary </td>
+    </tr>
+      <td class="SumPercent" width="10%">66 lines</td>
+      <td class="SumPercent" width="10%">17 lines (26 %)</td>      <td class="SumPercent" width="10%">6 lines (9 %)</td>      <td class="SumPercent" width="10%">43 lines (65 %)</td>      <td class="SumPercent" width="10%">0 lines (0 %)</td>      <td class="SumPercent" width="10%">0 lines (0 %)</td>      <td class="SumBar" align="center" width="10%">        <table border="0" cellspacing="0" class="BarGraph"><tr height="10"><td class="SumBarCOVERED" width="26" title="26% COVERED"></td><td class="SumBarPARTIALLY_COVERED" width="9" title="9% PARTIALLY_COVERED"></td><td class="SumBarNOT_COVERED" width="65" title="65% NOT_COVERED"></td></tr></table></td>
+</tr></table>
+<hr/>
+<table width="100%" cellpadding="0" class="SourceFile">
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>1</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>------------------------------------------------------------------------------</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>2</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                             M O D E L I N G                              --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>3</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>4</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                     Copyright (C) 2011-2013, AdaCore                     --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>5</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>6</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- This library is free software;  you can redistribute it and/or modify it --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>7</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- under terms of the  GNU General Public License  as published by the Free --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>8</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- Software  Foundation;  either version 3,  or (at your  option) any later --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>9</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- version. This library is distributed in the hope that it will be useful, --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>10</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>11</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- TABILITY or FITNESS FOR A PARTICULAR PURPOSE.                            --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>12</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>13</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- As a special exception under Section 7 of GPL version 3, you are granted --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>14</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- additional permissions described in the GCC Runtime Library Exception,   --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>15</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- version 3.1, as published by the Free Software Foundation.               --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>16</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>17</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- You should have received a copy of the GNU General Public License and    --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>18</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- a copy of the GCC Runtime Library Exception along with this program;     --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>19</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>20</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- &lt;http://www.gnu.org/licenses/&gt;.                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>21</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>22</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>------------------------------------------------------------------------------</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>23</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>24</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>package body EML.Traversers is</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>25</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>26</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Traverse_Func (N : Node) return Traverse_Result is</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>27</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      function Traverse_Stmts (N : Node) return Traverse_Result;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>28</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      function Traverse_Decls (N : Node) return Traverse_Result;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>29</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      function Traverse_Chain (N : Node_Chain) return Traverse_Result;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>30</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>31</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      function Traverse_Stmts (N : Node) return Traverse_Result is</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>32</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         S : Node := N;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>33</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      begin</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>34</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         while S /= Null_Node loop</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>35</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>            if Traverse_Func (S) = Abandon then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>decision &quot;Traverse_...&quot; at 35:16 outcome TRUE never exercised</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>36</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ab...&quot; at 36:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>37</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>38</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>            S := Get_Stmt_Next (S);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>39</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         end loop;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>40</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         return Ok;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>41</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end Traverse_Stmts;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>42</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>43</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      function Traverse_Decls (N : Node) return Traverse_Result is</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>44</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         S : Node := N;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>45</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      begin</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>46</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         while S /= Null_Node loop</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>47</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>            if Traverse_Func (S) = Abandon then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>decision &quot;Traverse_...&quot; at 47:16 outcome TRUE never exercised</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>48</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ab...&quot; at 48:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>49</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>50</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>            S := Get_Decl_Next (S);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>51</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         end loop;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>52</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         return Ok;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>53</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end Traverse_Decls;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>54</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>55</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      function Traverse_Chain (N : Node_Chain) return Traverse_Result is</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>56</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         C : Node_Chain := N;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;C : Node_...&quot; at 56:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>57</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      begin</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>58</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         while C /= Null_Node_Chain loop</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;while C /...&quot; at 58:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>59</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            if Traverse_Func (Get_Chain_Value (C)) = Abandon then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Traver...&quot; at 59:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>60</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ab...&quot; at 60:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>61</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>62</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            C := Get_Chain_Next (C);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;C := Get_...&quot; at 62:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>63</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         end loop;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>64</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         return Ok;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ok&quot; at 64:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>65</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end Traverse_Chain;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>66</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>67</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      --  Guard against empty node (for example, else blocks).</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>68</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      --  ??? Should be directly handled in N_If_Stmt, n_elseif_Stmt,</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>69</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      --   n_range_expr.</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>70</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      --  ?? Are there any other examples ?</pre></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>71</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>      if N = Null_Node then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>decision &quot;N = Null_...&quot; at 71:10 outcome TRUE never exercised</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>72</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         return Ok;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ok&quot; at 72:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>73</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>74</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>75</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      case Process (N) is</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>76</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when Ok =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>77</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>            null;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>78</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when Abandon =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>79</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            return Abandon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ab...&quot; at 79:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>80</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when Skip =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>81</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>            return Ok;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>82</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end case;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>83</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>84</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      case Get_Kind (N) is</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>85</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Assign_Stmt =&gt;</pre></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>86</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>            if Traverse_Func (Get_Assign_Lhs (N)) = Abandon</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>decision &quot;Traverse_...&quot; at 86:16 outcome TRUE never exercised</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>87</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>              or else Traverse_Func (Get_Assign_Rhs (N)) = Abandon</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>88</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            then</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>89</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ab...&quot; at 89:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>90</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>91</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_If_Stmt | N_Elseif =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>92</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            if Traverse_Func (Get_If_Condition (N)) = Abandon then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Traver...&quot; at 92:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>93</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ab...&quot; at 93:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>94</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>95</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            if Traverse_Stmts (Get_Then_Statements (N)) = Abandon then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Traver...&quot; at 95:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>96</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ab...&quot; at 96:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>97</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>98</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            return Traverse_Func (Get_Else_Block (N));</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Tr...&quot; at 98:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>99</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_For_Stmt =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>100</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            if Traverse_Func (Get_For_Expression (N)) = Abandon</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Traver...&quot; at 100:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>101</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>              or else Traverse_Stmts (Get_For_Statements (N)) = Abandon</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>102</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            then</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>103</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ab...&quot; at 103:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>104</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>105</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_While_Stmt =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>106</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            if Traverse_Func (Get_While_Condition (N)) = Abandon</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Traver...&quot; at 106:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>107</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>              or else Traverse_Stmts (Get_While_Statements (N)) = Abandon</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>108</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            then</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>109</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ab...&quot; at 109:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>110</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>111</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Switch_Stmt =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>112</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            if Traverse_Func (Get_Switch_Expression (N)) = Abandon then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Traver...&quot; at 112:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>113</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ab...&quot; at 113:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>114</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>115</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            if Traverse_Stmts (Get_Case_Chain (N)) = Abandon then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Traver...&quot; at 115:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>116</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ab...&quot; at 116:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>117</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>118</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Case =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>119</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            if Traverse_Func (Get_Case_Expression (N)) = Abandon</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Traver...&quot; at 119:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>120</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>              or else Traverse_Stmts (Get_Case_Statements (N)) = Abandon</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>121</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            then</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>122</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ab...&quot; at 122:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>123</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>124</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Otherwise =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>125</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            return Traverse_Stmts (Get_Case_Statements (N));</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Tr...&quot; at 125:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>126</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>127</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Declaration_Stmt =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>128</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            return Traverse_Func (Get_Declaration_Decl (N));</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Tr...&quot; at 128:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>129</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Expression_Stmt =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>130</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            return Traverse_Func (Get_Expression_Stmt (N));</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Tr...&quot; at 130:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>131</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Break_Stmt</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>132</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>           | N_Continue_Stmt =&gt;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>133</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            null;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>134</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Return_Stmt =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>135</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            null;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;null;...&quot; at 135:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>136</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         when N_Comment_Stmt =&gt;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>137</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            null;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>138</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>139</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Function =&gt;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>140</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            if Traverse_Decls (Get_Func_Arguments (N)) = Abandon</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>141</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>              or else Traverse_Decls (Get_Func_Results (N)) = Abandon</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>142</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>              or else Traverse_Stmts (Get_Func_Statements (N)) = Abandon</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>143</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            then</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>144</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>145</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>146</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Builtin =&gt;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>147</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            null;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>148</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Argument</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>149</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            | N_Variable</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>150</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            | N_Persistent</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>151</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            | N_Global</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>152</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            | N_Constant</pre></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>153</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>            | N_Num_Variable =&gt;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>decision &quot;_Num_Vari...&quot; at 153:16 outcome FALSE never exercised</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>154</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>            null;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>155</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Name_Ref | N_Field_Ref =&gt;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>156</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            null;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>157</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;&quot; at 157:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>158</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         when N_Parenthesis_Expr =&gt;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>159</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            if Traverse_Func (Get_Parenthesis_Expr (N)) = Abandon then</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>160</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ab...&quot; at 160:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>161</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>162</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Binary_Expr =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>163</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            if Traverse_Func (Get_Left_Expr (N)) = Abandon</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Traver...&quot; at 163:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>164</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>              or else Traverse_Func (Get_Right_Expr (N)) = Abandon</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>165</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            then</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>166</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>167</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>168</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Unary_Expr =&gt;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>169</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            return Traverse_Func (Get_Operand (N));</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>170</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_String_Value</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>171</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            | N_Unsigned_Value</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>172</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            | N_Float_Value</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>173</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            | N_Colon_Value</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>174</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            | N_End_Value</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>175</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            | N_Computed_Value =&gt;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>176</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            null;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>177</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Indexed_Expr</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>178</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            | N_Call_Expr</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>179</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            | N_Cell_Index =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>180</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            if Traverse_Func (Get_Prefix (N)) = Abandon</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Traver...&quot; at 180:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>181</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>              or else Traverse_Chain (Get_Param_Chain (N)) = Abandon</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>eml-traversers.adb:181:60: incomplete occurrence of SCO #61417: DECISION at eml-traversers.adb:180:16-182:60</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>182</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>183</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>184</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>185</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Range_Expr =&gt;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>186</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            if Traverse_Func (Get_Range_First (N)) = Abandon</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>187</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>              or else Traverse_Func (Get_Range_Step (N)) = Abandon</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;  or else...&quot; at 187:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>188</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>              or else Traverse_Func (Get_Range_Last (N)) = Abandon</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>189</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            then</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>190</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               return Abandon;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>191</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>192</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Hcat | N_Vcat =&gt;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>193</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            return Traverse_Chain (Get_Concat_Chain (N));</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>194</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_Cell =&gt;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>195</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            return Traverse_Chain (Get_Cell_Chain (N));</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>196</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>197</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         when N_File</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>198</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>           | N_Folder</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>199</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>           | N_Package =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>200</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>            raise Program_Error;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>201</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      end case;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>202</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      return Ok;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>203</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Traverse_Func;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>204</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>205</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   procedure Traverse_Proc (N : Node) is</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>206</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      function Traverse is new Traverse_Func (Process);</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>207</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      Res : Traverse_Result;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>208</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      pragma Unreferenced (Res);</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>209</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>210</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      Res := Traverse (N);</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>211</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Traverse_Proc;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>212</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>end EML.Traversers;</pre></td>
+  </tr>
+</table>
+</body>
+</html>

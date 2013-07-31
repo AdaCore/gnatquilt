@@ -1,0 +1,3516 @@
+<html lang="en">
+<head>
+  <title>Coverage of eml-scanner.adb</title>
+  <link rel="stylesheet" type="text/css" href="xcov.css">
+  <script language="JavaScript" type="text/javascript">
+    function flip(atr) {
+      var details = atr.nextSibling.nextSibling;
+      if (details.style.display == "none")
+        details.style.display = "";
+      else
+        details.style.display = "none";
+    }
+  </script>
+</head>
+<body>
+<h4 align="right"><a href="index.html"> index </a></h4>
+<h1 align="center">eml-scanner.adb</h1>
+<h2 align="center">Coverage level: stmt+mcdc</h2>
+<hr/>
+<table class="SumTable"><tr>
+    <tr>
+      <td class="SumHead"> total lines of relevance</td>
+      <td class="SumHead"> fully covered</td>
+      <td class="SumHead"> partially covered</td>
+      <td class="SumHead"> not covered</td>
+      <td class="SumHead"> exempted, no violation</td>
+      <td class="SumHead"> exempted</td>
+      <td class="SumHead"> visual summary </td>
+    </tr>
+      <td class="SumPercent" width="10%">197 lines</td>
+      <td class="SumPercent" width="10%">69 lines (35 %)</td>      <td class="SumPercent" width="10%">8 lines (4 %)</td>      <td class="SumPercent" width="10%">120 lines (61 %)</td>      <td class="SumPercent" width="10%">0 lines (0 %)</td>      <td class="SumPercent" width="10%">0 lines (0 %)</td>      <td class="SumBar" align="center" width="10%">        <table border="0" cellspacing="0" class="BarGraph"><tr height="10"><td class="SumBarCOVERED" width="35" title="35% COVERED"></td><td class="SumBarPARTIALLY_COVERED" width="4" title="4% PARTIALLY_COVERED"></td><td class="SumBarNOT_COVERED" width="61" title="61% NOT_COVERED"></td></tr></table></td>
+</tr></table>
+<hr/>
+<table width="100%" cellpadding="0" class="SourceFile">
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>1</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>------------------------------------------------------------------------------</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>2</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                             M O D E L I N G                              --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>3</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>4</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                     Copyright (C) 2011-2013, AdaCore                     --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>5</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>6</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- This library is free software;  you can redistribute it and/or modify it --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>7</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- under terms of the  GNU General Public License  as published by the Free --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>8</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- Software  Foundation;  either version 3,  or (at your  option) any later --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>9</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- version. This library is distributed in the hope that it will be useful, --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>10</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>11</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- TABILITY or FITNESS FOR A PARTICULAR PURPOSE.                            --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>12</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>13</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- As a special exception under Section 7 of GPL version 3, you are granted --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>14</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- additional permissions described in the GCC Runtime Library Exception,   --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>15</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- version 3.1, as published by the Free Software Foundation.               --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>16</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>17</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- You should have received a copy of the GNU General Public License and    --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>18</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- a copy of the GCC Runtime Library Exception along with this program;     --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>19</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>20</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- &lt;http://www.gnu.org/licenses/&gt;.                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>21</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>22</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>------------------------------------------------------------------------------</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>23</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>with EML.Errors; use EML.Errors;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>24</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>25</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>package body EML.Scanner is</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>26</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>   Current_File : File_Id := No_File_Id;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>27</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  This is used only in error message to display the filename.</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>28</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>29</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>   Current_Line : Natural;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>30</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  Line number of the current token. Will be incremented when a line</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>31</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  terminator is skipped. First line is 1.</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>32</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>33</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>   Line_Offset : Location;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>34</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  Offset of the start of the current line. Used to compute column.</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>35</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>36</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>   Offset      : Location;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>37</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  The next token will be scanned starting from this offset.</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>38</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>39</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   procedure Scan_Numeric;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>40</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  Scan a numeric literal.</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>41</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>42</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   procedure Scan_EOL (EOL : Character);</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>43</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  Handle end of line. EOL must be either CR or LF. Will skip next LF/CR</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>44</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  to support DOS style line terminator, so a line terminator is one of</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>45</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  this sequence: LF, CR, LF+CR, CR+LF. This procedure updates the</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>46</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  locations. Offset must point to the next character.</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>47</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>48</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Get_Token_Location return Expanded_Location is</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>49</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>50</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      --  Do not add +1, as this is already done: Offset is the offset</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>51</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      --  of the next character.</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>52</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      return (File =&gt; Current_File,</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return (F...&quot; at 52:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>53</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>              Line =&gt; Current_Line,</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>54</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>              Col =&gt; Scan_Loc - Line_Offset);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>55</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Get_Token_Location;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>56</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>57</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Get_Scan_Location return Expanded_Location is</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>58</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>59</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      --  Do not add +1, as this is already done: Offset is the offset</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>60</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      --  of the next character.</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>61</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      return (File =&gt; Current_File,</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return (F...&quot; at 61:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>62</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>              Line =&gt; Current_Line,</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>63</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>              Col =&gt; Offset - Line_Offset);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>64</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Get_Scan_Location;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>65</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>66</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   procedure Initialize (F : File_Id)</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>67</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   is</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>68</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>69</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Current_File := F;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>70</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Current_Line := 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>71</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>72</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      --  Unbounded strings starts at 1.</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>73</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Offset := Get_First_Location (F);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>74</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Line_Offset := Offset;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>75</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Initialize;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>76</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>77</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  Scan [0-9]+(.[0-9]*)?</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>78</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   procedure Scan_Numeric is</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>79</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      C : Character;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>80</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>81</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      loop</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>82</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         C := Source (Offset);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>83</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         exit when C not in &apos;0&apos; .. &apos;9&apos;;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>84</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>85</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end loop;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>86</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      if C = &apos;.&apos; then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>87</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>88</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         loop</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>89</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>            C := Source (Offset);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>90</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>            exit when C not in &apos;0&apos; .. &apos;9&apos;;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>91</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>            Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>92</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         end loop;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>93</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         Scan_Tok := Tok_Real;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>94</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      else</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>95</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         Scan_Tok := Tok_Integer;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>96</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>97</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Scan_Numeric;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>98</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>99</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   procedure Scan_EOL (EOL : Character)</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>100</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   is</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>101</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      C : Character;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>102</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>103</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      pragma Assert (EOL = ASCII.CR or else EOL = ASCII.LF);</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>104</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      C := Source (Offset);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>105</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>      if (C = ASCII.LF or else C = ASCII.CR)</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>decision &quot;C = ASCII...&quot; at 105:11 outcome TRUE never exercised</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>106</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>        and then C /= EOL</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>107</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      then</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>108</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 108:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>109</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end if;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>110</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Current_Line := Current_Line + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>111</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Line_Offset := Offset;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>112</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Scan_EOL;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>113</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>114</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   procedure Scan</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>115</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   is</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>116</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      C : Character;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>117</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>118</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      loop</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>119</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         Scan_Loc := Offset;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>120</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         C := Source (Offset);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>121</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>122</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>123</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>124</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         case C is</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>125</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos; &apos; | ASCII.HT =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>126</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               null;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>127</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>128</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            --  Line terminators.</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>129</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when ASCII.CR | ASCII.LF =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>130</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               Scan_EOL (C);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>131</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               Scan_Tok := Tok_EOL;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>132</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>133</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>134</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            --  End of file</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>135</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when ASCII.NUL =&gt;</pre></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>136</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>               if Offset - 1 /= Get_Last_Location (Current_File) then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>decision &quot;Offset - ...&quot; at 136:19 outcome TRUE never exercised</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>137</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Error (&quot;Unexpected NUL character&quot;);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Erro...&quot; at 137:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>138</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               else</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>139</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                  Scan_Tok := Tok_EOF;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>140</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  --  Stay on the last character.</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>141</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                  Offset := Offset - 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>142</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                  return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>143</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>144</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>145</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            --  Identifiers</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>146</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;a&apos; .. &apos;z&apos; | &apos;A&apos; .. &apos;Z&apos; | &apos;_&apos; | &apos;$&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>147</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>               if C = &apos;$&apos; and then not Scan_Dollars then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>decision &quot;C = &apos;$&apos; a...&quot; at 147:19 outcome TRUE never exercised</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>148</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Error (&quot;&apos;$&apos; not allowed and ignored&quot;);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Erro...&quot; at 148:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>149</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  C := Source (Offset);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;C := Sour...&quot; at 149:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>150</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 150:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>151</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>152</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               loop</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>153</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                  C := Source (Offset);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>154</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                  case C is</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>155</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                     when &apos;a&apos; .. &apos;z&apos; | &apos;A&apos; .. &apos;Z&apos; | &apos;_&apos; | &apos;0&apos; .. &apos;9&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>156</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                        null;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>157</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                     when others =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>158</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                        exit;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>159</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  end case;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>160</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                  Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>161</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               end loop;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>162</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               Scan_Id :=</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>163</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                 Create_Id (String (Source (Scan_Loc .. Offset - 1)));</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>164</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               --  Check for keyword</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>165</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               if Scan_Id in Name_First_Keyword .. Name_Last_Keyword then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>166</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                  Scan_Tok := Tokens&apos;Val (Tokens&apos;Pos (Tok_Break)</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>167</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                                          + Scan_Id - Name_First_Keyword);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>168</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               else</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>169</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                  Scan_Tok := Tok_Name;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>170</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               end if;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>171</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>172</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>173</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            --  Numbers.</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>174</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;0&apos; .. &apos;9&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>175</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               Scan_Numeric;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>176</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>177</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;.&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>178</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               case Source (Offset) is</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>179</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  when &apos;0&apos; .. &apos;9&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>180</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                     --  Rescan the &apos;.&apos;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>181</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                     Offset := Offset - 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 181:22 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>182</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                     Scan_Numeric;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Nume...&quot; at 182:22 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>183</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                     return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 183:22 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>184</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  when &apos;*&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>185</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                     Scan_Tok := Tok_Dot_Mul;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 185:22 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>186</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                     Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 186:22 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>187</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                     return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 187:22 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>188</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  when &apos;/&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>189</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                     Scan_Tok := Tok_Dot_Slash;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 189:22 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>190</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                     Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 190:22 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>191</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                     return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 191:22 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>192</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  when &apos;&apos;&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>193</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                     Scan_Tok := Tok_Dot_Quote;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 193:22 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>194</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                     Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 194:22 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>195</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                     return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 195:22 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>196</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  when &apos;.&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>197</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                     if Source (Offset + 1) = &apos;.&apos; then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Source...&quot; at 197:22 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>198</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                        --  &apos;...&apos;, continuation. Skip until end of line.</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>199</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                        loop</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>200</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                           Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 200:28 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>201</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                           C := Source (Offset);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;C := Sour...&quot; at 201:28 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>202</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                           case C is</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;case C&quot; at 202:28 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>203</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                              when ASCII.NUL =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>204</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                                 exit;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;exit&quot; at 204:34 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>205</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                              when ASCII.CR | ASCII.LF =&gt;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>206</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                                 --  Skip it.</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>207</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                                 Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 207:34 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>208</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                                 Scan_EOL (C);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_EOL ...&quot; at 208:34 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>209</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                                 exit;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;exit&quot; at 209:34 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>210</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                              when others =&gt;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>211</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                                 ---  ??? Allow only valid character ?</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>212</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                                 null;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;null&quot; at 212:34 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>213</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                           end case;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>214</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                        end loop;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>215</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                     else</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>216</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                        Scan_Tok := Tok_Dot;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 216:25 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>217</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                        return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 217:25 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>218</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                     end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>219</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  when others =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>220</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                     Scan_Tok := Tok_Dot;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>221</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                     return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>222</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               end case;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>223</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               --  No return to rescan for &apos;...&apos;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>224</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>225</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            --  Comments</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>226</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;%&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>227</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               loop</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>228</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  C := Source (Offset);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;C := Sour...&quot; at 228:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>229</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  exit when C &lt; &apos; &apos;;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;exit when...&quot; at 229:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>230</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 230:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>231</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               end loop;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>232</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               Scan_Tok := Tok_Comment;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 232:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>233</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 233:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>234</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>235</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;=&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>236</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>               if Source (Offset) = &apos;=&apos; then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>decision &quot;Source (O...&quot; at 236:19 outcome TRUE never exercised</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>237</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 237:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>238</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Tok := Tok_Equal;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 238:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>239</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               else</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>240</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                  Scan_Tok := Tok_Assign;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>241</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               end if;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>242</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>243</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>244</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;(&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>245</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               Scan_Tok := Tok_Open_Paren;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>246</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>247</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>248</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;)&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>249</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               Scan_Tok := Tok_Close_Paren;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>250</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>251</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>252</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;[&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>253</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               Scan_Tok := Tok_Open_Bracket;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>254</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>255</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>256</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;]&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>257</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               Scan_Tok := Tok_Close_Bracket;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>258</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>259</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>260</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;{&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>261</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               Scan_Tok := Tok_Open_Brace;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 261:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>262</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 262:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>263</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>264</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;}&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>265</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               Scan_Tok := Tok_Close_Brace;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 265:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>266</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 266:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>267</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>268</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;,&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>269</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               Scan_Tok := Tok_Comma;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 269:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>270</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 270:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>271</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>272</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;;&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>273</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               Scan_Tok := Tok_Semicolon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>274</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>275</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>276</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;:&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>277</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               Scan_Tok := Tok_Colon;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 277:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>278</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 278:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>279</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>280</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;+&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>281</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               Scan_Tok := Tok_Plus;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 281:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>282</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 282:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>283</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>284</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;-&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>285</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>               if Scan_In_Matrix</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>decision &quot;Scan_In_M...&quot; at 285:19 outcome TRUE never exercised</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>286</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>                 and then Source (Offset) in &apos;0&apos; .. &apos;9&apos;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>287</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               then</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>288</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Numeric;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Nume...&quot; at 288:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>289</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               else</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>290</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                  Scan_Tok := Tok_Minus;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>291</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               end if;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>292</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>293</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>294</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;&gt;&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>295</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               if Source (Offset) = &apos;=&apos; then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Source...&quot; at 295:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>296</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 296:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>297</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Tok := Tok_Greater_Equal;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 297:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>298</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               else</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>299</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Tok := Tok_Greater;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 299:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>300</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               end if;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>301</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 301:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>302</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>303</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;&lt;&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>304</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               if Source (Offset) = &apos;=&apos; then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Source...&quot; at 304:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>305</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 305:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>306</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Tok := Tok_Less_Equal;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 306:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>307</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               else</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>308</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Tok := Tok_Less;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 308:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>309</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               end if;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>310</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 310:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>311</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>312</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;~&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>313</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               if Source (Offset) = &apos;=&apos; then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Source...&quot; at 313:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>314</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 314:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>315</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Tok := Tok_Not_Equal;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 315:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>316</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               else</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>317</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Tok := Tok_Tilde;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 317:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>318</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               end if;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>319</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 319:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>320</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>321</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;|&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>322</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               if Source (Offset) = &apos;|&apos; then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Source...&quot; at 322:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>323</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 323:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>324</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Tok := Tok_Or_Or;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 324:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>325</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               else</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>326</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Tok := Tok_Or;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 326:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>327</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               end if;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>328</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 328:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>329</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>330</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;&amp;&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>331</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               if Source (Offset) = &apos;&amp;&apos; then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Source...&quot; at 331:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>332</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 332:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>333</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Tok := Tok_And_And;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 333:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>334</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               else</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>335</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Tok := Tok_And;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 335:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>336</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               end if;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>337</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 337:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>338</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>339</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;*&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>340</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               Scan_Tok := Tok_Mul;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>341</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>342</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>343</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;/&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>344</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               Scan_Tok := Tok_Slash;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 344:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>345</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 345:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>346</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>347</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos;&apos;&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>348</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               Scan_Tok := Tok_Quote;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Tok ...&quot; at 348:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>349</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return&quot; at 349:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>350</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>351</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when others =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>352</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               Scan_Error (&quot;invalid character &apos;&quot; &amp; C &amp; &quot;&apos; is ignored&quot;);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Erro...&quot; at 352:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>353</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         end case;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>354</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end loop;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>355</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Scan;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>356</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>357</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Scan_Is_Space return Boolean is</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>358</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>359</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>      return Source (Offset) = &apos; &apos; or else Source (Offset) = ASCII.HT;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>decision &quot;Source (O...&quot; at 359:14 outcome FALSE never exercised</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>360</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Scan_Is_Space;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>361</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>362</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Scan_String return String</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>363</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   is</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>364</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      C : Character;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;C : Chara...&quot; at 364:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>365</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>366</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      pragma Assert (Source (Scan_Loc) = &apos;&apos;&apos;);</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>367</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      pragma Assert (Scan_Loc = Offset - 1);</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>368</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>369</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      loop</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>370</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         C := Source (Offset);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;C := Sour...&quot; at 370:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>371</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         if C = &apos;&apos;&apos; then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if C = &apos;&apos;...&quot; at 371:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>372</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 372:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>373</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            --  Double single quote is allowed.</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>374</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            exit when Source (Offset) /= &apos;&apos;&apos;;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;exit when...&quot; at 374:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>375</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         elsif C &lt; &apos; &apos; or else C &gt;= Character&apos;Val (127) then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;elsif C &lt;...&quot; at 375:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>376</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            Scan_Error (&quot;invalid character in string&quot;);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Erro...&quot; at 376:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>377</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         end if;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>378</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 378:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>379</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end loop;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>380</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>381</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      return Source (Scan_Loc + 1 .. Offset - 2);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return So...&quot; at 381:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>382</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Scan_String;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>383</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>384</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   procedure Scan_Start_Command is</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>385</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>386</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Offset := Scan_Loc;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 386:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>387</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Scan_Start_Command;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>388</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>389</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Scan_Command_Argument return Boolean</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>390</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   is</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>391</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      C : Character;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;C : Chara...&quot; at 391:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>392</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>393</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      --  Skip spaces</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>394</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      loop</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>395</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         C := Source (Offset);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;C := Sour...&quot; at 395:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>396</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         case C is</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;case C&quot; at 396:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>397</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when &apos; &apos; | ASCII.HT =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>398</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 398:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>399</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when ASCII.CR | ASCII.LF | ASCII.NUL | &apos;%&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>400</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               return False;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Fa...&quot; at 400:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>401</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            when others =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>402</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               exit;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;exit&quot; at 402:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>403</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         end case;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>404</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end loop;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>405</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>406</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      --  Might be a quoted string</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>407</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Scan_Loc := Offset;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Loc ...&quot; at 407:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>408</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      if C = &apos;&apos;&apos; then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if C = &apos;&apos;...&quot; at 408:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>409</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         loop</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>410</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 410:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>411</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            C := Source (Offset);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;C := Sour...&quot; at 411:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>412</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            case C is</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;case C&quot; at 412:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>413</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               when &apos;&apos;&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>414</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 414:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>415</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  if Source (Offset) /= &apos;&apos;&apos; then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Source...&quot; at 415:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>416</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                     --  End of string</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>417</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                     return True;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Tr...&quot; at 417:22 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>418</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>419</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               when ASCII.HT =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>420</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  null;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;null&quot; at 420:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>421</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               when ASCII.NUL .. ASCII.BS</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>422</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  | ASCII.LF .. ASCII.US</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>423</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  | Character&apos;Val (127) =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>424</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Error (&quot;invalid character in quoted string&quot;);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Erro...&quot; at 424:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>425</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  return True;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Tr...&quot; at 425:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>426</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               when &apos; &apos; .. &apos;&amp;&apos;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>427</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  | &apos;(&apos; .. &apos;~&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>428</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  null;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;null&quot; at 428:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>429</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               when Character&apos;Val (128) .. Character&apos;Val (255) =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>430</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  null; -- ???</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;null&quot; at 430:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>431</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end case;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>432</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         end loop;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>433</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      else</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>434</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         loop</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>435</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            case C is</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;case C&quot; at 435:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>436</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               when &apos; &apos; | ASCII.HT =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>437</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  return True;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Tr...&quot; at 437:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>438</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               when ASCII.CR | ASCII.LF | ASCII.NUL | &apos;%&apos;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>439</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  | &apos;,&apos; | &apos;;&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>440</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  return True;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Tr...&quot; at 440:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>441</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               when ASCII.SOH .. ASCII.BS</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>442</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  | ASCII.VT .. ASCII.FF</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>443</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  | ASCII.SO .. ASCII.US</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>444</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  | Character&apos;Val (127) =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>445</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  Scan_Error (&quot;invalid character&quot;);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Scan_Erro...&quot; at 445:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>446</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  return True;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Tr...&quot; at 446:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>447</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               when &apos;!&apos; .. &apos;$&apos;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>448</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  | &apos;&amp;&apos; .. &apos;+&apos;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>449</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  | &apos;-&apos; .. &apos;:&apos;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>450</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>                  | &apos;&lt;&apos; .. &apos;~&apos; =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>451</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  null;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;null&quot; at 451:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>452</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>               when Character&apos;Val (128) .. Character&apos;Val (255) =&gt;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>453</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>                  null; -- ???</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;null&quot; at 453:19 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>454</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end case;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>455</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            Offset := Offset + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Offset :=...&quot; at 455:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>456</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            C := Source (Offset);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;C := Sour...&quot; at 456:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>457</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         end loop;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>458</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>459</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Scan_Command_Argument;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>460</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>461</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Scan_Name return String is</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>462</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>463</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      return Source (Scan_Loc .. Offset - 1);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>464</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Scan_Name;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>465</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>end EML.Scanner;</pre></td>
+  </tr>
+</table>
+</body>
+</html>

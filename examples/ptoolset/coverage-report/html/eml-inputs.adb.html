@@ -1,0 +1,1790 @@
+<html lang="en">
+<head>
+  <title>Coverage of eml-inputs.adb</title>
+  <link rel="stylesheet" type="text/css" href="xcov.css">
+  <script language="JavaScript" type="text/javascript">
+    function flip(atr) {
+      var details = atr.nextSibling.nextSibling;
+      if (details.style.display == "none")
+        details.style.display = "";
+      else
+        details.style.display = "none";
+    }
+  </script>
+</head>
+<body>
+<h4 align="right"><a href="index.html"> index </a></h4>
+<h1 align="center">eml-inputs.adb</h1>
+<h2 align="center">Coverage level: stmt+mcdc</h2>
+<hr/>
+<table class="SumTable"><tr>
+    <tr>
+      <td class="SumHead"> total lines of relevance</td>
+      <td class="SumHead"> fully covered</td>
+      <td class="SumHead"> partially covered</td>
+      <td class="SumHead"> not covered</td>
+      <td class="SumHead"> exempted, no violation</td>
+      <td class="SumHead"> exempted</td>
+      <td class="SumHead"> visual summary </td>
+    </tr>
+      <td class="SumPercent" width="10%">96 lines</td>
+      <td class="SumPercent" width="10%">30 lines (31 %)</td>      <td class="SumPercent" width="10%">1 line (1 %)</td>      <td class="SumPercent" width="10%">65 lines (68 %)</td>      <td class="SumPercent" width="10%">0 lines (0 %)</td>      <td class="SumPercent" width="10%">0 lines (0 %)</td>      <td class="SumBar" align="center" width="10%">        <table border="0" cellspacing="0" class="BarGraph"><tr height="10"><td class="SumBarCOVERED" width="31" title="31% COVERED"></td><td class="SumBarPARTIALLY_COVERED" width="1" title="1% PARTIALLY_COVERED"></td><td class="SumBarNOT_COVERED" width="68" title="68% NOT_COVERED"></td></tr></table></td>
+</tr></table>
+<hr/>
+<table width="100%" cellpadding="0" class="SourceFile">
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>1</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>------------------------------------------------------------------------------</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>2</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                             M O D E L I N G                              --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>3</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>4</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                     Copyright (C) 2011-2013, AdaCore                     --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>5</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>6</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- This library is free software;  you can redistribute it and/or modify it --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>7</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- under terms of the  GNU General Public License  as published by the Free --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>8</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- Software  Foundation;  either version 3,  or (at your  option) any later --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>9</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- version. This library is distributed in the hope that it will be useful, --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>10</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>11</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- TABILITY or FITNESS FOR A PARTICULAR PURPOSE.                            --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>12</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>13</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- As a special exception under Section 7 of GPL version 3, you are granted --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>14</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- additional permissions described in the GCC Runtime Library Exception,   --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>15</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- version 3.1, as published by the Free Software Foundation.               --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>16</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>17</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- You should have received a copy of the GNU General Public License and    --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>18</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- a copy of the GCC Runtime Library Exception along with this program;     --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>19</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>20</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- &lt;http://www.gnu.org/licenses/&gt;.                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>21</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>22</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>------------------------------------------------------------------------------</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>23</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>24</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>with Ada.Unchecked_Deallocation;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>25</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>with GNAT.Table;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>26</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>with GNAT.OS_Lib;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>27</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>28</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>package body EML.Inputs is</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>29</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   type String_Acc is access String;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>30</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>31</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function New_Source_First_Location return Location;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>32</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  Get the first location of the next to be created source file.</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>33</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  This function is useful to create the content string before calling</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>34</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  Create_New_Source_With_Content.</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>35</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>36</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Create_New_Source_With_Content</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>37</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>     (Name : String; Content : Content_Ptr)</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>38</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      return File_Id;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>39</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  Create a new source, with a fixed content</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>40</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>41</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   type File_Desc is record</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>42</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      Name : String_Acc;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>43</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      Content   : Content_Ptr;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>44</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end record;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>45</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>46</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   package File_Table is new Gnat.Table</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>47</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>     (Table_Component_Type =&gt; File_Desc,</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>48</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      Table_Index_Type =&gt; File_Id,</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>49</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      Table_Low_Bound =&gt; No_File_Id + 1,</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>50</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      Table_Initial =&gt; 8,</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>51</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      Table_Increment =&gt; 100);</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>52</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>53</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Source return Content_Ptr is</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>54</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>55</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      --  ??? To be cached</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>56</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      return File_Table.Table (File_Table.Last).Content;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>57</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Source;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>58</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>59</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function New_Source_First_Location return Location is</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>60</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>61</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      if File_Table.Last = No_File_Id then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>62</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         return No_Location + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>63</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      else</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>64</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         return Get_Last_Location (File_Table.Last) + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>65</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>66</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end New_Source_First_Location;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>67</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>68</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Create_New_Source_With_Content</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>69</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>     (Name : String; Content : Content_Ptr)</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>70</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>     return File_Id is</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>71</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>72</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      pragma Assert (Content&apos;First = New_Source_First_Location);</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>73</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      File_Table.Append ((Name =&gt; new String&apos;(Name),</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>74</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                          Content =&gt; Content));</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>75</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      return File_Table.Last;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>76</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Create_New_Source_With_Content;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>77</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>78</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Create_New_Source_From_String</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>79</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>     (Name : String; Content : String := &quot;&quot;) return File_Id</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>80</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   is</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>81</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Last_Location : constant Location := New_Source_First_Location;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>82</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      subtype Content_String is</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>83</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>        String (Last_Location .. Last_Location + Content&apos;Length);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>84</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Src             : constant Content_Ptr := new Content_String;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>85</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>86</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Src (Src&apos;First .. Src&apos;Last - 1) := Content;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>87</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Src (Src&apos;Last) := ASCII.NUL;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>88</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      return Create_New_Source_With_Content (Name, Src);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>89</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Create_New_Source_From_String;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>90</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>91</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   procedure Append (Content : String) is</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>92</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      procedure Deallocate is new Ada.Unchecked_Deallocation</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;procedure...&quot; at 92:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>93</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>        (String, Content_Ptr);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>94</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Old_Content : Content_Ptr renames</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Old_Conte...&quot; at 94:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>95</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>        File_Table.Table (File_Table.Last).Content;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>96</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      New_Content : Content_Ptr;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;New_Conte...&quot; at 96:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>97</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>98</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      New_Content := new String</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;New_Conte...&quot; at 98:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>99</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>        (Old_Content&apos;First .. Old_Content&apos;Last + Content&apos;Length);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>100</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      New_Content (Old_Content&apos;Range) := Old_Content.all;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;New_Conte...&quot; at 100:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>101</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      New_Content (Old_Content&apos;Last .. New_Content&apos;Last - 1) := Content;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;New_Conte...&quot; at 101:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>102</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      New_Content (New_Content&apos;Last) := ASCII.NUL;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;New_Conte...&quot; at 102:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>103</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Deallocate (Old_Content);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Deallocat...&quot; at 103:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>104</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Old_Content := New_Content;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Old_Conte...&quot; at 104:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>105</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Append;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>106</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>107</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Create_And_Read_New_File (Name : String) return File_Id is</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>108</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      use GNAT.OS_Lib;</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>109</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      FD : File_Descriptor;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>110</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Length : Natural;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>111</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Buffer : Content_Ptr;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>112</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Last_Location : Location;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>113</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>114</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      FD := Open_Read (Name, Binary);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>115</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      if FD = Invalid_FD then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>116</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>         return No_File_Id;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>117</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>118</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>119</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Length := Natural (File_Length (FD));</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>120</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>121</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Last_Location := New_Source_First_Location;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>122</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>123</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Buffer := new String (Last_Location</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>124</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>                            .. Last_Location + Location (Length));</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="PARTIALLY_COVERED" title="code partially covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>125</pre></td>
+    <td><pre>!</pre></td>
+    <td><pre>      if Read (FD, Buffer (Last_Location)&apos;Address, Length) /= Length then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>decision &quot;Read (FD,...&quot; at 125:10 outcome TRUE never exercised</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>126</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         raise Program_Error with &quot;cannot read content of &quot; &amp; Name;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;raise Pro...&quot; at 126:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>127</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>128</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>129</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Buffer (Buffer&apos;Last) := ASCII.NUL;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>130</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>131</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      Close (FD);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>132</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>133</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      return Create_New_Source_With_Content (Name, Buffer);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>134</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Create_And_Read_New_File;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>135</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>136</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Get_First_Location (F : File_Id) return Location is</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>137</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>138</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      return File_Table.Table (F).Content&apos;First;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>139</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Get_First_Location;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>140</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>141</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Get_Last_Location (F : File_Id) return Location is</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>142</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>143</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>      return File_Table.Table (F).Content&apos;Last;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>144</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Get_Last_Location;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>145</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>146</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Get_File_Name (F : File_Id) return String is</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>147</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>148</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      return File_Table.Table (F).Name.all;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Fi...&quot; at 148:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>149</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Get_File_Name;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>150</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>151</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Get_File_Id (L : Location) return File_Id</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>152</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   is</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>153</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Lo, Hi, Mid : File_Id;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Lo, Hi, M...&quot; at 153:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>154</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Content : Content_Ptr;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Content :...&quot; at 154:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>155</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      First, Last : Natural;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;First, La...&quot; at 155:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>156</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>157</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Lo := File_Table.First;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Lo := Fil...&quot; at 157:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>158</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Hi := File_Table.Last;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Hi := Fil...&quot; at 158:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>159</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      while Lo &lt;= Hi loop</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;while Lo ...&quot; at 159:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>160</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         Mid := Lo + (Hi - Lo) / 2;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Mid := Lo...&quot; at 160:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>161</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>162</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         Content := File_Table.Table (Mid).Content;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Content :...&quot; at 162:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>163</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         First := Content&apos;First;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;First := ...&quot; at 163:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>164</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         Last := Content&apos;Last;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Last := C...&quot; at 164:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>165</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         if L &gt;= First and then L &lt;= Last then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if L &gt;= F...&quot; at 165:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>166</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            return Mid;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Mi...&quot; at 166:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>167</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         elsif L &lt; First then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;elsif L &lt;...&quot; at 167:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>168</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            Hi := Mid - 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Hi := Mid...&quot; at 168:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>169</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         else</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>170</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            Lo := Mid + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Lo := Mid...&quot; at 170:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>171</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>172</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end loop;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>173</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      return No_File_Id;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return No...&quot; at 173:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>174</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Get_File_Id;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>175</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>176</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Get_File_Content (F : File_Id) return Content_Ptr is</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>177</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>178</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      return File_Table.Table (F).Content;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Fi...&quot; at 178:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>179</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Get_File_Content;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>180</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>181</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Location_Image (Loc : Expanded_Location) return String</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>182</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   is</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>183</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Line_Img : String := Natural&apos;Image (Loc.Line);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Line_Img ...&quot; at 183:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>184</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Col_Img : String := Location&apos;Image (Loc.Col);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Col_Img :...&quot; at 184:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>185</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>186</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Line_Img (Line_Img&apos;First) := &apos;:&apos;;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Line_Img ...&quot; at 186:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>187</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Col_Img (Col_Img&apos;First) := &apos;:&apos;;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Col_Img (...&quot; at 187:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>188</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      if Loc.File = No_File_Id then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Loc.Fi...&quot; at 188:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>189</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         return &quot;*unknown*:0:0&quot;;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return &quot;*...&quot; at 189:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>190</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      else</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>191</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         return Get_File_Name (Loc.File) &amp; Line_Img &amp; Col_Img;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Ge...&quot; at 191:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>192</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>193</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Location_Image;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>194</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>195</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Expand_Location (Loc : Location) return Expanded_Location</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>196</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   is</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>197</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      F : constant File_Id := Get_File_Id (Loc);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;F : const...&quot; at 197:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>198</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Src : Content_Ptr;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Src : Con...&quot; at 198:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>199</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Line : Natural;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Line : Na...&quot; at 199:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>200</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Line_Start : Natural;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Line_Star...&quot; at 200:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>201</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      I : Location;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;I : Locat...&quot; at 201:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>202</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>203</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      if F = No_File_Id then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if F = No...&quot; at 203:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>204</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         return (F, 1, 1);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return (F...&quot; at 204:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>205</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end if;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>206</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Src := Get_File_Content (F);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Src := Ge...&quot; at 206:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>207</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Line := 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Line := 1&quot; at 207:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>208</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      Line_Start := Src&apos;First;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Line_Star...&quot; at 208:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>209</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      I := Line_Start;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;I := Line...&quot; at 209:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>210</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      while I &lt; Loc loop</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;while I &lt;...&quot; at 210:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>211</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         if Src (I) = ASCII.CR then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Src (I...&quot; at 211:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>212</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            I := I + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;I := I + ...&quot; at 212:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>213</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            if Src (I + 1) = ASCII.LF then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Src (I...&quot; at 213:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>214</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               I := I + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;I := I + ...&quot; at 214:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>215</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>216</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            Line := Line + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Line := L...&quot; at 216:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>217</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            Line_Start := I;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Line_Star...&quot; at 217:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>218</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>         elsif Src (I) = ASCII.LF then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;elsif Src...&quot; at 218:10 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>219</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            I := I + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;I := I + ...&quot; at 219:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>220</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            if Src (I + 1) = ASCII.CR then</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;if Src (I...&quot; at 220:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>221</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>               I := I + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;I := I + ...&quot; at 221:16 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>222</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>            end if;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>223</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            Line := Line + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Line := L...&quot; at 223:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>224</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            Line_Start := I;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;Line_Star...&quot; at 224:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>225</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         else</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>226</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>            I := I + 1;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;I := I + ...&quot; at 226:13 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>227</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>         end if;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>228</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      end loop;</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>229</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      return (F, Line, Loc - Line_Start + 1);</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return (F...&quot; at 229:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>230</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Expand_Location;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>231</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>232</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Location_Image (Loc : Location) return String is</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>233</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   begin</pre></td>
+  </tr>
+  <tr class="NOT_COVERED" title="code not covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>234</pre></td>
+    <td><pre>-</pre></td>
+    <td><pre>      return Location_Image (Expand_Location (Loc));</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+      <tr class="error">
+        <td><pre>statement &quot;return Lo...&quot; at 234:7 not executed</pre></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>235</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   end Location_Image;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>236</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>end EML.Inputs;</pre></td>
+  </tr>
+</table>
+</body>
+</html>

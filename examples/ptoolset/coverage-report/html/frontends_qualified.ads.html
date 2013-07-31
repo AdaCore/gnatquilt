@@ -1,0 +1,414 @@
+<html lang="en">
+<head>
+  <title>Coverage of frontends_qualified.ads</title>
+  <link rel="stylesheet" type="text/css" href="xcov.css">
+  <script language="JavaScript" type="text/javascript">
+    function flip(atr) {
+      var details = atr.nextSibling.nextSibling;
+      if (details.style.display == "none")
+        details.style.display = "";
+      else
+        details.style.display = "none";
+    }
+  </script>
+</head>
+<body>
+<h4 align="right"><a href="index.html"> index </a></h4>
+<h1 align="center">frontends_qualified.ads</h1>
+<h2 align="center">Coverage level: stmt+mcdc</h2>
+<hr/>
+<table class="SumTable"><tr>
+    <tr>
+      <td class="SumHead"> total lines of relevance</td>
+      <td class="SumHead"> fully covered</td>
+      <td class="SumHead"> partially covered</td>
+      <td class="SumHead"> not covered</td>
+      <td class="SumHead"> exempted, no violation</td>
+      <td class="SumHead"> exempted</td>
+      <td class="SumHead"> visual summary </td>
+    </tr>
+      <td class="SumPercent" width="10%">8 lines</td>
+      <td class="SumPercent" width="10%">8 lines (100 %)</td>      <td class="SumPercent" width="10%">0 lines (0 %)</td>      <td class="SumPercent" width="10%">0 lines (0 %)</td>      <td class="SumPercent" width="10%">0 lines (0 %)</td>      <td class="SumPercent" width="10%">0 lines (0 %)</td>      <td class="SumBar" align="center" width="10%">        <table border="0" cellspacing="0" class="BarGraph"><tr height="10"><td class="SumBarCOVERED" width="100" title="100% COVERED"></td></tr></table></td>
+</tr></table>
+<hr/>
+<table width="100%" cellpadding="0" class="SourceFile">
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>1</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>------------------------------------------------------------------------------</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>2</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                             M O D E L I N G                              --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>3</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>4</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                     Copyright (C) 2010-2013, AdaCore                     --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>5</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>6</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- This library is free software;  you can redistribute it and/or modify it --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>7</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- under terms of the  GNU General Public License  as published by the Free --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>8</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- Software  Foundation;  either version 3,  or (at your  option) any later --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>9</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- version. This library is distributed in the hope that it will be useful, --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>10</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>11</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- TABILITY or FITNESS FOR A PARTICULAR PURPOSE.                            --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>12</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>13</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- As a special exception under Section 7 of GPL version 3, you are granted --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>14</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- additional permissions described in the GCC Runtime Library Exception,   --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>15</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- version 3.1, as published by the Free Software Foundation.               --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>16</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>17</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- You should have received a copy of the GNU General Public License and    --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>18</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- a copy of the GCC Runtime Library Exception along with this program;     --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>19</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>20</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>-- &lt;http://www.gnu.org/licenses/&gt;.                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>21</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--                                                                          --</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>22</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>------------------------------------------------------------------------------</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>23</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>24</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--  This package provides initialization support for the various main</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>25</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>--  units, including the qualifiable code generator.</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>26</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>27</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>with GNATCOLL.VFS; use GNATCOLL.VFS;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>28</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>29</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>package Frontends_Qualified is</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>30</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>31</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  Command line arguments</pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>32</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>   Clean_Existing : Boolean := False;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>33</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>   Incremental_Overwrite :  Boolean := False;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>34</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>   Settings_File : Virtual_File;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>35</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>   Output_Dir    : Virtual_File;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>36</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>   Matlab_File   : Virtual_File;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>37</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>   Typing_File   : Virtual_File;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>38</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>   Input_File    : Virtual_File;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>39</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>40</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   procedure Setup;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>41</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  Setup the application.</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>42</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  In the qualifiable context, we do not parse the command line, nor any</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>43</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  external settings file.</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>44</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>45</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   procedure Tear_Down;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>46</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  Close all opened resources.</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>47</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="COVERED" title="code covered (click to display/mask details)" onclick="flip(this)">
+    <td><pre>48</pre></td>
+    <td><pre>+</pre></td>
+    <td><pre>   Invalid_Argument : exception;</pre></td>
+  </tr>
+  <tr style="display: none"><td></td><td></td>
+    <td><table width="100%">
+    </table></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>49</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>50</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   procedure Parse_Command_Line;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>51</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>52</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   procedure Validate_Arguments;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>53</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>54</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   function Ensure_Output_Dir</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>55</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>     (Input_File : Virtual_File;</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>56</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      Output_Dir : Virtual_File;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>57</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      Clean_Existing, Incremental_Overwrite : Boolean := False)</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>58</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>      return Virtual_File;</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>59</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  Returns a valid Virtual_File for use as an output directory based on the</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>60</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  arguments. If Output_Dir is specified, we try to use it, otherwise, we</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>61</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  derive an output directory name by appending &quot;_generated&quot; to Input_File.</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>62</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  If the output directory (user-specified or derived) already exists,</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>63</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  Clean_Existing indicates that it should be cleaned before generation,</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>64</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  and Incremental_Overwrite indicates that it should be left as is, and</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>65</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  files will be overwritten as they are generated. An exception is raised</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>66</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  in case of errors (conflicting flags, exisiting output dir without any</pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>67</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>   --  flags...).</pre></td>
+  </tr>
+  <tr class="NO_CODE_even" title="no code generated for this line">
+    <td><pre>68</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre></pre></td>
+  </tr>
+  <tr class="NO_CODE_odd" title="no code generated for this line">
+    <td><pre>69</pre></td>
+    <td><pre>.</pre></td>
+    <td><pre>end Frontends_Qualified;</pre></td>
+  </tr>
+</table>
+</body>
+</html>
