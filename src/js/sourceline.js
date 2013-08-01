@@ -7,7 +7,7 @@ goog.provide('xcov.SourceLine');
 
 goog.require('goog.Disposable');
 
-goog.require('xcov.CoverageStatus');
+goog.require('xcov.coverage');
 
 
 /*******************
@@ -20,7 +20,7 @@ goog.require('xcov.CoverageStatus');
  * Defines a line in a source file.
  *
  * @param {number} no Line number.
- * @param {xcov.CoverageStatus} coverage Coverage value for this line.
+ * @param {xcov.coverage.Status} coverage Coverage value for this line.
  * @param {string} text The content of that line.
  * @param {boolean=} opt_exempted Whether the file has been tagged as exempted
  *    in the coverage report. Defaults to {@code false}.
@@ -38,7 +38,7 @@ xcov.SourceLine = function(no, coverage, text, opt_exempted) {
   this.number_ = no;
 
   /**
-   * @type {xcov.CoverageStatus}
+   * @type {xcov.coverage.Status}
    * @const
    * @private
    */
@@ -80,7 +80,7 @@ xcov.SourceLine.prototype.getNumber = function() {
 
 
 /**
- * @return {xcov.CoverageStatus} The coverage status for this line.
+ * @return {xcov.coverage.Status} The coverage status for this line.
  */
 xcov.SourceLine.prototype.getCoverage = function() {
   return this.coverage_;

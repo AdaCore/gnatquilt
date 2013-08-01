@@ -11,6 +11,12 @@
 @xcov-table-header-bgcolor: #6199df;
 @xcov-table-header-border:  1px solid #4d90fe;
 
+@xcov-table-body-border:    1px solid #bbb;
+@xcov-summary-table-border: 1px solid #888;
+
+@xcov-table-row-even: transparent;
+@xcov-table-row-odd:  rgba(0, 0, 0, 0.02);
+
 * { margin: 0; padding: 0; }
 
 body {
@@ -28,6 +34,10 @@ table {
   margin-bottom: 30px;
 }
 
+.xcov-table-row-even { background-color: @xcov-table-row-even; }
+.xcov-table-row-odd  { background-color: @xcov-table-row-odd;  }
+
 @import "report";
 @import "sources";
+@import "summary";
 @import "traces";

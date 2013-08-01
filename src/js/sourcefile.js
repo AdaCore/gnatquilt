@@ -9,8 +9,8 @@ goog.require('goog.Disposable');
 goog.require('goog.asserts');
 goog.require('goog.object');
 
-goog.require('xcov.CoverageStatus');
 goog.require('xcov.SourceLine');
+goog.require('xcov.coverage');
 
 
 /*******************
@@ -55,14 +55,14 @@ xcov.SourceFile = function(filename, coverageLevel) {
   /**
    * Internal index structure used for performance purpose.
    *
-   * @type {Object.<xcov.CoverageStatus, Array.<!xcov.SourceLine>>}
+   * @type {Object.<xcov.coverage.Status, Array.<!xcov.SourceLine>>}
    * @const
    * @private
    */
   this.coverage_ = {};
 
-  goog.object.forEach(xcov.CoverageStatus, function(status) {
-    goog.object.set(this.coverage_, status, []);
+  goog.object.forEach(xcov.coverage.Status, function(status) {
+    goog.object.set(this.coverage_, status.sym, []);
   }, this /* opt_obj */);
 };
 goog.inherits(xcov.SourceFile, goog.Disposable);
@@ -146,7 +146,7 @@ xcov.SourceFile.prototype.getLine = function(no, opt_val) {
  */
 xcov.SourceFile.prototype.addLine = function(line) {
   goog.object.add(this.lines_, line.getNumber().toString(), line);
-  goog.object.get(this.coverage_, line.getCoverage(), null).push(line);
+  goog.object.get(this.coverage_, line.getCoverage().sym, null).push(line);
 };
 
 
@@ -159,8 +159,8 @@ xcov.SourceFile.prototype.addLine = function(line) {
  * Returns the total lines of interest in this file, optionally filtered by
  * coverage status.
  *
- * @param {xcov.CoverageStatus=} opt_coverageStatus Optional coverage status for
- *    filtering.
+ * @param {xcov.coverage.Status=} opt_coverageStatus Optional coverage status
+ *    for filtering.
  * @return {number} The total number of lines in this file, given the input
  *    rules.
  */
@@ -168,8 +168,30 @@ xcov.SourceFile.prototype.getLineCount = function(opt_coverageStatus) {
   if (!goog.isDef(opt_coverageStatus)) {
     // Return only the lines that are not tagged as NO_CODE
     return goog.object.getCount(this.lines_) -
-        this.getLineCount(xcov.CoverageStatus.NO_CODE);
+        this.getLineCount(xcov.coverage.Status.NO_CODE);
   }
 
-  return goog.object.get(this.coverage_, opt_coverageStatus, null).length;
+  return goog.object.get(this.coverage_, opt_coverageStatus.sym, null).length;
+};
+
+
+/*************************************
+ * xcov.SourceFile.getLinePercentage *
+ *************************************/
+
+
+/**
+ * Returns the percentage of line with the given status among the total number
+ * of relevant lines.
+ *
+ * @param {xcov.coverage.Status} coverageStatus Coverage status for filtering.
+ * @return {number} The total number of lines in this file, given the input
+ *    rules.
+ */
+xcov.SourceFile.prototype.getLinePercentage = function(coverageStatus) {
+  /** @const */ var relevantLineCount = this.getLineCount();
+  goog.asserts.assert(relevantLineCount !== 0, 'unexpected division by 0');
+
+  return Math.round(this.getLineCount(coverageStatus) * 100 /
+      relevantLineCount);
 };

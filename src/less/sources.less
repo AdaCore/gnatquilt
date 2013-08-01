@@ -3,10 +3,17 @@
     margin-left: 5%;
     width: 90%;
 
-    &-count {
+    &-count, &-summary {
       width: 10%;
-      text-align: center;
+      text-align: right;
     }
+
+    &-count   {
+      padding-left:  8px !important;
+      padding-right: 8px !important;
+    }
+
+    &-summary { vertical-align: middle; }
 
     tr, th, td {
       padding: 4px 3px;
@@ -27,4 +34,3 @@
     tbody td { border: 1px solid #bbb; }
   }
 }
-

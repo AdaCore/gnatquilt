@@ -1,0 +1,18 @@
+.xcov-coverage {
+  &-summary {
+    width:  100%;
+    height: 10px;
+
+    margin: 0;
+
+    tbody tr { border: @xcov-summary-table-border; }
+    tbody td { border: none; }
+  }
+
+  &-no-code                 { /* empty */ }
+  &-covered                 { background-color: @xcov-status-covered;                 }
+  &-partially-covered       { background-color: @xcov-status-partially-covered;       }
+  &-not-covered             { background-color: @xcov-status-not-covered;             }
+  &-exempted-no-violation   { background-color: @xcov-status-exempted-no-violation;   }
+  &-exempted-with-violation { background-color: @xcov-status-exempted-with-violation; }
+}

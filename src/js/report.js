@@ -207,8 +207,8 @@ xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
           'missing "line" attribute of mapping');
 
       /** @const */ var line = mapping['line'];
-      /** @const */ var sourceLine =
-          new xcov.SourceLine(line['number'], mapping['coverage'], line['src']);
+      /** @const */ var sourceLine = new xcov.SourceLine(line['number'],
+          xcov.coverage.fromSymbol(mapping['coverage']), line['src']);
 
       sourceFile.addLine(sourceLine);
     }, this /* opt_obj */);

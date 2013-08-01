@@ -72,8 +72,11 @@ xcov.ui.TraceFileTable.prototype.createDom = function() {
 
   /** @const */ var tableBody = dom.createDom(goog.dom.TagName.TBODY);
 
-  goog.array.forEach(this.traces_, function(trace) {
-    /** @const */ var row = dom.createDom(goog.dom.TagName.TR, null,
+  goog.array.forEach(this.traces_, function(trace, index) {
+    /** @const */ var rowStyle = index % 2 === 0 ?
+        xcov.style.ROW_EVEN_CSS_CLASS : xcov.style.ROW_ODD_CSS_CLASS;
+
+    /** @const */ var row = dom.createDom(goog.dom.TagName.TR, rowStyle,
         dom.createDom(goog.dom.TagName.TD, null, trace.getFilename()),
         dom.createDom(goog.dom.TagName.TD, null, trace.getProgram()),
         dom.createDom(goog.dom.TagName.TD, null, trace.getFormatedDate()),
