@@ -96,3 +96,32 @@ xcov.ui.Report.prototype.createDom = function() {
 xcov.ui.Report.prototype.getContentElement = function() {
   return this.getDomHelper().getLastElementChild(this.getElement());
 };
+
+
+/******************************
+ * xcov.ui.Report.showSummary *
+ ******************************/
+
+
+/**
+ * Displays the report summary.
+ */
+xcov.ui.Report.prototype.showSummary = function() {
+  // ???
+};
+
+
+/*********************************
+ * xcov.ui.Report.showSourceFile *
+ *********************************/
+
+
+/**
+ * Displays the source file for the given filename, or an error page if no
+ * source file can be found for that filename.
+ *
+ * @param {string} filename The source file name.
+ */
+xcov.ui.Report.prototype.showSourceFile = function(filename) {
+  // ???
+};
