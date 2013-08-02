@@ -14,8 +14,13 @@
 @xcov-table-body-border:    1px solid #bbb;
 @xcov-summary-table-border: 1px solid #888;
 
-@xcov-table-row-even: transparent;
-@xcov-table-row-odd:  rgba(0, 0, 0, 0.02);
+@xcov-table-row-even:  transparent;
+@xcov-table-row-odd:   rgba(0, 0, 0, 0.02);
+
+@xcov-table-row-hover: #d8edf9;
+
+@xcov-link-color:       #4281eb;
+@xcov-link-color-hover: #fd472b;
 
 * { margin: 0; padding: 0; }
 
@@ -32,6 +37,15 @@ table {
   border-collapse: collapse;
 
   margin-bottom: 30px;
+
+  tbody tr:hover { background-color: @xcov-table-row-hover; }
+}
+
+a {
+  text-decoration: none;
+
+  &, &:visited      { color: @xcov-link-color;     }
+  &:hover, &:active { color: @xcov-link-color-hover}
 }
 
 .xcov-table-row-even { background-color: @xcov-table-row-even; }

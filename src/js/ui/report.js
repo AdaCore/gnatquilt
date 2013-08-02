@@ -48,15 +48,8 @@ xcov.ui.Report = function(report, opt_domHelper) {
    */
   this.report_ = report;
 
-  /** @const */ var dom = this.getDomHelper();
-
-  this.addChild(
-      new xcov.ui.TraceFileTable(this.report_.getTraces(), dom),
-      true /* opt_render */);
-
-  this.addChild(
-      new xcov.ui.SourceFileTable(this.report_.getSources(), dom),
-      true /* opt_render */);
+  // Navigates first on the summary view.
+  this.handleSummaryViewEvent(null);
 };
 goog.inherits(xcov.ui.Report, goog.ui.Component);
 
@@ -87,6 +80,37 @@ xcov.ui.Report.prototype.createDom = function() {
 };
 
 
+/********************************
+ * xcov.ui.Report.enterDocument *
+ ********************************/
+
+
+/** @inheritDoc */
+xcov.ui.Report.prototype.enterDocument = function() {
+  goog.base(this, 'enterDocument');
+  /** @const */ var handler = this.getHandler();
+
+  handler.listen(xcov.navigation.eventTarget, xcov.navigation.Views.SUMMARY,
+      this.handleSummaryViewEvent);
+  handler.listen(xcov.navigation.eventTarget, xcov.navigation.Views.SOURCE,
+      this.handleSourceViewEvent);
+  handler.listen(xcov.navigation.eventTarget, xcov.navigation.Views.TRACES,
+      this.handleTracesViewEvent);
+};
+
+
+/*******************************
+ * xcov.ui.Report.exitDocument *
+ *******************************/
+
+
+/** @inheritDoc */
+xcov.ui.Report.prototype.exitDocument = function() {
+  goog.base(this, 'exitDocument');
+  this.getHandler().removeAll();
+};
+
+
 /************************************
  * xcov.ui.Report.getContentElement *
  ************************************/
@@ -98,30 +122,75 @@ xcov.ui.Report.prototype.getContentElement = function() {
 };
 
 
-/******************************
- * xcov.ui.Report.showSummary *
- ******************************/
+/*****************************************
+ * xcov.ui.Report.handleSummaryViewEvent *
+ *****************************************/
 
 
 /**
  * Displays the report summary.
+ *
+ * @param {xcov.navigation.Event} e The navigation event.
+ * @protected
  */
-xcov.ui.Report.prototype.showSummary = function() {
-  // ???
+xcov.ui.Report.prototype.handleSummaryViewEvent = function(e) {
+  goog.dispose(this.removeChildren(true /* opt_unrender */));
+
+  this.addChild(
+      new xcov.ui.SourceFileTable(this.report_.getSources(),
+          this.getDomHelper()),
+      true /* opt_render */);
+
+  this.logger_.info('Navigated to summary view.');
 };
 
 
-/*********************************
- * xcov.ui.Report.showSourceFile *
- *********************************/
+/****************************************
+ * xcov.ui.Report.handleTracesViewEvent *
+ ****************************************/
+
+
+/**
+ * Displays the traces table.
+ *
+ * @param {xcov.navigation.Event} e The navigation event.
+ * @protected
+ */
+xcov.ui.Report.prototype.handleTracesViewEvent = function(e) {
+  goog.dispose(this.removeChildren(true /* opt_unrender */));
+
+  this.addChild(
+      new xcov.ui.TraceFileTable(this.report_.getTraces(),
+          this.getDomHelper()),
+      true /* opt_render */);
+
+  this.logger_.info('Navigated to traces table.');
+};
+
+
+/****************************************
+ * xcov.ui.Report.handleSourceViewEvent *
+ ****************************************/
 
 
 /**
  * Displays the source file for the given filename, or an error page if no
  * source file can be found for that filename.
  *
- * @param {string} filename The source file name.
+ * @param {xcov.navigation.Event} e The navigation event.
+ * @protected
  */
-xcov.ui.Report.prototype.showSourceFile = function(filename) {
+xcov.ui.Report.prototype.handleSourceViewEvent = function(e) {
+  if (!goog.isDefAndNotNull(e.filename)) {
+    this.logger_.warning('Unexpected empty value for source filename');
+    this.logger_.warning('Fallback on summary view.');
+    this.handleSummaryViewEvent(e);
+    return;
+  }
+
+  goog.dispose(this.removeChildren(true /* opt_unrender */));
+
   // ???
+
+  this.logger_.info('Navigated to source file: ' + e.filename);
 };

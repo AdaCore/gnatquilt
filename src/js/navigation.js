@@ -5,21 +5,37 @@
  */
 
 
-goog.provide('xcov.Navigation');
+goog.provide('xcov.navigation');
 
 goog.require('goog.Disposable');
 goog.require('goog.History');
 goog.require('goog.array');
+goog.require('goog.debug.Logger');
 goog.require('goog.dom');
 goog.require('goog.events');
+goog.require('goog.events.Event');
+goog.require('goog.events.EventTarget');
 goog.require('goog.history.EventType');
-goog.require('goog.history.Html5History');
+goog.require('goog.string');
 
-goog.require('xcov.ui.Report');
+goog.require('xcov.history.Html5History');
+
+
+/***************************
+ * xcov.navigation.logger_ *
+ ***************************/
+
+
+/**
+ * @type {goog.debug.Logger} An custom instance of the logger for this class.
+ * @const
+ * @private
+ */
+xcov.navigation.logger_ = goog.debug.Logger.getLogger('xcov.navigation');
 
 
 /****************************
- * xcov.Navigation.history_ *
+ * xcov.navigation.history_ *
  ****************************/
 
 
@@ -28,36 +44,64 @@ goog.require('xcov.ui.Report');
  *    both {@code goog.History} and {@code goog.Html5History}.
  * @private
  */
-xcov.Navigation.history_ = goog.history.Html5History.isSupported() ?
-    new goog.history.Html5History() : new goog.History();
+xcov.navigation.history_ = goog.history.Html5History.isSupported() ?
+    new xcov.history.Html5History() : new goog.History();
+
+
+/*************************
+ * xcov.navigation.Views *
+ *************************/
+
+
+/**
+ * @enum {string} Enumerates the navigation path available. Add a trailing '/'
+ *    for path that expects a payload (e.g. /source/main.adb).
+ */
+xcov.navigation.Views = {
+  SOURCE: '/source/',
+  SUMMARY: '/summary',
+  TRACES: '/traces'
+};
+
+
+/**************************
+ * xcov.navigation.Token_ *
+ **************************/
+
+
+/**
+ * @typedef {{view: !xcov.navigation.Views, payload: ?string}}
+ * @private
+ */
+xcov.navigation.Token_;
 
 
 /***************************
- * xcov.Navigation.report_ *
+ * xcov.navigation.baseURL *
  ***************************/
 
 
 /**
- * @type {xcov.ui.Report}
- * @private
+ * @type {?string} Base URL for the HTML report. Defaults to {@code null} until
+ *    the navigation engine gets initialized.
  */
-xcov.Navigation.report_ = null;
+xcov.navigation.baseURL = null;
 
 
-/****************************
- * xcov.Navigation.Payload_ *
- ****************************/
+/*******************************
+ * xcov.navigation.eventTarget *
+ *******************************/
 
 
 /**
- * @typedef {{filename: ?string}}
- * @private
+ * @type {goog.events.EventTarget} Event target on which to register to reveive
+ *    XCOV HTML report navigation events.
  */
-xcov.Navigation.Payload_;
+xcov.navigation.eventTarget = new goog.events.EventTarget();
 
 
 /******************************
- * xcov.Navigation.initialize *
+ * xcov.navigation.initialize *
  ******************************/
 
 
@@ -66,20 +110,21 @@ xcov.Navigation.Payload_;
  * current docement, then starts listening to the history events sent by the
  * browser.
  *
- * @param {xcov.ui.Report} report Report UI component in charge of the
- *    rendering.
+ * @param {Window=} opt_window The Window object to use.
  */
-xcov.Navigation.initialize = function(report) {
-  xcov.Navigation.report_ = report;
-  xcov.Navigation.report_.render();
+xcov.navigation.initialize = function(opt_window) {
+  /** @const */ var win = opt_window || window;
+  xcov.navigation.baseURL = win.location.origin + win.location.pathname;
 
-  goog.events.listen(xcov.Navigation.history_, goog.history.EventType.NAVIGATE,
-      xcov.Navigation.onNavigate_);
+  goog.events.listen(xcov.navigation.history_, goog.history.EventType.NAVIGATE,
+      xcov.navigation.onNavigate_);
+
+  xcov.navigation.history_.setEnabled(true);
 };
 
 
 /****************************
- * xcov.Navigation.finalize *
+ * xcov.navigation.finalize *
  ****************************/
 
 
@@ -87,22 +132,72 @@ xcov.Navigation.initialize = function(report) {
  * Stops listening to the history events sent by the browser, i.e. disable the
  * navigation mechanism.
  */
-xcov.Navigation.finalize = function() {
-  goog.asserts.assert(goog.isDefAndNotNull(xcov.Navigation.history_),
+xcov.navigation.finalize = function() {
+  xcov.navigation.history_.setEnabled(false);
+
+  goog.asserts.assert(goog.isDefAndNotNull(xcov.navigation.history_),
       'prevent goog.events.removeAll(null)');
-  goog.events.removeAll(xcov.Navigation.history_);
+  goog.events.removeAll(xcov.navigation.history_);
+};
 
-  // Remove the report from the current document
 
-  xcov.Navigation.report_.exitDocument();
-  if (xcov.Navigation.report_.getElement()) {
-    goog.dom.removeNode(xcov.Navigation.report_.getElement());
+/***********************************************
+ * xcov.navigation.getCanonicalSummaryTableURL *
+ ***********************************************/
+
+
+/**
+ * @return {string} The URL pointing to the summary page of the HTML report.
+ *    Returns {@code null} if the navigation engine has not been initialized
+ *    yet.
+ */
+xcov.navigation.getCanonicalSummaryTableURL = function() {
+  return goog.string.buildString(xcov.navigation.baseURL, '#/summary');
+};
+
+
+/*********************************************
+ * xcov.navigation.getCanonicalSourceFileURL *
+ *********************************************/
+
+
+/**
+ * Crafts an URL ot the given source file name.
+ *
+ * @param {string} filename The source file name.
+ * @return {string} The URL pointing to the given source file from the HTML
+ *    report.  Returns {@code null} if the navigation engine has not been
+ *    initialized yet.
+ */
+xcov.navigation.getCanonicalSourceFileURL = function(filename) {
+  return goog.string.buildString(xcov.navigation.baseURL,
+      '#/source/', filename);
+};
+
+
+/*********************************
+ * xcov.navigation.replaceToken_ *
+ *********************************/
+
+
+/**
+ * Replaces the current history state without affecting the rest of the history
+ * stack.
+ *
+ * @param {string} token The history state identifier.
+ * @private
+ */
+xcov.navigation.replaceToken_ = function(token) {
+  if (goog.history.Html5History.isSupported()) {
+    xcov.navigation.history_.replaceToken(token);
+  } else {
+    xcov.navigation.history_.setToken(token);
   }
 };
 
 
 /******************************
- * xcov.Navigation.parseHash_ *
+ * xcov.navigation.parseHash_ *
  ******************************/
 
 
@@ -111,26 +206,50 @@ xcov.Navigation.finalize = function() {
  * payload.
  *
  * @param {string} hash The decoded URL hash.
- * @return {xcov.Navigation.Payload_} The analyzed payload.
+ * @return {?xcov.navigation.Token_} The analyzed navigation token. Returns
+ *    {@code null} to indicates that the event has te be dropped.
  * @private
  */
-xcov.Navigation.parseHash_ = function(hash) {
-  /** @const */ var payload = { filename: null };
+xcov.navigation.parseHash_ = function(hash) {
+  if (goog.string.startsWith(hash, '#')) {
+    hash = goog.string.remove(hash, '#');
+  }
 
-  goog.array.forEach(hash.split('&'), function(pair) {
-    /** @const */ var split = pair.split('=');
+  /**
+   * @type {xcov.navigation.Token_}
+   * @const
+   */
+  var token = {
+    view: xcov.navigation.Views.SUMMARY,
+    payload: null
+  };
 
-    if (split[0] === 'filename') {
-      payload.filename = split[1];
-    }
-  });
+  if (goog.string.isEmpty(hash)) {
+    // token.view is already set to SUMMARY (default behavior).
 
-  return payload;
+  } else if (goog.string.startsWith(hash, xcov.navigation.Views.SUMMARY)) {
+    // token.view is already set to SUMMARY (default behavior).
+
+  } else if (goog.string.startsWith(hash, xcov.navigation.Views.TRACES)) {
+    token.view = xcov.navigation.Views.TRACES;
+
+  } else if (goog.string.startsWith(hash, xcov.navigation.Views.SOURCE)) {
+    token.view = xcov.navigation.Views.SOURCE;
+    token.payload = goog.string.remove(hash, xcov.navigation.Views.SOURCE);
+
+  } else {
+    xcov.navigation.logger_.warning('Unrecognized URL: ' + hash);
+    xcov.navigation.logger_.warning('Fallback on default view.');
+    xcov.navigation.replaceToken_('');
+    return null;
+  }
+
+  return token;
 };
 
 
 /*******************************
- * xcov.Navigation.onNavigate_ *
+ * xcov.navigation.onNavigate_ *
  *******************************/
 
 
@@ -140,18 +259,54 @@ xcov.Navigation.parseHash_ = function(hash) {
  * @param {goog.events.Event} e The history event object.
  * @private
  */
-xcov.Navigation.onNavigate_ = function(e) {
-  /** @const */ var hash = goog.string.urlDecode(e.token);
-  /** @const */ var payload = xcov.Navigation.parseHash_(hash);
-
-  // Note: The UI component is expected to be not null since it is set in the
-  // initialize function, before listening to history events.
-  goog.asserts.assert(goog.isDefAndNotNull(xcov.Navigation.report_),
-      'unexpected null or undefined report');
-
-  if (goog.isNull(payload.filename)) {
-    xcov.Navigation.report_.showSummary();
-  } else {
-    xcov.Navigation.report_.showSourceFile(payload.filename);
+xcov.navigation.onNavigate_ = function(e) {
+  if (!e.isNavigation) {
+    return;
   }
+
+  /** @const */ var hash = goog.string.urlDecode(e.token);
+  /** @const */ var token = xcov.navigation.parseHash_(hash);
+
+  if (goog.isNull(token)) {
+    xcov.navigation.logger_.info('Dropping navigation event: ' + hash);
+    return;
+  }
+
+  if (!goog.object.containsValue(xcov.navigation.Views, token.view)) {
+    goog.asserts.fail('Unexpected value for token.view: ' + token.view);
+    return;
+  }
+
+  xcov.navigation.eventTarget.dispatchEvent(
+      new xcov.navigation.Event(token.view, token.payload));
 };
+
+
+/*************************
+ * xcov.navigation.Event *
+ *************************/
+
+
+
+/**
+ * A base class for navigation event objects, so that they can support
+ * preventDefault and stopPropagation.
+ *
+ * @param {xcov.navigation.Views} view The view to display.
+ * @param {?string=} opt_filename Optional filename attached to the event.
+ * @param {Object=} opt_target Reference to the object that is the target of
+ *      this event. It has to implement the {@code EventTarget} interface
+ *      declared at {@link http://developer.mozilla.org/en/DOM/EventTarget}.
+ * @constructor
+ * @extends {goog.events.Event}
+ */
+xcov.navigation.Event = function(view, opt_filename, opt_target) {
+  goog.base(this, view, opt_target);
+
+  /**
+   * @type {?string} Optional filename used for the
+   *    {@code xcov.navigation.View.SOURCE} view.
+   */
+  this.filename = opt_filename || null;
+};
+goog.inherits(xcov.navigation.Event, goog.events.Event);

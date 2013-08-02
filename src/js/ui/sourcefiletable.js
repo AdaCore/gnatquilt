@@ -14,6 +14,7 @@ goog.require('goog.ui.Component');
 
 goog.require('xcov.SourceFile');
 goog.require('xcov.coverage');
+goog.require('xcov.navigation');
 goog.require('xcov.style');
 
 
@@ -65,6 +66,7 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
   /** @const */ var tableStyle = goog.getCssName(style, 'table');
   /** @const */ var countCellStyle = goog.getCssName(tableStyle, 'count');
   /** @const */ var summaryCellStyle = goog.getCssName(tableStyle, 'summary');
+  /** @const */ var filenameCellStyle = goog.getCssName(tableStyle, 'filename');
 
   /** @const */ var table = dom.createDom(goog.dom.TagName.TABLE, tableStyle,
       dom.createDom(goog.dom.TagName.THEAD, null,
@@ -86,6 +88,13 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
   /** @const */ var tableBody = dom.createDom(goog.dom.TagName.TBODY);
 
   goog.array.forEach(this.sources_, function(source, index) {
+    /** @const */ var rowStyle = index % 2 === 0 ?
+        xcov.style.ROW_EVEN_CSS_CLASS : xcov.style.ROW_ODD_CSS_CLASS;
+
+    /** @const */ var sourceLinkDom = dom.createDom(goog.dom.TagName.A, {
+      'href': xcov.navigation.getCanonicalSourceFileURL(source.getFilename())
+    }, source.getFilename());
+
     /**
      * Returns a string representation of the total lines of interest in this
      * file, filtered by coverage status.
@@ -103,11 +112,8 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
       return goog.string.buildString(count, ' (', percent, '%)');
     };
 
-    /** @const */ var rowStyle = index % 2 === 0 ?
-        xcov.style.ROW_EVEN_CSS_CLASS : xcov.style.ROW_ODD_CSS_CLASS;
-
     /** @const */ var row = dom.createDom(goog.dom.TagName.TR, rowStyle,
-        dom.createDom(goog.dom.TagName.TD, null, source.getFilename()),
+        dom.createDom(goog.dom.TagName.TD, filenameCellStyle, sourceLinkDom),
         dom.createDom(goog.dom.TagName.TD, countCellStyle,
             source.getLineCount().toString() + ' lines'),
         dom.createDom(goog.dom.TagName.TD, countCellStyle,

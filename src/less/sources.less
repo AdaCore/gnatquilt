@@ -3,19 +3,24 @@
     margin-left: 5%;
     width: 90%;
 
-    &-count, &-summary {
+    &-count   {
       width: 10%;
       text-align: right;
-    }
 
-    &-count   {
       padding-left:  8px !important;
       padding-right: 8px !important;
     }
 
-    &-summary { vertical-align: middle; }
+    &-summary  { width: 20%; vertical-align: middle; }
 
-    tr, th, td {
+    &-filename {
+      padding: 0 !important;
+      a { display: block; }
+    }
+
+  a { display: block; }
+
+    tr, th, td, &-filename a {
       padding: 4px 3px;
 
       font-size: @xcov-font-size;
