@@ -71,6 +71,7 @@ xcov.getCssName = function(className, modifier) {
  */
 xcov.analyze = function(input) {
   // Initialize the xcov logging module.
+
   xcov.logging.initialize();
   xcov.logger = goog.debug.Logger.getLogger('xcov');
 
