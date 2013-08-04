@@ -24,37 +24,37 @@ xcov.coverage.CSS_CLASS = goog.getCssName(xcov.style.CSS_CLASS, 'coverage');
  ************************/
 
 
-/** @enum {{sym: string, image: string}} */
+/** @enum {{image: string, style: string, symbol: string}} */
 xcov.coverage.Status = {
   NO_CODE: {
-    sym: '.',
     image: 'No Code',
-    style: 'no-code'
+    style: 'no-code',
+    symbol: '.'
   },
   COVERED: {
-    sym: '+',
     image: 'Covered',
-    style: 'covered'
+    style: 'covered',
+    symbol: '+'
   },
   PARTIALLY_COVERED: {
-    sym: '!',
     image: 'Partially Covered',
-    style: 'partially-covered'
+    style: 'partially-covered',
+    symbol: '!'
   },
   NOT_COVERED: {
-    sym: '-',
     image: 'Not Covered',
-    style: 'not-covered'
+    style: 'not-covered',
+    symbol: '-'
   },
   EXEMPTED_NO_VIOLATION: {
-    sym: '#',
     image: 'Exempted, No Violation',
-    style: 'exempted-no-violation'
+    style: 'exempted-no-violation',
+    symbol: '#'
   },
   EXEMPTED_WITH_VIOLATION: {
-    sym: '*',
-    image: 'Exempted, Violations',
-    style: 'exempted-with-violation'
+    image: 'Exempted, With Violations',
+    style: 'exempted-with-violation',
+    symbol: '*'
   }
 };
 
@@ -74,7 +74,7 @@ xcov.coverage.fromSymbol = function(symbol) {
   /** @type {?xcov.coverage.Status} */ var status = null;
 
   goog.object.forEach(xcov.coverage.Status, function(value) {
-    if (value.sym === symbol) {
+    if (value.symbol === symbol) {
       status = value;
     }
   });

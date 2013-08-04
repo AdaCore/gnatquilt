@@ -62,7 +62,7 @@ xcov.SourceFile = function(filename, coverageLevel) {
   this.coverage_ = {};
 
   goog.object.forEach(xcov.coverage.Status, function(status) {
-    goog.object.set(this.coverage_, status.sym, []);
+    goog.object.set(this.coverage_, status.symbol, []);
   }, this /* opt_obj */);
 };
 goog.inherits(xcov.SourceFile, goog.Disposable);
@@ -170,7 +170,7 @@ xcov.SourceFile.prototype.forEachLine = function(f, opt_obj) {
  */
 xcov.SourceFile.prototype.addLine = function(line) {
   goog.object.add(this.lines_, line.getNumber().toString(), line);
-  goog.object.get(this.coverage_, line.getCoverage().sym, null).push(line);
+  goog.object.get(this.coverage_, line.getCoverage().symbol, null).push(line);
 };
 
 
@@ -195,7 +195,11 @@ xcov.SourceFile.prototype.getLineCount = function(opt_coverageStatus) {
         this.getLineCount(xcov.coverage.Status.NO_CODE);
   }
 
-  return goog.object.get(this.coverage_, opt_coverageStatus.sym, null).length;
+  /** @const */ var lines =
+      goog.object.get(this.coverage_, opt_coverageStatus.symbol, null);
+
+  goog.asserts.assert(goog.isDefAndNotNull(lines), 'Unknown coverage status');
+  return lines.length;
 };
 
 

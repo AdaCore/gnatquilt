@@ -160,7 +160,7 @@ xcov.ui.SourceFile.Line_.prototype.createDom = function() {
 
   /** @const */ var coverageSymbolDom =
       dom.createDom(goog.dom.TagName.TD, goog.getCssName(style, 'coverage'),
-          dom.createDom(goog.dom.TagName.PRE, null, status.sym));
+          dom.createDom(goog.dom.TagName.PRE, null, status.symbol));
 
   /** @const */ var textDom =
       dom.createDom(goog.dom.TagName.TD, goog.getCssName(style, 'text'),

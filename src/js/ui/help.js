@@ -85,12 +85,13 @@ xcov.ui.Help.prototype.createDom = function() {
           'a visual summary of this coverage data.'));
 
   /** @const */ var paragraph4 = dom.createDom(goog.dom.TagName.P, null,
-      goog.string.buildString('"line of relevance" are the source ',
-          'lines that have associated object code and which include ',
-          'all or part of a source entity of interest if we are',
-          'assessing a source level criterion.  Source comment lines ',
-          'are never included in the counts, typically. In the visual',
-          'summaries, the colors have the following meaning:'));
+      dom.createDom(goog.dom.TagName.B, null, '"line of relevance"'),
+      goog.string.buildString(' are the source lines that have ' +
+          'associated object code and which include all or part of a ' +
+          'source entity of interest if we are assessing a source ' +
+          'level criterion.  Source comment lines are never included ' +
+          'in the counts, typically. In the visual summaries, the ' +
+          'colors have the following meaning:'));
 
   /** @const */ var style =
       goog.getCssName(xcov.style.CSS_CLASS, 'help');

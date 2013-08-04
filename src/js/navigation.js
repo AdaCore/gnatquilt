@@ -171,6 +171,21 @@ xcov.navigation.getCanonicalSummaryTableURL = function() {
 
 
 /*********************************************
+ * xcov.navigation.getCanonicalTraceTableURL *
+ *********************************************/
+
+
+/**
+ * @return {string} The URL pointing to the trace list page of the HTML report.
+ *    Returns {@code null} if the navigation engine has not been initialized
+ *    yet.
+ */
+xcov.navigation.getCanonicalTraceTableURL = function() {
+  return goog.string.buildString(xcov.navigation.baseURL, '#/traces');
+};
+
+
+/*********************************************
  * xcov.navigation.getCanonicalSourceFileURL *
  *********************************************/
 

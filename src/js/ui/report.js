@@ -13,6 +13,7 @@ goog.require('goog.ui.Component');
 goog.require('xcov.Report');
 goog.require('xcov.style');
 goog.require('xcov.ui.Help');
+goog.require('xcov.ui.Navigation');
 goog.require('xcov.ui.SourceFile');
 goog.require('xcov.ui.SourceFileTable');
 goog.require('xcov.ui.TraceFileTable');
@@ -142,6 +143,12 @@ xcov.ui.Report.prototype.handleSummaryViewEvent = function(e) {
   /** @const */ var dom = this.getDomHelper();
 
   this.addChild(
+      new xcov.ui.Navigation(
+          '⇧ Show traces table',
+          xcov.navigation.getCanonicalTraceTableURL()),
+      true /* opt_render */);
+
+  this.addChild(
       new xcov.ui.SourceFileTable(this.report_.getSources(), dom),
       true /* opt_render */);
 
@@ -165,10 +172,17 @@ xcov.ui.Report.prototype.handleSummaryViewEvent = function(e) {
 xcov.ui.Report.prototype.handleTracesViewEvent = function(e) {
   goog.disposeAll(this.removeChildren(true /* opt_unrender */));
 
+  /** @const */ var dom = this.getDomHelper();
+
   this.addChild(
-      new xcov.ui.TraceFileTable(
-          this.report_.getTraces(),
-          this.getDomHelper()),
+      new xcov.ui.Navigation(
+          '⇧ Up to sources list',
+          xcov.navigation.getCanonicalSummaryTableURL(),
+          dom /* opt_domHelper */),
+      true /* opt_render */);
+
+  this.addChild(
+      new xcov.ui.TraceFileTable(this.report_.getTraces(), dom),
       true /* opt_render */);
 
   this.logger_.info('Navigated to traces table.');
@@ -207,6 +221,13 @@ xcov.ui.Report.prototype.handleSourceViewEvent = function(e) {
   goog.disposeAll(this.removeChildren(true /* opt_unrender */));
 
   /** @const */ var dom = this.getDomHelper();
+
+  this.addChild(
+      new xcov.ui.Navigation(
+          '⇧ Up to sources list',
+          xcov.navigation.getCanonicalSummaryTableURL(),
+          dom /* opt_domHelper */),
+      true /* opt_render */);
 
   this.addChild(
       new xcov.ui.SourceFileTable([source], this.getDomHelper()),
