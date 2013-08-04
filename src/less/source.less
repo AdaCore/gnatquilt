@@ -1,0 +1,36 @@
+.bgline (@color) {
+  .xcov-source-line {
+    &-number, &-coverage, &-text:hover { background-color: @color; }
+  }
+}
+
+.xcov-source {
+  width:  90%;
+  margin: 15px 5%;
+
+  tbody tr:hover { background-color: transparent; }
+
+  &-line {
+    &-number   {
+      text-align: right;
+      padding-right: 10px;
+    }
+
+    &-coverage {
+      text-align: center;
+      border-right: @xcov-table-body-border;
+
+      padding: 0 3px;
+    }
+
+    &-text { padding-left: 10px; }
+
+    &-no-code:hover { background-color: @xcov-table-row-hover !important; }
+
+    &-covered                 { .bgline(@xcov-line-covered);                 }
+    &-partially-covered       { .bgline(@xcov-line-partially-covered);       }
+    &-not-covered             { .bgline(@xcov-line-not-covered);             }
+    &-exempted-no-violation   { .bgline(@xcov-line-exempted-no-violation);   }
+    &-exempted-with-violation { .bgline(@xcov-line-exempted-with-violation); }
+  }
+};

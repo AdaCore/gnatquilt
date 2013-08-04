@@ -10,6 +10,7 @@ goog.require('goog.Disposable');
 goog.require('goog.array');
 goog.require('goog.asserts');
 goog.require('goog.debug.Logger');
+goog.require('goog.object');
 
 goog.require('xcov.SourceFile');
 goog.require('xcov.TraceFile');
@@ -51,11 +52,11 @@ xcov.Report = function() {
   this.traces_ = [];
 
   /**
-   * @type {Array.<!xcov.SourceFile>}
+   * @type {Object.<string, !xcov.SourceFile>}
    * @const
    * @private
    */
-  this.sources_ = [];
+  this.sources_ = {};
 };
 goog.inherits(xcov.Report, goog.Disposable);
 
@@ -100,7 +101,28 @@ xcov.Report.prototype.getTraces = function() {
  *    analyzed yet.
  */
 xcov.Report.prototype.getSources = function() {
-  return this.sources_;
+  return goog.object.getValues(this.sources_);
+};
+
+
+/*************************
+ * xcov.Report.getSource *
+ *************************/
+
+
+/**
+ * Returns the source object corresponding to the given filename.
+ *
+ * @param {string} filename The source filename.
+ * @return {?xcov.SourceFile} The source object if exists, {@code null}
+ *    otherwise.
+ */
+xcov.Report.prototype.getSource = function(filename) {
+  /** @const */ var ret =
+      goog.object.get(this.sources_, filename, null /* opt_val */);
+
+  goog.asserts.assert(goog.isDef(ret), 'compiler check');
+  return ret;
 };
 
 
@@ -213,6 +235,6 @@ xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
       sourceFile.addLine(sourceLine);
     }, this /* opt_obj */);
 
-    this.sources_.push(sourceFile);
+    goog.object.set(this.sources_, sourceFile.getFilename(), sourceFile);
   }, this /* opt_obj */);
 };

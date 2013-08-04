@@ -2,11 +2,20 @@
 @xcov-font-color:  #222;
 @xcov-font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial;
 
-@xcov-status-covered:                 #b5d600;
-@xcov-status-partially-covered:       #ffc707;
-@xcov-status-not-covered:             #e94b42;
-@xcov-status-exempted-no-violation:   #9ec6e7;
-@xcov-status-exempted-with-violation: #cccccc;
+@xcov-font-size-monospace:   14px;
+@xcov-font-family-monospace: Inconsolata, Monospace;
+
+@xcov-summary-covered:                 rgba(181, 214,   0, 1.0);
+@xcov-summary-partially-covered:       rgba(255, 199,   7, 1.0);
+@xcov-summary-not-covered:             rgba(233,  75,  66, 0.9);
+@xcov-summary-exempted-no-violation:   rgba(158, 198, 231, 1.0);
+@xcov-summary-exempted-with-violation: rgba(204, 204, 204, 1.0);
+
+@xcov-line-covered:                 rgba(181, 214, 0, 0.5);
+@xcov-line-partially-covered:       rgba(255, 199, 7, 0.5);
+@xcov-line-not-covered:             rgba(233, 75, 66, 0.4);
+@xcov-line-exempted-no-violation:   rgba(158, 198, 231, 0.5);
+@xcov-line-exempted-with-violation: rgba(204, 204, 204, 0.5);
 
 @xcov-table-header-bgcolor: #6199df;
 @xcov-table-header-border:  1px solid #4d90fe;
@@ -22,7 +31,7 @@
 @xcov-link-color:       #4281eb;
 @xcov-link-color-hover: #fd472b;
 
-* { margin: 0; padding: 0; }
+* { margin: 0; padding: 0; cursor: default; }
 
 body {
   color: @xcov-font-color;
@@ -38,6 +47,7 @@ table {
 
   margin-bottom: 30px;
 
+  tbody td       { vertical-align: middle; }
   tbody tr:hover { background-color: @xcov-table-row-hover; }
 }
 
@@ -48,10 +58,14 @@ a {
   &:hover, &:active { color: @xcov-link-color-hover}
 }
 
+pre { font: @xcov-font-size-monospace @xcov-font-family-monospace; }
+
 .xcov-table-row-even { background-color: @xcov-table-row-even; }
 .xcov-table-row-odd  { background-color: @xcov-table-row-odd;  }
 
+@import "help";
 @import "report";
+@import "source";
 @import "sources";
 @import "summary";
 @import "traces";

@@ -118,8 +118,24 @@ xcov.navigation.initialize = function(opt_window) {
 
   goog.events.listen(xcov.navigation.history_, goog.history.EventType.NAVIGATE,
       xcov.navigation.onNavigate_);
+};
 
-  xcov.navigation.history_.setEnabled(true);
+
+/******************************
+ * xcov.navigation.setEnabled *
+ ******************************/
+
+
+/**
+ * Starts or stops the History. When enabled, the History object will
+ * immediately fire an event for the current location. The caller can set up
+ * event listeners between the call to the constructor and the call to
+ * {@code setEnabled}.
+ *
+ * @param {boolean} enable Whether to enable history.
+ */
+xcov.navigation.setEnabled = function(enable) {
+  xcov.navigation.history_.setEnabled(enable);
 };
 
 
@@ -133,8 +149,6 @@ xcov.navigation.initialize = function(opt_window) {
  * navigation mechanism.
  */
 xcov.navigation.finalize = function() {
-  xcov.navigation.history_.setEnabled(false);
-
   goog.asserts.assert(goog.isDefAndNotNull(xcov.navigation.history_),
       'prevent goog.events.removeAll(null)');
   goog.events.removeAll(xcov.navigation.history_);
@@ -260,10 +274,6 @@ xcov.navigation.parseHash_ = function(hash) {
  * @private
  */
 xcov.navigation.onNavigate_ = function(e) {
-  if (!e.isNavigation) {
-    return;
-  }
-
   /** @const */ var hash = goog.string.urlDecode(e.token);
   /** @const */ var token = xcov.navigation.parseHash_(hash);
 

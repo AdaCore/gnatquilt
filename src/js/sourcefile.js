@@ -123,12 +123,36 @@ xcov.SourceFile.prototype.containsLine = function(no) {
  *    the given key (default is undefined).
  * @return {?xcov.SourceLine} The line for the given number.
  */
-xcov.SourceFile.prototype.getLine = function(no, opt_val) {
+xcov.SourceFile.prototype.getLineAt = function(no, opt_val) {
   /** @const */ var ret =
       goog.object.get(this.lines_, no.toString(), opt_val || null);
 
   goog.asserts.assert(goog.isDef(ret), 'compiler check');
   return ret;
+};
+
+
+/*******************************
+ * xcov.SourceFile.forEachLine *
+ *******************************/
+
+
+/**
+ * Calls a function for each line in the file. The lines are provided in the
+ * correct (increasing) order.
+ *
+ * @param {?function(this: T, xcov.SourceLine, number, ?): ?} f The function to
+ *    call for every line. This function takes 3 argument (the line object, the
+ *    index and the source file object). The return value is ignored.
+ * @param {T=} opt_obj The object to be used as the value of 'this' within f.
+ * @template T
+ */
+xcov.SourceFile.prototype.forEachLine = function(f, opt_obj) {
+  /** @const */ var callback = goog.bind(f, opt_obj);
+
+  goog.object.forEach(this.lines_, function(line, index) {
+    callback(line, index, this);
+  }, this /* opt_obj */);
 };
 
 

@@ -29,32 +29,32 @@ xcov.coverage.Status = {
   NO_CODE: {
     sym: '.',
     image: 'No Code',
-    style: goog.getCssName(xcov.coverage.CSS_CLASS, 'no-code')
+    style: 'no-code'
   },
   COVERED: {
     sym: '+',
     image: 'Covered',
-    style: goog.getCssName(xcov.coverage.CSS_CLASS, 'covered')
+    style: 'covered'
   },
   PARTIALLY_COVERED: {
     sym: '!',
     image: 'Partially Covered',
-    style: goog.getCssName(xcov.coverage.CSS_CLASS, 'partially-covered')
+    style: 'partially-covered'
   },
   NOT_COVERED: {
     sym: '-',
     image: 'Not Covered',
-    style: goog.getCssName(xcov.coverage.CSS_CLASS, 'not-covered')
+    style: 'not-covered'
   },
   EXEMPTED_NO_VIOLATION: {
     sym: '#',
     image: 'Exempted, No Violation',
-    style: goog.getCssName(xcov.coverage.CSS_CLASS, 'exempted-no-violation')
+    style: 'exempted-no-violation'
   },
   EXEMPTED_WITH_VIOLATION: {
     sym: '*',
     image: 'Exempted, Violations',
-    style: goog.getCssName(xcov.coverage.CSS_CLASS, 'exempted-with-violations')
+    style: 'exempted-with-violations'
   }
 };
 

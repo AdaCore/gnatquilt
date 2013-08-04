@@ -12,6 +12,8 @@ goog.require('goog.ui.Component');
 
 goog.require('xcov.Report');
 goog.require('xcov.style');
+goog.require('xcov.ui.Help');
+goog.require('xcov.ui.SourceFile');
 goog.require('xcov.ui.SourceFileTable');
 goog.require('xcov.ui.TraceFileTable');
 
@@ -47,9 +49,6 @@ xcov.ui.Report = function(report, opt_domHelper) {
    * @private
    */
   this.report_ = report;
-
-  // Navigates first on the summary view.
-  this.handleSummaryViewEvent(null);
 };
 goog.inherits(xcov.ui.Report, goog.ui.Component);
 
@@ -96,6 +95,8 @@ xcov.ui.Report.prototype.enterDocument = function() {
       this.handleSourceViewEvent);
   handler.listen(xcov.navigation.eventTarget, xcov.navigation.Views.TRACES,
       this.handleTracesViewEvent);
+
+  xcov.navigation.setEnabled(true);
 };
 
 
@@ -107,6 +108,8 @@ xcov.ui.Report.prototype.enterDocument = function() {
 /** @inheritDoc */
 xcov.ui.Report.prototype.exitDocument = function() {
   goog.base(this, 'exitDocument');
+
+  xcov.navigation.setEnabled(false);
   this.getHandler().removeAll();
 };
 
@@ -134,12 +137,15 @@ xcov.ui.Report.prototype.getContentElement = function() {
  * @protected
  */
 xcov.ui.Report.prototype.handleSummaryViewEvent = function(e) {
-  goog.dispose(this.removeChildren(true /* opt_unrender */));
+  goog.disposeAll(this.removeChildren(true /* opt_unrender */));
+
+  /** @const */ var dom = this.getDomHelper();
 
   this.addChild(
-      new xcov.ui.SourceFileTable(this.report_.getSources(),
-          this.getDomHelper()),
+      new xcov.ui.SourceFileTable(this.report_.getSources(), dom),
       true /* opt_render */);
+
+  this.addChild(new xcov.ui.Help(dom), true /* opt_render */);
 
   this.logger_.info('Navigated to summary view.');
 };
@@ -157,10 +163,11 @@ xcov.ui.Report.prototype.handleSummaryViewEvent = function(e) {
  * @protected
  */
 xcov.ui.Report.prototype.handleTracesViewEvent = function(e) {
-  goog.dispose(this.removeChildren(true /* opt_unrender */));
+  goog.disposeAll(this.removeChildren(true /* opt_unrender */));
 
   this.addChild(
-      new xcov.ui.TraceFileTable(this.report_.getTraces(),
+      new xcov.ui.TraceFileTable(
+          this.report_.getTraces(),
           this.getDomHelper()),
       true /* opt_render */);
 
@@ -182,15 +189,32 @@ xcov.ui.Report.prototype.handleTracesViewEvent = function(e) {
  */
 xcov.ui.Report.prototype.handleSourceViewEvent = function(e) {
   if (!goog.isDefAndNotNull(e.filename)) {
-    this.logger_.warning('Unexpected empty value for source filename');
+    this.logger_.warning('Unexpected empty value for source filename.');
     this.logger_.warning('Fallback on summary view.');
     this.handleSummaryViewEvent(e);
     return;
   }
 
-  goog.dispose(this.removeChildren(true /* opt_unrender */));
+  /** @const */ var source = this.report_.getSource(e.filename);
 
-  // ???
+  if (goog.isNull(source)) {
+    this.logger_.warning('Unknown source file name: ' + e.filename);
+    this.logger_.warning('Fallback on summary view.');
+    this.handleSummaryViewEvent(e);
+    return;
+  }
+
+  goog.disposeAll(this.removeChildren(true /* opt_unrender */));
+
+  /** @const */ var dom = this.getDomHelper();
+
+  this.addChild(
+      new xcov.ui.SourceFileTable([source], this.getDomHelper()),
+      true /* opt_render */);
+
+  this.addChild(
+      new xcov.ui.SourceFile(source, this.getDomHelper()),
+      true /* opt_render */);
 
   this.logger_.info('Navigated to source file: ' + e.filename);
 };

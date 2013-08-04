@@ -9,6 +9,7 @@ goog.provide('xcov');
 
 goog.require('goog.debug.ErrorHandler');  // Fix closure missing import
 goog.require('goog.dom');
+goog.require('goog.string');
 
 goog.require('xcov.Report');
 goog.require('xcov.logging');
@@ -36,6 +37,24 @@ xcov.htmlReport = null;
  * @type {goog.debug.Logger}
  */
 xcov.logger = null;
+
+
+/*******************
+ * xcov.getCssName *
+ *******************/
+
+
+/**
+ * Handles strings that are intended to be used as CSS class names.
+ *
+ * @param {string} className The class name.
+ * @param {string} modifier A modifier to be appended to the class name.
+ * @return {string} The concatenation of the class name and the
+ *    modifier.
+ */
+xcov.getCssName = function(className, modifier) {
+  return goog.string.buildString(className, '-', modifier);
+};
 
 
 /****************

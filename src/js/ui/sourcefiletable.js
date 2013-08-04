@@ -153,6 +153,8 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
  */
 xcov.ui.SourceFileTable.createCoverageSummaryDom_ = function(source, dom) {
   /** @const */ var row = dom.createDom(goog.dom.TagName.TR, null);
+  /** @const */ var style =
+      goog.getCssName(xcov.style.CSS_CLASS, 'summary');
 
   goog.object.forEach(xcov.coverage.Status, function(status) {
     /** @const */ var count = source.getLineCount(status);
@@ -172,7 +174,7 @@ xcov.ui.SourceFileTable.createCoverageSummaryDom_ = function(source, dom) {
 
     if (percent !== 0) {
       /** @const */ var cell = dom.createDom(goog.dom.TagName.TD, {
-        'class': status.style,
+        'class': xcov.getCssName(style, status.style),
         'width': goog.string.buildString(percent, '%'),
         'title': goog.string.buildString(percent, '% ', status.image)
       });
@@ -181,7 +183,6 @@ xcov.ui.SourceFileTable.createCoverageSummaryDom_ = function(source, dom) {
     }
   });
 
-  return dom.createDom(goog.dom.TagName.TABLE,
-      goog.getCssName(xcov.style.CSS_CLASS, 'coverage-summary'),
+  return dom.createDom(goog.dom.TagName.TABLE, style,
       dom.createDom(goog.dom.TagName.TBODY, null, row));
 };
