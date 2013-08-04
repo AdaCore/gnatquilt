@@ -54,7 +54,7 @@ xcov.coverage.Status = {
   EXEMPTED_WITH_VIOLATION: {
     sym: '*',
     image: 'Exempted, Violations',
-    style: 'exempted-with-violations'
+    style: 'exempted-with-violation'
   }
 };
 
