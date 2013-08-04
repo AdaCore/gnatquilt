@@ -84,8 +84,6 @@ xcov.analyze = function(input) {
 
     xcov.navigation.initialize(xcov.htmlReport.getDomHelper().getWindow());
     xcov.htmlReport.render();
-
-    xcov.logger.info('HTML report rendered');
   }
 };
 
