@@ -73,7 +73,7 @@ xcov.ui.Help.prototype.createDom = function() {
   /** @const */ var list3 = dom.createDom(goog.dom.TagName.UL, null,
       dom.createDom(goog.dom.TagName.LI, null,
           'the total number of lines "of relevance" for the unit ' +
-          '(definition blow);'),
+          '(definition below);'),
       dom.createDom(goog.dom.TagName.LI, null,
           'the number of such lines that are considered as fully, ' +
           'partially, or not covered for the chosen coverage ' +
