@@ -10,11 +10,13 @@ goog.require('goog.array');
 goog.require('goog.debug.Logger');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
+goog.require('goog.dom.classes');
 goog.require('goog.ui.Component');
 
 goog.require('xcov.SourceFile');
 goog.require('xcov.coverage');
 goog.require('xcov.navigation');
+goog.require('xcov.sort');
 goog.require('xcov.style');
 
 
@@ -50,6 +52,14 @@ xcov.ui.SourceFileTable = function(sources, opt_domHelper) {
    * @private
    */
   this.sources_ = sources;
+
+  /**
+   * @type {Object.<string,!Node>} Table rows stored for easy sorting. This
+   *    table is populated in the {@code createDom} method. Keys are filenames.
+   * @const
+   * @private
+   */
+  this.rows_ = {};
 };
 goog.inherits(xcov.ui.SourceFileTable, goog.ui.Component);
 
@@ -70,7 +80,7 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
 
   /** @const */ var table = dom.createDom(goog.dom.TagName.TABLE, tableStyle,
       dom.createDom(goog.dom.TagName.THEAD, null,
-          dom.createDom(goog.dom.TagName.TH, null, 'Source Filename'),
+          dom.createDom(goog.dom.TagName.TH, null, '↕ Source Filename'),
           dom.createDom(goog.dom.TagName.TH, countCellStyle,
               'Total lines'),
           dom.createDom(goog.dom.TagName.TH, countCellStyle,
@@ -83,7 +93,7 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
               xcov.coverage.Status.EXEMPTED_NO_VIOLATION.image),
           dom.createDom(goog.dom.TagName.TH, countCellStyle,
               xcov.coverage.Status.EXEMPTED_WITH_VIOLATION.image),
-          dom.createDom(goog.dom.TagName.TH, null, 'Summary')));
+          dom.createDom(goog.dom.TagName.TH, null, '↕ Summary')));
 
   /** @const */ var tableBody = dom.createDom(goog.dom.TagName.TBODY);
 
@@ -130,7 +140,8 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
             xcov.ui.SourceFileTable.createCoverageSummaryDom_(source, dom)));
 
     dom.appendChild(tableBody, row);
-  });
+    goog.object.set(this.rows_, source.getFilename(), row);
+  }, this /* opt_obj */);
 
   dom.appendChild(table, tableBody);
   this.setElementInternal(table);
@@ -185,4 +196,106 @@ xcov.ui.SourceFileTable.createCoverageSummaryDom_ = function(source, dom) {
 
   return dom.createDom(goog.dom.TagName.TABLE, style,
       dom.createDom(goog.dom.TagName.TBODY, null, row));
+};
+
+
+/************************************
+ * xcov.ui.SourceFile.enterDocument *
+ ************************************/
+
+
+/** @inheritDoc */
+xcov.ui.SourceFileTable.prototype.enterDocument = function() {
+  goog.base(this, 'enterDocument');
+
+  /** @const */ var dom = this.getDomHelper();
+  /** @const */ var thead = dom.getFirstElementChild(this.getElement());
+  /** @const */ var filenameTitleCell = dom.getFirstElementChild(thead);
+  /** @const */ var summaryTitleCell = dom.getLastElementChild(thead);
+
+  this.getHandler().listen(filenameTitleCell, goog.events.EventType.CLICK,
+      goog.bind(this.onSort_, this, xcov.sort.compareSourceFileNames));
+
+  this.getHandler().listen(summaryTitleCell, goog.events.EventType.CLICK,
+      goog.bind(this.onSort_, this, xcov.sort.compareCoverageResults));
+};
+
+
+/****************************************
+ * xcov.ui.SourceFileTable.exitDocument *
+ ****************************************/
+
+
+/** @inheritDoc */
+xcov.ui.SourceFileTable.prototype.exitDocument = function() {
+  goog.base(this, 'exitDocument');
+  this.getHandler().removeAll();
+};
+
+
+/***********************************
+ * xcov.ui.SourceFileTable.onSort_ *
+ ***********************************/
+
+
+/**
+ * On click callback for table headers.
+ *
+ * @param {?function(!xcov.SourceFile,!xcov.SourceFile):number} compareFn
+ *    Comparison function by which the array is to be ordered. Should take 2
+ *    arguments to compare, and return a negative number, zero, or a positive
+ *    number depending on whether the first argument is less than, equal to, or
+ *    greater than the second.
+ * @private
+ */
+xcov.ui.SourceFileTable.prototype.onSort_ = function(compareFn) {
+  goog.asserts.assert(!goog.isNull(this.getElement()),
+      'Table need to be rendered first');
+  goog.asserts.assert(!goog.isNull(this.rows_), 'Missing internal structures');
+
+  /** @const */ var ordered = this.sort(compareFn);
+
+  /** @const */ var dom = this.getDomHelper();
+  /** @const */ var tbody = dom.getLastElementChild(this.getElement());
+
+  dom.removeChildren(tbody);
+
+  goog.array.forEach(ordered, function(file, index) {
+    /** @const */ var row =
+        goog.object.get(this.rows_, file.getFilename(), null /* oopt_val */);
+
+    goog.asserts.assert(goog.isDefAndNotNull(row), 'Unexpected null row');
+
+    /** @const */ var rowStyle = index % 2 === 0 ?
+        xcov.style.ROW_EVEN_CSS_CLASS : xcov.style.ROW_ODD_CSS_CLASS;
+
+    goog.dom.classes.remove(row, xcov.style.ROW_EVEN_CSS_CLASS);
+    goog.dom.classes.remove(row, xcov.style.ROW_ODD_CSS_CLASS);
+
+    goog.dom.classes.add(row, rowStyle);
+
+    dom.appendChild(tbody, row);
+  }, this /* opt_obj */);
+};
+
+
+/********************************
+ * xcov.ui.SourceFileTable.sort *
+ ********************************/
+
+
+/**
+ * Sorts the source files into ascending order.
+ *
+ * @param {?function(!xcov.SourceFile,!xcov.SourceFile):number=} opt_compareFn
+ *    Optional comparison function by which the array is to be ordered. Should
+ *    take 2 arguments to compare, and return a negative number, zero, or a
+ *    positive number depending on whether the first argument is less than,
+ *    equal to, or greater than the second.
+ * @return {Array.<!xcov.SourceFile>} The array of files sorted given the input
+ *    criteria.
+ */
+xcov.ui.SourceFileTable.prototype.sort = function(opt_compareFn) {
+  goog.array.sort(this.sources_, opt_compareFn);
+  return this.sources_;
 };

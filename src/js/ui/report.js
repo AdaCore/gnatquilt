@@ -50,8 +50,28 @@ xcov.ui.Report = function(report, opt_domHelper) {
    * @private
    */
   this.report_ = report;
+
+  /**
+   * @type {goog.ui.Component} The cached source file table if already rendered.
+   * @private
+   */
+  this.sourceFileTable_ = null;
 };
 goog.inherits(xcov.ui.Report, goog.ui.Component);
+
+
+/**********************************
+ * xcov.ui.Report.disposeInternal *
+ **********************************/
+
+
+/** @inheritDoc */
+xcov.ui.Report.prototype.disposeInternal = function() {
+  goog.base(this, 'disposeInternal');
+
+  goog.dispose(this.sourceFileTable_);
+  this.sourceFileTable_ = null;
+};
 
 
 /****************************
@@ -126,6 +146,45 @@ xcov.ui.Report.prototype.getContentElement = function() {
 };
 
 
+/************************
+ * xcov.ui.Report.clear *
+ ************************/
+
+
+/**
+ * Removes all widgets from the interface and disposes of the non-permanent
+ * ones.
+ */
+xcov.ui.Report.prototype.clear = function() {
+  if (!goog.isNull(this.sourceFileTable_) &&
+      this.indexOfChild(this.sourceFileTable_) >= 0) {
+    this.removeChild(this.sourceFileTable_, true /* opt_unrender */);
+  }
+
+  goog.disposeAll(this.removeChildren(true /* opt_unrender */));
+};
+
+
+/*************************************
+ * xcov.ui.Report.getSourceFileTable *
+ *************************************/
+
+
+/**
+ * @return {!goog.ui.Component} The source file table instance.
+ */
+xcov.ui.Report.prototype.getSourceFileTable = function() {
+  if (goog.isNull(this.sourceFileTable_)) {
+    this.sourceFileTable_ =
+        new xcov.ui.SourceFileTable(
+            this.report_.getSources(),
+            this.getDomHelper());
+  }
+
+  return this.sourceFileTable_;
+};
+
+
 /*****************************************
  * xcov.ui.Report.handleSummaryViewEvent *
  *****************************************/
@@ -148,10 +207,7 @@ xcov.ui.Report.prototype.handleSummaryViewEvent = function(e) {
           xcov.navigation.getCanonicalTraceTableURL()),
       true /* opt_render */);
 
-  this.addChild(
-      new xcov.ui.SourceFileTable(this.report_.getSources(), dom),
-      true /* opt_render */);
-
+  this.addChild(this.getSourceFileTable(), true /* opt_render */);
   this.addChild(new xcov.ui.Help(dom), true /* opt_render */);
 
   this.logger_.info('Navigated to summary view.');
@@ -176,7 +232,7 @@ xcov.ui.Report.prototype.handleTracesViewEvent = function(e) {
 
   this.addChild(
       new xcov.ui.Navigation(
-          '⇧ Up to sources list',
+          '⇪ Up to sources list',
           xcov.navigation.getCanonicalSummaryTableURL(),
           dom /* opt_domHelper */),
       true /* opt_render */);
@@ -224,7 +280,7 @@ xcov.ui.Report.prototype.handleSourceViewEvent = function(e) {
 
   this.addChild(
       new xcov.ui.Navigation(
-          '⇧ Up to sources list',
+          '⇪ Up to sources list',
           xcov.navigation.getCanonicalSummaryTableURL(),
           dom /* opt_domHelper */),
       true /* opt_render */);
