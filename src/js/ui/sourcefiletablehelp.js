@@ -3,7 +3,7 @@
  */
 
 
-goog.provide('xcov.ui.Help');
+goog.provide('xcov.ui.SourceFileTableHelp');
 
 goog.require('goog.debug.Logger');
 goog.require('goog.dom');
@@ -14,9 +14,9 @@ goog.require('goog.ui.Component');
 goog.require('xcov.style');
 
 
-/****************
- * xcov.ui.Help *
- ****************/
+/*******************************
+ * xcov.ui.SourceFileTableHelp *
+ *******************************/
 
 
 
@@ -27,19 +27,19 @@ goog.require('xcov.style');
  * @constructor
  * @extends {goog.ui.Component}
  */
-xcov.ui.Help = function(opt_domHelper) {
+xcov.ui.SourceFileTableHelp = function(opt_domHelper) {
   goog.base(this, opt_domHelper);
 };
-goog.inherits(xcov.ui.Help, goog.ui.Component);
+goog.inherits(xcov.ui.SourceFileTableHelp, goog.ui.Component);
 
 
-/**************************
- * xcov.ui.Help.createDom *
- **************************/
+/*****************************************
+ * xcov.ui.SourceFileTableHelp.createDom *
+ *****************************************/
 
 
 /** @inheritDoc */
-xcov.ui.Help.prototype.createDom = function() {
+xcov.ui.SourceFileTableHelp.prototype.createDom = function() {
   /** @const */ var dom = this.getDomHelper();
 
   /** @const */ var paragraph1 = dom.createDom(goog.dom.TagName.P, null,
@@ -55,22 +55,9 @@ xcov.ui.Help.prototype.createDom = function() {
           'the coverage results per source file.'));
 
   /** @const */ var paragraph2 = dom.createDom(goog.dom.TagName.P, null,
-      'For each trace file, the following information is given:');
-
-  /** @const */ var list2 = dom.createDom(goog.dom.TagName.UL, null,
-      dom.createDom(goog.dom.TagName.LI, null,
-          'the name of the trace file;'),
-      dom.createDom(goog.dom.TagName.LI, null,
-          'the name of the executable used to generate it;'),
-      dom.createDom(goog.dom.TagName.LI, null,
-          'when it has been generated;'),
-      dom.createDom(goog.dom.TagName.LI, null,
-          'the tag that has been associated with this run, if any.'));
-
-  /** @const */ var paragraph3 = dom.createDom(goog.dom.TagName.P, null,
       'The results (total and per file) contain:');
 
-  /** @const */ var list3 = dom.createDom(goog.dom.TagName.UL, null,
+  /** @const */ var list2 = dom.createDom(goog.dom.TagName.UL, null,
       dom.createDom(goog.dom.TagName.LI, null,
           'the total number of lines "of relevance" for the unit ' +
           '(definition below);'),
@@ -84,7 +71,7 @@ xcov.ui.Help.prototype.createDom = function() {
       dom.createDom(goog.dom.TagName.LI, null,
           'a visual summary of this coverage data.'));
 
-  /** @const */ var paragraph4 = dom.createDom(goog.dom.TagName.P, null,
+  /** @const */ var paragraph3 = dom.createDom(goog.dom.TagName.P, null,
       dom.createDom(goog.dom.TagName.B, null, '"line of relevance"'),
       goog.string.buildString(' are the source lines that have ' +
           'associated object code and which include all or part of a ' +
@@ -109,8 +96,8 @@ xcov.ui.Help.prototype.createDom = function() {
   });
 
   this.setElementInternal(dom.createDom(goog.dom.TagName.DIV, style,
-      paragraph1, list1, paragraph2, list2, paragraph3, list3,
-      paragraph4, dom.createDom(goog.dom.TagName.TABLE,
+      paragraph1, list1, paragraph2, list2, paragraph3,
+      dom.createDom(goog.dom.TagName.TABLE,
           goog.getCssName(style, 'legend'),
           dom.createDom(goog.dom.TagName.TBODY, null, legend))));
 };

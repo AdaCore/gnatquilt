@@ -12,11 +12,12 @@ goog.require('goog.ui.Component');
 
 goog.require('xcov.Report');
 goog.require('xcov.style');
-goog.require('xcov.ui.Help');
 goog.require('xcov.ui.Navigation');
 goog.require('xcov.ui.SourceFile');
 goog.require('xcov.ui.SourceFileTable');
+goog.require('xcov.ui.SourceFileTableHelp');
 goog.require('xcov.ui.TraceFileTable');
+goog.require('xcov.ui.TraceTableHelp');
 
 
 /******************
@@ -208,7 +209,7 @@ xcov.ui.Report.prototype.handleSummaryViewEvent = function(e) {
       true /* opt_render */);
 
   this.addChild(this.getSourceFileTable(), true /* opt_render */);
-  this.addChild(new xcov.ui.Help(dom), true /* opt_render */);
+  this.addChild(new xcov.ui.SourceFileTableHelp(dom), true /* opt_render */);
 
   this.logger_.info('Navigated to summary view.');
 };
@@ -240,6 +241,7 @@ xcov.ui.Report.prototype.handleTracesViewEvent = function(e) {
   this.addChild(
       new xcov.ui.TraceFileTable(this.report_.getTraces(), dom),
       true /* opt_render */);
+  this.addChild(new xcov.ui.TraceTableHelp(dom), true /* opt_render */);
 
   this.logger_.info('Navigated to traces table.');
 };
