@@ -1,6 +1,14 @@
+// Full line background
 .bgline (@color) {
   .xcov-source-line {
-    &-number, &-coverage, &-text:hover { background-color: @color; }
+    &-coverage, &-text { background-color: @color; }
+  }
+}
+
+// Partial line background, full on hover
+.bgline-hover (@color) {
+  .xcov-source-line {
+    &-coverage, &-text:hover { background-color: @color; }
   }
 }
 
@@ -8,18 +16,22 @@
   width:  90%;
   margin: 15px 5%;
 
+  border: @xcov-table-body-border;
+
   tbody tr:hover { background-color: transparent; }
 
   &-line {
+    &-number, &-coverage { border-right: @xcov-table-body-border; }
+
     &-number   {
       text-align: right;
       padding-right: 10px;
+
+      background-color: @xcov-line-number-bgcolor;
     }
 
     &-coverage {
       text-align: center;
-      border-right: @xcov-table-body-border;
-
       padding: 0 3px;
     }
 
@@ -27,7 +39,7 @@
 
     &-no-code:hover { background-color: @xcov-table-row-hover !important; }
 
-    &-covered                 { .bgline(@xcov-line-covered);                 }
+    &-covered                 { .bgline-hover(@xcov-line-covered);           }
     &-partially-covered       { .bgline(@xcov-line-partially-covered);       }
     &-not-covered             { .bgline(@xcov-line-not-covered);             }
     &-exempted-no-violation   { .bgline(@xcov-line-exempted-no-violation);   }
