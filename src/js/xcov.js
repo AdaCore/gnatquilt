@@ -95,7 +95,7 @@ xcov.analyze = function(input) {
 
 
 /**
- * Destroyes the current HTML report instance if any.
+ * Destroys the current HTML report instance if any.
  */
 xcov.destroy = function() {
   if (goog.isNull(xcov.htmlReport)) {

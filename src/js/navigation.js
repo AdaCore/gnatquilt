@@ -166,7 +166,8 @@ xcov.navigation.finalize = function() {
  *    yet.
  */
 xcov.navigation.getCanonicalSummaryTableURL = function() {
-  return goog.string.buildString(xcov.navigation.baseURL, '#/summary');
+  return goog.string.buildString(xcov.navigation.baseURL, '#',
+      xcov.navigation.Views.SUMMARY);
 };
 
 
@@ -181,7 +182,8 @@ xcov.navigation.getCanonicalSummaryTableURL = function() {
  *    yet.
  */
 xcov.navigation.getCanonicalTraceTableURL = function() {
-  return goog.string.buildString(xcov.navigation.baseURL, '#/traces');
+  return goog.string.buildString(xcov.navigation.baseURL, '#',
+      xcov.navigation.Views.TRACES);
 };
 
 
@@ -200,7 +202,7 @@ xcov.navigation.getCanonicalTraceTableURL = function() {
  */
 xcov.navigation.getCanonicalSourceFileURL = function(filename) {
   return goog.string.buildString(xcov.navigation.baseURL,
-      '#/source/', filename);
+      '#', xcov.navigation.Views.SOURCE, filename);
 };
 
 
