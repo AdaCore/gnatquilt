@@ -9,7 +9,9 @@ goog.require('goog.Disposable');
 goog.require('goog.asserts');
 goog.require('goog.object');
 
+goog.require('xcov.Message');
 goog.require('xcov.SourceLine');
+goog.require('xcov.Statement');
 goog.require('xcov.coverage');
 
 
@@ -46,7 +48,7 @@ xcov.SourceFile = function(filename, coverageLevel) {
   this.coverageLevel_ = coverageLevel;
 
   /**
-   * @type {Object.<string, !xcov.SourceLine>}
+   * @type {Object.<string,!xcov.SourceLine>}
    * @const
    * @private
    */
@@ -55,7 +57,7 @@ xcov.SourceFile = function(filename, coverageLevel) {
   /**
    * Internal index structure used for performance purpose.
    *
-   * @type {Object.<xcov.coverage.Status, Array.<!xcov.SourceLine>>}
+   * @type {Object.<xcov.coverage.Status,Array.<!xcov.SourceLine>>}
    * @const
    * @private
    */
@@ -64,6 +66,29 @@ xcov.SourceFile = function(filename, coverageLevel) {
   goog.object.forEach(xcov.coverage.Status, function(status) {
     goog.object.set(this.coverage_, status.symbol, []);
   }, this /* opt_obj */);
+
+  /**
+   * @type {Object.<string,!xcov.Statement>} Dictionary of statements. Indexed
+   *    by the string representation of a statement ID.
+   * @const
+   * @private
+   */
+  this.statements_ = {};
+
+  /**
+   * @type {Object.<string,!xcov.Decision>} Dictionary of decision. Indexed
+   *    by the string representation of a statement ID.
+   * @const
+   * @private
+   */
+  this.decisions_ = {};
+
+  /**
+   * @type {Object.<string,!Array.<!xcov.Message>>}
+   * @const
+   * @private
+   */
+  this.messages_ = {};
 };
 goog.inherits(xcov.SourceFile, goog.Disposable);
 
@@ -91,6 +116,68 @@ xcov.SourceFile.prototype.getFilename = function() {
  */
 xcov.SourceFile.prototype.getCoverageLevel = function() {
   return this.coverageLevel_;
+};
+
+
+/******************************
+ * xcov.SourceFile.addMessage *
+ ******************************/
+
+
+/**
+ * Registers the message.
+ *
+ * @param {number} no The line number for that message.
+ * @param {!xcov.Message} message The message.
+ */
+xcov.SourceFile.prototype.addMessage = function(no, message) {
+  /** @const */ var key = no.toString();
+  /** @const */ var cell = goog.object.get(this.messages_, key, []);
+
+  cell.push(message);
+  goog.object.set(this.messages_, key, cell);
+};
+
+
+/******************************
+ * xcov.SourceFile.hasMessage *
+ ******************************/
+
+
+/**
+ * Whether the given line has message(s) attached.
+ *
+ * @param {number} no The line number.
+ * @return {boolean} Whether the line in tagged with one or more messages.
+ */
+xcov.SourceFile.prototype.hasMessage = function(no) {
+  return !goog.isNull(goog.object.get(this.messages_, no.toString(), null));
+};
+
+
+/**********************************
+ * xcov.SourceFile.forEachMessage *
+ **********************************/
+
+
+/**
+ * Calls a function for each message of that line.
+ *
+ * @param {number} no The line number.
+ * @param {?function(this:T,!xcov.Message,number,?):?} f The function to
+ *    call for every message. This function takes 3 argument (the message
+ *    object, the index and the source file object). The return value is
+ *    ignored.
+ * @param {T=} opt_obj The object to be used as the value of 'this' within f.
+ * @template T
+ */
+xcov.SourceFile.prototype.forEachMessage = function(no, f, opt_obj) {
+  /** @const */ var callback = goog.bind(f, opt_obj);
+
+  goog.array.forEach(goog.object.get(this.messages_, no.toString()) || [],
+      function(message, index) {
+        callback(message, index, this);
+      }, this /* opt_obj */);
 };
 
 
@@ -141,7 +228,7 @@ xcov.SourceFile.prototype.getLineAt = function(no, opt_val) {
  * Calls a function for each line in the file. The lines are provided in the
  * correct (increasing) order.
  *
- * @param {?function(this: T, xcov.SourceLine, number, ?): ?} f The function to
+ * @param {?function(this:T,xcov.SourceLine,number,?):?} f The function to
  *    call for every line. This function takes 3 argument (the line object, the
  *    index and the source file object). The return value is ignored.
  * @param {T=} opt_obj The object to be used as the value of 'this' within f.
@@ -222,6 +309,153 @@ xcov.SourceFile.prototype.getLinePercentage = function(coverageStatus) {
 
   return Math.round(this.getLineCount(coverageStatus) * 100 /
       relevantLineCount);
+};
+
+
+/*************************************
+ * xcov.SourceFile.getSourceFragment *
+ *************************************/
+
+
+/**
+ * Returns the source fragment (either statement or decision) for that ID,
+ * {@code null} otherwise.
+ *
+ * @param {number|string} id The statement id.
+ * @param {xcov.AbstractSourceFragment=} opt_val The value to return if no item
+ *    is found for the given key (default is undefined).
+ * @return {?xcov.AbstractSourceFragment} The line for the given number.
+ */
+xcov.SourceFile.prototype.getSourceFragment = function(id, opt_val) {
+  return this.getStatement(id) || this.getDecision(id) || opt_val || null;
+};
+
+
+/********************************
+ * xcov.SourceFile.getStatement *
+ ********************************/
+
+
+/**
+ * Returns the statement for that ID if any, {@code null} otherwise.
+ *
+ * @param {number|string} id The statement id.
+ * @param {xcov.Statement=} opt_val The value to return if no item is found for
+ *    the given key (default is undefined).
+ * @return {?xcov.Statement} The line for the given number.
+ */
+xcov.SourceFile.prototype.getStatement = function(id, opt_val) {
+  /** @const */ var ret =
+      goog.object.get(this.statements_, id.toString(), opt_val || null);
+
+  goog.asserts.assert(goog.isDef(ret), 'compiler check');
+  return ret;
+};
+
+
+/************************************
+ * xcov.SourceFile.forEachStatement *
+ ************************************/
+
+
+/**
+ * Calls a function for each statement in the file. The statements are provided
+ * in the correct (increasing) order.
+ *
+ * @param {?function(this:T,xcov.Statement,number,?):?} f The function to
+ *    call for every statement. This function takes 3 argument (the statement
+ *    object, the index and the source file object). The return value is
+ *    ignored.
+ * @param {T=} opt_obj The object to be used as the value of 'this' within f.
+ * @template T
+ */
+xcov.SourceFile.prototype.forEachStatement = function(f, opt_obj) {
+  /** @const */ var callback = goog.bind(f, opt_obj);
+
+  goog.object.forEach(this.statements_, function(statement, index) {
+    callback(statement, index, this);
+  }, this /* opt_obj */);
+};
+
+
+/********************************
+ * xcov.SourceFile.addStatement *
+ ********************************/
+
+
+/**
+ * Adds a new statement for this source file. Uses the unique ID to organize
+ * internally the statement list. Overrides any previously provided statement
+ * with the same ID.
+ *
+ * @param {!xcov.Statement} statement The statement to add to this file.
+ */
+xcov.SourceFile.prototype.addStatement = function(statement) {
+  goog.object.set(this.statements_, statement.getUniqueId(), statement);
+};
+
+
+/*******************************
+ * xcov.SourceFile.getDecision *
+ *******************************/
+
+
+/**
+ * Returns the decision for that ID if any, {@code null} otherwise.
+ *
+ * @param {number|string} id The decision id.
+ * @param {xcov.Decision=} opt_val The value to return if no item is found for
+ *    the given key (default is undefined).
+ * @return {?xcov.Decision} The line for the given number.
+ */
+xcov.SourceFile.prototype.getDecision = function(id, opt_val) {
+  /** @const */ var ret =
+      goog.object.get(this.decisions_, id.toString(), opt_val || null);
+
+  goog.asserts.assert(goog.isDef(ret), 'compiler check');
+  return ret;
+};
+
+
+/***********************************
+ * xcov.SourceFile.forEachDecision *
+ ***********************************/
+
+
+/**
+ * Calls a function for each decision in the file. The decisions are provided
+ * in the correct (increasing) order.
+ *
+ * @param {?function(this:T,xcov.Decision,number,?):?} f The function to
+ *    call for every decision. This function takes 3 argument (the decision
+ *    object, the index and the source file object). The return value is
+ *    ignored.
+ * @param {T=} opt_obj The object to be used as the value of 'this' within f.
+ * @template T
+ */
+xcov.SourceFile.prototype.forEachDecision = function(f, opt_obj) {
+  /** @const */ var callback = goog.bind(f, opt_obj);
+
+  goog.object.forEach(this.decisions_, function(decision, index) {
+    callback(decision, index, this);
+  }, this /* opt_obj */);
+};
+
+
+/*******************************
+ * xcov.SourceFile.addDecision *
+ *******************************/
+
+
+/**
+ * Adds a new decision for this source file. Uses the unique ID to organize
+ * internally the decision list. Overrides any previously provided decision
+ * with the same ID.
+ *
+ * @param {!xcov.Decision} decision The decision to add to this file.
+ */
+xcov.SourceFile.prototype.addDecision = function(decision) {
+  goog.object.set(this.decisions_, decision.getUniqueId(), decision);
 };
 
 

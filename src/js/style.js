@@ -18,6 +18,18 @@ goog.provide('xcov.style');
 xcov.style.CSS_CLASS = goog.getCssName('xcov');
 
 
+/***************************
+ * xcov.style.INLINE_BLOCK *
+ ***************************/
+
+
+/**
+ * @type {string} CSS class for inline block elements.
+ * @const
+ */
+xcov.style.INLINE_BLOCK = goog.getCssName(xcov.style.CSS_CLASS, 'inline-block');
+
+
 /*********************************
  * xcov.style.ROW_EVEN_CSS_CLASS *
  *********************************/

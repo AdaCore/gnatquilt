@@ -63,13 +63,46 @@ class Line(object):
         return {
             'number': self.number,
             'src': self.source if self.source is not None else 'null',
-            'exempted': self.exempted if self.exempted is not None else 'null',
-            'col_begin': self.col_begin if self.col_begin else 'null',
-            'col_end': self.col_begin if self.col_begin else 'null'
+            'exempted': self.exempted if self.exempted is not None else 'null'
         }
 
 
-class Statement(object):
+class SourceRange(object):
+    """Represents a source range as read in the XML file.
+    Contains 3 mandatory fields:
+        - id
+        - text
+        - coverage
+
+    Also provides a list of related lines.
+    """
+
+    def __init__(self, uid, text, coverage):
+        """SourceRange Ctor."""
+        self.uid = uid
+        self.text = text
+        self.coverage = coverage
+        self.lines = []
+
+    def toJSON(self):
+        """Returns a object representation of this object.
+        This mechanism is used for dumping the object in JSON format.
+        """
+
+        begin = self.lines[0]
+        end = self.lines[-1]
+
+        r = ((begin.number, begin.col_begin), (end.number, end.col_end))
+
+        return {
+            'id': self.uid,
+            'text': self.text,
+            'coverage': self.coverage,
+            'range': r
+        }
+
+
+class Statement(SourceRange):
     """Represents a statement object as read in the XML file.
     Contains 3 mandatory fields:
         - id
@@ -81,25 +114,10 @@ class Statement(object):
 
     def __init__(self, uid, text, coverage):
         """Statement Ctor."""
-        self.uid = uid
-        self.text = text
-        self.coverage = coverage
-        self.lines = []
-
-    def toJSON(self):
-        """Returns a object representation of this object.
-        This mechanism is used for dumping the object in JSON format.
-        """
-
-        return {
-            'id': self.uid,
-            'text': self.text,
-            'coverage': self.coverage,
-            'lines': [l.toJSON() for l in self.lines]
-        }
+        super(Statement, self).__init__(uid, text, coverage)
 
 
-class Decision(Statement):
+class Decision(SourceRange):
     """Represents a statement object, derived from the Statement declaration.
     It contains an additional list of related conditions.
     """
@@ -110,20 +128,15 @@ class Decision(Statement):
         self.conditions = []
 
     def toJSON(self):
-        """Returns a object representation of this object.
-        This mechanism is used for dumping the object in JSON format.
-        """
+        """Inherited."""
 
-        return {
-            'id': self.uid,
-            'text': self.text,
-            'coverage': self.coverage,
-            'lines': [l.toJSON() for l in self.lines],
-            'conditions': [c.toJSON() for c in self.conditions]
-        }
+        obj = super(Decision, self).toJSON()
+        obj['conditions'] = [c.toJSON() for c in self.conditions]
+
+        return obj
 
 
-class Condition(Statement):
+class Condition(SourceRange):
     """Represents a statement object, derived from the Statement declaration."""
 
     def __init__(self, uid, text, coverage):
@@ -174,6 +187,7 @@ class SourceMapping(object):
         self.lines = []
         self.statements = []
         self.decisions = []
+        self.message = None
 
     def toJSON(self):
         """Returns a object representation of this object.
@@ -188,7 +202,8 @@ class SourceMapping(object):
             'coverage': self.coverage,
             'line': self.lines[0].toJSON(),
             'statements': [s.toJSON() for s in self.statements],
-            'decisions': [d.toJSON() for d in self.decisions]
+            'decisions': [d.toJSON() for d in self.decisions],
+            'message': self.message.toJSON() if self.message is not None else {}
         }
 
 
@@ -293,6 +308,18 @@ class XmlReportHandler(xml.sax.handler.ContentHandler):
 
             self.tmp_mapping = SourceMapping(attributes['coverage'])
 
+        elif name == 'message':
+            # Sanity checks
+            assert self.tmp_source is not None
+            assert self.tmp_mapping is not None
+            assert self.tmp_statement is None
+            assert self.tmp_decision is None
+            assert self.tmp_condition is None
+
+            SCO = attributes['SCO'] if 'SCO' in attributes else None
+            self.tmp_mapping.message = Message(attributes['kind'], SCO,
+                                               attributes['message'])
+
         elif name == 'statement':
             # Sanity checks
             assert self.tmp_source is not None
@@ -301,7 +328,8 @@ class XmlReportHandler(xml.sax.handler.ContentHandler):
             assert self.tmp_decision is None
             assert self.tmp_condition is None
 
-            self.tmp_statement = Statement(attributes['id'], attributes['text'],
+            self.tmp_statement = Statement(int(attributes['id']),
+                                           attributes['text'],
                                            attributes['coverage'])
 
         elif name == 'decision':
@@ -312,7 +340,8 @@ class XmlReportHandler(xml.sax.handler.ContentHandler):
             assert self.tmp_decision is None
             assert self.tmp_condition is None
 
-            self.tmp_decision = Decision(attributes['id'], attributes['text'],
+            self.tmp_decision = Decision(int(attributes['id']),
+                                         attributes['text'],
                                          attributes['coverage'])
 
         elif name == 'condition':
@@ -323,7 +352,8 @@ class XmlReportHandler(xml.sax.handler.ContentHandler):
             assert self.tmp_decision is not None
             assert self.tmp_condition is None
 
-            self.tmp_condition = Condition(attributes['id'], attributes['text'],
+            self.tmp_condition = Condition(int(attributes['id']),
+                                           attributes['text'],
                                            attributes['coverage'])
 
         elif name == 'xi:include':
@@ -402,12 +432,12 @@ class XmlReportHandler(xml.sax.handler.ContentHandler):
     def _createLine(attr):
         """Creates a line object given the input attributes."""
 
-        col_begin = attr['column_begin'] if 'column_begin' in attr else None
-        col_end = attr['column_end'] if 'column_end' in attr else None
-        exempted = attr['exempted'] if 'exempted' in attr else None
+        col_begin = int(attr['column_begin']) if 'column_begin' in attr else None
+        col_end = int(attr['column_end']) if 'column_end' in attr else None
+        exempted = attr['exempted'] == 'TRUE' if 'exempted' in attr else False
         src = attr['src'] if 'src' in attr else None
 
-        return Line(attr['num'], src, exempted, col_begin, col_end)
+        return Line(int(attr['num']), src, exempted, col_begin, col_end)
 
     def __repr__(self):
         """Returns a JSON-serialized string representation of this object."""

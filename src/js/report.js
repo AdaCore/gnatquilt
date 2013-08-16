@@ -11,8 +11,13 @@ goog.require('goog.array');
 goog.require('goog.asserts');
 goog.require('goog.debug.Logger');
 goog.require('goog.object');
+goog.require('goog.string');
 
+goog.require('xcov.Condition');
+goog.require('xcov.Decision');
+goog.require('xcov.Message');
 goog.require('xcov.SourceFile');
+goog.require('xcov.Statement');
 goog.require('xcov.TraceFile');
 
 
@@ -229,12 +234,154 @@ xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
           'missing "line" attribute of mapping');
 
       /** @const */ var line = mapping['line'];
-      /** @const */ var sourceLine = new xcov.SourceLine(line['number'],
+      /** @const */ var lineno = line['number'];
+
+      /** @const */ var sourceLine = new xcov.SourceLine(lineno,
           xcov.coverage.fromSymbol(mapping['coverage']), line['src']);
 
+      goog.asserts.assert('message' in mapping,
+          'missing "message" attribute of mapping');
+
+      /** @const */ var message = mapping['message'];
+
+      if (!goog.object.isEmpty(message)) {
+        sourceFile.addMessage(lineno,
+            new xcov.Message(message['kind'], message['message'],
+                message['sco']));
+      }
+
+      goog.asserts.assert('statements' in mapping,
+          'missing "statements" attribute of mapping');
+
+      goog.array.forEach(mapping['statements'],
+          goog.partial(xcov.Report.analyseStatement_, sourceFile));
+
+      goog.asserts.assert('decisions' in mapping,
+          'missing "decisions" attribute of mapping');
+
+      goog.array.forEach(mapping['decisions'],
+          goog.partial(xcov.Report.analyseDecision_, sourceFile));
+
       sourceFile.addLine(sourceLine);
-    }, this /* opt_obj */);
+    });
 
     goog.object.set(this.sources_, sourceFile.getFilename(), sourceFile);
   }, this /* opt_obj */);
+};
+
+
+/*********************************
+ * xcov.Report.analyseStatement_ *
+ *********************************/
+
+
+/**
+ * Retrieves data from a statement JSON object.
+ *
+ * @param {!xcov.SourceFile} sourceFile The annotated source file.
+ * @param {!Object} statement JSON representation of a statement.
+ * @private
+ */
+xcov.Report.analyseStatement_ = function(sourceFile, statement) {
+  goog.asserts.assert('coverage' in statement,
+      'missing "coverage" attribute of statement');
+
+  goog.asserts.assert('id' in statement,
+      'missing "id" attribute of statement');
+
+  goog.asserts.assert('range' in statement,
+      'missing "range" attribute of statement');
+
+  goog.asserts.assert('text' in statement,
+      'missing "text" attribute of statement');
+
+  /** @const */ var range = statement['range'];
+
+  /** @const */ var s = new xcov.Statement(
+      statement['id'], statement['text'],
+      xcov.coverage.fromSymbol(statement['coverage']),
+      new xcov.Range(
+          new xcov.SLOC(range[0][0], range[0][1]),
+          new xcov.SLOC(range[1][0], range[1][1])));
+
+  sourceFile.addStatement(s);
+};
+
+
+/*********************************
+ * xcov.Report.analyseCondition_ *
+ *********************************/
+
+
+/**
+ * Retrieves data from a condition JSON object.
+ *
+ * @param {!xcov.Decision} decision The decision object.
+ * @param {!Object} condition JSON representation of a condition.
+ * @private
+ */
+xcov.Report.analyseCondition_ = function(decision, condition) {
+  goog.asserts.assert('coverage' in condition,
+      'missing "coverage" attribute of condition');
+
+  goog.asserts.assert('id' in condition,
+      'missing "id" attribute of condition');
+
+  goog.asserts.assert('range' in condition,
+      'missing "range" attribute of condition');
+
+  goog.asserts.assert('text' in condition,
+      'missing "text" attribute of condition');
+
+  /** @const */ var range = condition['range'];
+
+  /** @const */ var c = new xcov.Condition(
+      condition['id'], condition['text'],
+      xcov.coverage.fromSymbol(condition['coverage']),
+      new xcov.Range(
+          new xcov.SLOC(range[0][0], range[0][1]),
+          new xcov.SLOC(range[1][0], range[1][1])));
+
+  decision.addCondition(c);
+};
+
+
+/********************************
+ * xcov.Report.analyseDecision_ *
+ ********************************/
+
+
+/**
+ * Retrieves data from a decision JSON object.
+ *
+ * @param {!xcov.SourceFile} sourceFile The annotated source file.
+ * @param {!Object} decision JSON representation of a decision.
+ * @private
+ */
+xcov.Report.analyseDecision_ = function(sourceFile, decision) {
+  goog.asserts.assert('coverage' in decision,
+      'missing "coverage" attribute of decision');
+
+  goog.asserts.assert('id' in decision,
+      'missing "id" attribute of decision');
+
+  goog.asserts.assert('range' in decision,
+      'missing "range" attribute of decision');
+
+  goog.asserts.assert('text' in decision,
+      'missing "text" attribute of decision');
+
+  /** @const */ var range = decision['range'];
+
+  /** @const */ var d = new xcov.Decision(
+      decision['id'], decision['text'],
+      xcov.coverage.fromSymbol(decision['coverage']),
+      new xcov.Range(
+          new xcov.SLOC(range[0][0], range[0][1]),
+          new xcov.SLOC(range[1][0], range[1][1])));
+
+  goog.array.forEach(decision['conditions'],
+      goog.partial(xcov.Report.analyseCondition_, d));
+
+  sourceFile.addDecision(d);
 };

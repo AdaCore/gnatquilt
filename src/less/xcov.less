@@ -62,8 +62,26 @@ a {
 
 pre { font: @xcov-font-size-monospace @xcov-font-family-monospace; }
 
+/* Tables */
+
 .xcov-table-row-even { background-color: @xcov-table-row-even; }
 .xcov-table-row-odd  { background-color: @xcov-table-row-odd;  }
+
+/* Inline blocks */
+
+.inline-block {
+  position: relative;
+
+  display: -moz-inline-box;
+  display:      inline-block;
+}
+
+.xcov-inline-block { .inline-block; }
+
+*:first-child+html .xcov-inline-block,
+* html .xcov-inline-block { display: inline; }
+
+/* Imports */
 
 @import "help";
 @import "navigation";
