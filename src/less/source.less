@@ -13,9 +13,18 @@
   width:  90%;
   margin: 15px 5%;
 
-  border: @xcov-table-body-border;
+  &-content {
+    border: @xcov-table-body-border;
+    tbody tr:hover { background-color: transparent; }
+  }
 
-  tbody tr:hover { background-color: transparent; }
+  &-toolbar {
+    padding: 3px 0;
+    text-align: right;
+  }
+
+  button { padding: 3px 5px; margin-right: 5px; }
+  &-autoroll { margin-right: 5px; }
 
   &-line {
     outline: 0;
@@ -56,9 +65,21 @@
 
       &, &-info, &-body { min-height: 20px; }
 
+      &-mark { float: left; }
+
       &-info, &-body { padding: 5px 10px; }
       &-info { text-transform: capitalize; }
-      &-body { position: relative; left: 10px; margin-right: 10px; }
+      &-body {
+        position: relative;
+        left: 10px;
+        margin-right: 10px;
+      }
+
+      &-sco {
+        font-weight: bold;
+        color: @xcov-link-color;
+        font: @xcov-font-size @xcov-font-family-monospace;
+      }
     }
 
     &-no-code:hover { background-color: @xcov-table-row-hover !important; }

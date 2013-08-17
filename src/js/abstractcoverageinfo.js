@@ -2,7 +2,7 @@
  * @fileoverview Declares an abstract coverage data object.
  */
 
-goog.provide('xcov.AbstractSourceFragment');
+goog.provide('xcov.AbstractCoverageInfo');
 
 goog.require('goog.Disposable');
 goog.require('goog.asserts');
@@ -10,9 +10,9 @@ goog.require('goog.asserts');
 goog.require('xcov.Range');
 
 
-/*******************************
- * xcov.AbstractSourceFragment *
- *******************************/
+/*****************************
+ * xcov.AbstractCoverageInfo *
+ *****************************/
 
 
 
@@ -26,7 +26,7 @@ goog.require('xcov.Range');
  * @constructor
  * @extends {goog.Disposable}
  */
-xcov.AbstractSourceFragment = function(id, text, coverage, range) {
+xcov.AbstractCoverageInfo = function(id, text, coverage, range) {
   goog.base(this);
 
   /**
@@ -57,57 +57,57 @@ xcov.AbstractSourceFragment = function(id, text, coverage, range) {
    */
   this.range_ = range;
 };
-goog.inherits(xcov.AbstractSourceFragment, goog.Disposable);
+goog.inherits(xcov.AbstractCoverageInfo, goog.Disposable);
 
 
-/*******************************************
- * xcov.AbstractSourceFragment.getUniqueId *
- *******************************************/
+/*****************************************
+ * xcov.AbstractCoverageInfo.getUniqueId *
+ *****************************************/
 
 
 /**
  * @return {string} The string representation of the unique ID.
  */
-xcov.AbstractSourceFragment.prototype.getUniqueId = function() {
+xcov.AbstractCoverageInfo.prototype.getUniqueId = function() {
   return this.id_.toString();
 };
 
 
-/**********************************************
- * xcov.AbstractSourceFragment.getDescription *
- **********************************************/
+/********************************************
+ * xcov.AbstractCoverageInfo.getDescription *
+ ********************************************/
 
 
 /**
  * @return {string} Short description of the element.
  */
-xcov.AbstractSourceFragment.prototype.getDescription = function() {
+xcov.AbstractCoverageInfo.prototype.getDescription = function() {
   return this.text_;
 };
 
 
-/*************************************************
- * xcov.AbstractSourceFragment.getCoverageStatus *
- *************************************************/
+/***********************************************
+ * xcov.AbstractCoverageInfo.getCoverageStatus *
+ ***********************************************/
 
 
 /**
  * @return {xcov.coverage.Status} The level specified by the coverage report.
  */
-xcov.AbstractSourceFragment.prototype.getCoverageStatus = function() {
+xcov.AbstractCoverageInfo.prototype.getCoverageStatus = function() {
   return this.coverage_;
 };
 
 
-/****************************************
- * xcov.AbstractSourceFragment.getRange *
- ****************************************/
+/**************************************
+ * xcov.AbstractCoverageInfo.getRange *
+ **************************************/
 
 
 /**
  * @return {!xcov.Range} The source range for the element.
  */
-xcov.AbstractSourceFragment.prototype.getRange = function() {
+xcov.AbstractCoverageInfo.prototype.getRange = function() {
   goog.asserts.assert(goog.isDefAndNotNull(this.range_), 'compiler check');
   return this.range_;
 };

@@ -68,20 +68,12 @@ xcov.SourceFile = function(filename, coverageLevel) {
   }, this /* opt_obj */);
 
   /**
-   * @type {Object.<string,!xcov.Statement>} Dictionary of statements. Indexed
-   *    by the string representation of a statement ID.
+   * @type {Object.<string,!xcov.AbstractCoverageInfo>} Dictionary of
+   *    coverage data/elements. Indexed by the string representation of an ID.
    * @const
    * @private
    */
-  this.statements_ = {};
-
-  /**
-   * @type {Object.<string,!xcov.Decision>} Dictionary of decision. Indexed
-   *    by the string representation of a statement ID.
-   * @const
-   * @private
-   */
-  this.decisions_ = {};
+  this.coverageInfo_ = {};
 
   /**
    * @type {Object.<string,!Array.<!xcov.Message>>}
@@ -312,9 +304,9 @@ xcov.SourceFile.prototype.getLinePercentage = function(coverageStatus) {
 };
 
 
-/*************************************
- * xcov.SourceFile.getSourceFragment *
- *************************************/
+/***********************************
+ * xcov.SourceFile.getCoverageInfo *
+ ***********************************/
 
 
 /**
@@ -322,140 +314,60 @@ xcov.SourceFile.prototype.getLinePercentage = function(coverageStatus) {
  * {@code null} otherwise.
  *
  * @param {number|string} id The statement id.
- * @param {xcov.AbstractSourceFragment=} opt_val The value to return if no item
+ * @param {xcov.AbstractCoverageInfo=} opt_val The value to return if no item
  *    is found for the given key (default is undefined).
- * @return {?xcov.AbstractSourceFragment} The line for the given number.
+ * @return {?xcov.AbstractCoverageInfo} The line for the given number.
  */
-xcov.SourceFile.prototype.getSourceFragment = function(id, opt_val) {
-  return this.getStatement(id) || this.getDecision(id) || opt_val || null;
-};
-
-
-/********************************
- * xcov.SourceFile.getStatement *
- ********************************/
-
-
-/**
- * Returns the statement for that ID if any, {@code null} otherwise.
- *
- * @param {number|string} id The statement id.
- * @param {xcov.Statement=} opt_val The value to return if no item is found for
- *    the given key (default is undefined).
- * @return {?xcov.Statement} The line for the given number.
- */
-xcov.SourceFile.prototype.getStatement = function(id, opt_val) {
-  /** @const */ var ret =
-      goog.object.get(this.statements_, id.toString(), opt_val || null);
+xcov.SourceFile.prototype.getCoverageInfo = function(id, opt_val) {
+  /** @const */ var ret = goog.object.get(this.coverageInfo_,
+      id.toString(), opt_val || null);
 
   goog.asserts.assert(goog.isDef(ret), 'compiler check');
   return ret;
 };
 
 
-/************************************
- * xcov.SourceFile.forEachStatement *
- ************************************/
+/***************************************
+ * xcov.SourceFile.forEachCoverageInfo *
+ ***************************************/
 
 
 /**
  * Calls a function for each statement in the file. The statements are provided
  * in the correct (increasing) order.
  *
- * @param {?function(this:T,xcov.Statement,number,?):?} f The function to
- *    call for every statement. This function takes 3 argument (the statement
- *    object, the index and the source file object). The return value is
- *    ignored.
+ * @param {?function(this:T,xcov.AbstractCoverageInfo,number,?):?} f The
+ *    function to call for every info element. This function takes 3 argument
+ *    (the coverage info  object, the index and the source file object). The
+ *    return value is ignored.
  * @param {T=} opt_obj The object to be used as the value of 'this' within f.
  * @template T
  */
-xcov.SourceFile.prototype.forEachStatement = function(f, opt_obj) {
+xcov.SourceFile.prototype.forEachCoverageInfo = function(f, opt_obj) {
   /** @const */ var callback = goog.bind(f, opt_obj);
 
-  goog.object.forEach(this.statements_, function(statement, index) {
-    callback(statement, index, this);
+  goog.object.forEach(this.coverageInfo_, function(info, index) {
+    callback(info, index, this);
   }, this /* opt_obj */);
-};
-
-
-/********************************
- * xcov.SourceFile.addStatement *
- ********************************/
-
-
-/**
- * Adds a new statement for this source file. Uses the unique ID to organize
- * internally the statement list. Overrides any previously provided statement
- * with the same ID.
- *
- * @param {!xcov.Statement} statement The statement to add to this file.
- */
-xcov.SourceFile.prototype.addStatement = function(statement) {
-  goog.object.set(this.statements_, statement.getUniqueId(), statement);
-};
-
-
-/*******************************
- * xcov.SourceFile.getDecision *
- *******************************/
-
-
-/**
- * Returns the decision for that ID if any, {@code null} otherwise.
- *
- * @param {number|string} id The decision id.
- * @param {xcov.Decision=} opt_val The value to return if no item is found for
- *    the given key (default is undefined).
- * @return {?xcov.Decision} The line for the given number.
- */
-xcov.SourceFile.prototype.getDecision = function(id, opt_val) {
-  /** @const */ var ret =
-      goog.object.get(this.decisions_, id.toString(), opt_val || null);
-
-  goog.asserts.assert(goog.isDef(ret), 'compiler check');
-  return ret;
 };
 
 
 /***********************************
- * xcov.SourceFile.forEachDecision *
+ * xcov.SourceFile.addCoverageInfo *
  ***********************************/
 
 
 /**
- * Calls a function for each decision in the file. The decisions are provided
- * in the correct (increasing) order.
+ * Adds a new coverage info object (either a statement, a decision or a
+ * condition) for this source file. Uses the unique ID to organize internally
+ * the internal list. Overrides any previously provided element with the same
+ * ID.
  *
- * @param {?function(this:T,xcov.Decision,number,?):?} f The function to
- *    call for every decision. This function takes 3 argument (the decision
- *    object, the index and the source file object). The return value is
- *    ignored.
- * @param {T=} opt_obj The object to be used as the value of 'this' within f.
- * @template T
+ * @param {!xcov.AbstractCoverageInfo} info The info element to add to this
+ *    file.
  */
-xcov.SourceFile.prototype.forEachDecision = function(f, opt_obj) {
-  /** @const */ var callback = goog.bind(f, opt_obj);
-
-  goog.object.forEach(this.decisions_, function(decision, index) {
-    callback(decision, index, this);
-  }, this /* opt_obj */);
-};
-
-
-/*******************************
- * xcov.SourceFile.addDecision *
- *******************************/
-
-
-/**
- * Adds a new decision for this source file. Uses the unique ID to organize
- * internally the decision list. Overrides any previously provided decision
- * with the same ID.
- *
- * @param {!xcov.Decision} decision The decision to add to this file.
- */
-xcov.SourceFile.prototype.addDecision = function(decision) {
-  goog.object.set(this.decisions_, decision.getUniqueId(), decision);
+xcov.SourceFile.prototype.addCoverageInfo = function(info) {
+  goog.object.set(this.coverageInfo_, info.getUniqueId(), info);
 };
 
 

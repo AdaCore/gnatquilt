@@ -4,7 +4,7 @@
 
 goog.provide('xcov.Condition');
 
-goog.require('xcov.AbstractSourceFragment');
+goog.require('xcov.AbstractCoverageInfo');
 goog.require('xcov.Range');
 
 
@@ -22,9 +22,9 @@ goog.require('xcov.Range');
  * @param {!xcov.coverage.Status} coverage The coverage state.
  * @param {!xcov.Range} range Source range.
  * @constructor
- * @extends {xcov.AbstractSourceFragment}
+ * @extends {xcov.AbstractCoverageInfo}
  */
 xcov.Condition = function(id, text, coverage, range) {
   goog.base(this, id, text, coverage, range);
 };
-goog.inherits(xcov.Condition, xcov.AbstractSourceFragment);
+goog.inherits(xcov.Condition, xcov.AbstractCoverageInfo);

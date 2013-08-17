@@ -304,7 +304,7 @@ xcov.Report.analyseStatement_ = function(sourceFile, statement) {
           new xcov.SLOC(range[0][0], range[0][1]),
           new xcov.SLOC(range[1][0], range[1][1])));
 
-  sourceFile.addStatement(s);
+  sourceFile.addCoverageInfo(s);
 };
 
 
@@ -383,5 +383,6 @@ xcov.Report.analyseDecision_ = function(sourceFile, decision) {
   goog.array.forEach(decision['conditions'],
       goog.partial(xcov.Report.analyseCondition_, d));
 
-  sourceFile.addDecision(d);
+  d.forEachCondition(sourceFile.addCoverageInfo, sourceFile);
+  sourceFile.addCoverageInfo(d);
 };

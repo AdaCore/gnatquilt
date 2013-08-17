@@ -15,6 +15,7 @@ goog.require('xcov.Report');
 goog.require('xcov.logging');
 goog.require('xcov.navigation');
 goog.require('xcov.ui.Report');
+goog.require('xcov.ui.progress');
 
 
 /*******************
@@ -84,6 +85,8 @@ xcov.analyze = function(input) {
     xcov.htmlReport = new xcov.ui.Report(report, goog.dom.getDomHelper());
 
     xcov.navigation.initialize(xcov.htmlReport.getDomHelper().getWindow());
+    xcov.ui.progress.initialize(xcov.htmlReport.getDomHelper());
+
     xcov.htmlReport.render();
   }
 };
@@ -105,6 +108,9 @@ xcov.destroy = function() {
 
   // Unregister the navigation mechanism.
   xcov.navigation.finalize();
+
+  // Remove the progress bar widget.
+  xcov.ui.progress.finalize();
 
   // Remove the report from the current document and dispose it.
   xcov.htmlReport.exitDocument();
