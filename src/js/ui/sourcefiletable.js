@@ -80,7 +80,7 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
 
   /** @const */ var table = dom.createDom(goog.dom.TagName.TABLE, tableStyle,
       dom.createDom(goog.dom.TagName.THEAD, null,
-          dom.createDom(goog.dom.TagName.TH, null, '↕ Source Filename'),
+          dom.createDom(goog.dom.TagName.TH, null, 'Source Filename'),
           dom.createDom(goog.dom.TagName.TH, countCellStyle,
               'Total lines'),
           dom.createDom(goog.dom.TagName.TH, countCellStyle,
@@ -93,7 +93,7 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
               xcov.coverage.Status.EXEMPTED_NO_VIOLATION.image),
           dom.createDom(goog.dom.TagName.TH, countCellStyle,
               xcov.coverage.Status.EXEMPTED_WITH_VIOLATION.image),
-          dom.createDom(goog.dom.TagName.TH, null, '↕ Summary')));
+          dom.createDom(goog.dom.TagName.TH, null, 'Summary')));
 
   /** @const */ var tableBody = dom.createDom(goog.dom.TagName.TBODY);
 
@@ -213,11 +213,33 @@ xcov.ui.SourceFileTable.prototype.enterDocument = function() {
   /** @const */ var filenameTitleCell = dom.getFirstElementChild(thead);
   /** @const */ var summaryTitleCell = dom.getLastElementChild(thead);
 
+  /** @const */ var totalTitleCell =
+      dom.getNextElementSibling(filenameTitleCell);
+
   this.getHandler().listen(filenameTitleCell, goog.events.EventType.CLICK,
-      goog.bind(this.onSort_, this, xcov.sort.compareSourceFileNames));
+      goog.bind(this.onSort_, this, xcov.sort.compareFileNames));
+
+  this.getHandler().listen(totalTitleCell, goog.events.EventType.CLICK,
+      goog.bind(this.onSort_, this, xcov.sort.compareLineCount));
+
+  /** @type {Element} */ var elt = dom.getNextElementSibling(totalTitleCell);
+
+  goog.object.forEach(xcov.coverage.Status, function(value) {
+    if (value === xcov.coverage.Status.NO_CODE) {
+      return;
+    }
+
+    this.getHandler().listen(elt, goog.events.EventType.CLICK,
+        goog.bind(this.onSort_, this,
+            goog.partial(xcov.sort.compareCoverageCount, value)));
+
+    elt = dom.getNextElementSibling(elt);
+  }, this /* opt_obj */);
 
   this.getHandler().listen(summaryTitleCell, goog.events.EventType.CLICK,
-      goog.bind(this.onSort_, this, xcov.sort.compareCoverageResults));
+      goog.bind(this.onSort_, this, xcov.sort.compareCoveragePercentage));
+
+  this.enableAccessibilityNavigation_();
 };
 
 
@@ -230,6 +252,34 @@ xcov.ui.SourceFileTable.prototype.enterDocument = function() {
 xcov.ui.SourceFileTable.prototype.exitDocument = function() {
   goog.base(this, 'exitDocument');
   this.getHandler().removeAll();
+};
+
+
+/**********************************************************
+ * xcov.ui.SourceFileTable.enableAccessibilityNavigation_ *
+ **********************************************************/
+
+
+/**
+ * Makes each row clickable to ease navigation.
+ * This function is expected to be called from {@code #enterDocument}.
+ *
+ * @private
+ */
+xcov.ui.SourceFileTable.prototype.enableAccessibilityNavigation_ = function() {
+  /** @const */ var dom = this.getDomHelper();
+  /** @const */ var tbody = dom.getLastElementChild(this.getElement());
+
+  goog.array.forEach(dom.getChildren(tbody), function(row) {
+    this.getHandler().listen(row, goog.events.EventType.CLICK,
+        function() {
+          /** @const */ var a =
+              dom.getFirstElementChild(dom.getFirstElementChild(row));
+
+          goog.asserts.assert('href' in a, 'Unexpected DOM element');
+          dom.getWindow().location = a['href'];
+        });
+  }, this /* opt_obj */);
 };
 
 
@@ -296,6 +346,7 @@ xcov.ui.SourceFileTable.prototype.onSort_ = function(compareFn) {
  *    criteria.
  */
 xcov.ui.SourceFileTable.prototype.sort = function(opt_compareFn) {
-  goog.array.sort(this.sources_, opt_compareFn);
-  return this.sources_;
+  /** @const */ var copy = goog.array.clone(this.sources_);
+  goog.array.sort(copy, opt_compareFn);
+  return copy;
 };

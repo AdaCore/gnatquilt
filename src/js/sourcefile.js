@@ -459,9 +459,9 @@ xcov.SourceFile.prototype.addDecision = function(decision) {
 };
 
 
-/***************************
- * xcov.SourceFile.compare *
- ***************************/
+/*************************************
+ * xcov.SourceFile.comparePercentage *
+ *************************************/
 
 
 /**
@@ -469,18 +469,21 @@ xcov.SourceFile.prototype.addDecision = function(decision) {
  *
  * @param {!xcov.SourceFile} other The other source file to compare the first
  *    one against.
+ * @param {xcov.coverage.Status=} opt_status Optional status to use for
+ *    comparison. Compares against all statuses if not specified.
  * @return {number} a negative number, zero, or a positive number depending on
  *    whether the first argument is less than, equal to, or greater than the
  *    second.
  */
-xcov.SourceFile.prototype.compare = function(other) {
-  /** @const */ var ORDERED_STATUS = [
-    xcov.coverage.Status.COVERED,
-    xcov.coverage.Status.PARTIALLY_COVERED,
-    xcov.coverage.Status.NOT_COVERED,
-    xcov.coverage.Status.EXEMPTED_NO_VIOLATION,
-    xcov.coverage.Status.EXEMPTED_WITH_VIOLATION
-  ];
+xcov.SourceFile.prototype.comparePercentage = function(other, opt_status) {
+  /** @const */ var ORDERED_STATUS = goog.isDefAndNotNull(opt_status) ?
+      [opt_status] : [
+        xcov.coverage.Status.COVERED,
+        xcov.coverage.Status.PARTIALLY_COVERED,
+        xcov.coverage.Status.NOT_COVERED,
+        xcov.coverage.Status.EXEMPTED_NO_VIOLATION,
+        xcov.coverage.Status.EXEMPTED_WITH_VIOLATION
+      ];
 
   /** @type {number} */ var result = 0;
 
@@ -492,6 +495,48 @@ xcov.SourceFile.prototype.compare = function(other) {
     if (this.getLinePercentage(status) !== other.getLinePercentage(status)) {
       result = this.getLinePercentage(status) <
           other.getLinePercentage(status) ? -1 : 1;
+    }
+  }, this /* opt_obj */);
+
+  return result;
+};
+
+
+/********************************
+ * xcov.SourceFile.compareCount *
+ ********************************/
+
+
+/**
+ * Compares this file against the provided one.
+ *
+ * @param {!xcov.SourceFile} other The other source file to compare the first
+ *    one against.
+ * @param {xcov.coverage.Status=} opt_status Optional status to use for
+ *    comparison. Compares against all statuses if not specified.
+ * @return {number} a negative number, zero, or a positive number depending on
+ *    whether the first argument is less than, equal to, or greater than the
+ *    second.
+ */
+xcov.SourceFile.prototype.compareCount = function(other, opt_status) {
+  /** @const */ var ORDERED_STATUS = goog.isDefAndNotNull(opt_status) ?
+      [opt_status] : [
+        xcov.coverage.Status.COVERED,
+        xcov.coverage.Status.PARTIALLY_COVERED,
+        xcov.coverage.Status.NOT_COVERED,
+        xcov.coverage.Status.EXEMPTED_NO_VIOLATION,
+        xcov.coverage.Status.EXEMPTED_WITH_VIOLATION
+      ];
+
+  /** @type {number} */ var result = 0;
+
+  goog.array.forEach(ORDERED_STATUS, function(status) {
+    if (result !== 0) {
+      return;
+    }
+
+    if (this.getLineCount(status) !== other.getLineCount(status)) {
+      result = this.getLineCount(status) < other.getLineCount(status) ? -1 : 1;
     }
   }, this /* opt_obj */);
 

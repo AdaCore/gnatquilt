@@ -78,6 +78,15 @@ pre { font: @xcov-font-size-monospace @xcov-font-family-monospace; }
 
 .xcov-inline-block { .inline-block; }
 
+.xcov-disable-user-selection {
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: -moz-none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
 *:first-child+html .xcov-inline-block,
 * html .xcov-inline-block { display: inline; }
 
