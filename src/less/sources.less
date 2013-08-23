@@ -1,7 +1,21 @@
-.xcov-sources {
+.xcov-total, .xcov-sources {
   &-table {
     margin-left: 5%;
     width: 90%;
+
+    &-cell {
+      span {
+        &:first-child { }
+        &:last-child {
+          .inline-block;
+
+          width: 35px;
+          font-size: 0.8em;
+          font-style: italic;
+          color: @xcov-disabled-color;
+        }
+      }
+    }
 
     &-count   {
       width: 10%;
@@ -11,17 +25,16 @@
       padding-right: 8px !important;
     }
 
-    &-summary  { width: 20%; }
-
-    &-filename {
-      padding: 0 !important;
-      a { display: block; }
-    }
+    &-summary    { width: 20%; }
+    &-filename a { display: block; }
 
     a  { display: block; }
-    th { .xcov-disable-user-selection; }
+    th {
+      .xcov-disable-user-selection;
+      // &:hover { &:before { content: '↕ '; } }
+    }
 
-    tr, th, td, &-filename a {
+    tr, th, td, &-filename {
       padding: 4px 3px;
 
       font-size: @xcov-font-size;

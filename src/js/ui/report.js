@@ -16,6 +16,7 @@ goog.require('xcov.ui.Navigation');
 goog.require('xcov.ui.SourceFile');
 goog.require('xcov.ui.SourceFileTable');
 goog.require('xcov.ui.SourceFileTableHelp');
+goog.require('xcov.ui.TotalTable');
 goog.require('xcov.ui.TraceFileTable');
 goog.require('xcov.ui.TraceTableHelp');
 
@@ -208,6 +209,11 @@ xcov.ui.Report.prototype.handleSummaryViewEvent = function(e) {
           xcov.navigation.getCanonicalTraceTableURL()),
       true /* opt_render */);
 
+  this.addChild(
+      new xcov.ui.TotalTable(
+          this.report_.getSources(),
+          this.getDomHelper()),
+      true /* opt_render */);
   this.addChild(this.getSourceFileTable(), true /* opt_render */);
   this.addChild(new xcov.ui.SourceFileTableHelp(dom), true /* opt_render */);
 
