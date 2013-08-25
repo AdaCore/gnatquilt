@@ -181,7 +181,8 @@ xcov.ui.TraceFileTable.prototype.onSort_ = function(compareFn) {
   /** @const */ var ordered = this.sort(compareFn);
 
   /** @const */ var dom = this.getDomHelper();
-  /** @const */ var tbody = dom.getLastElementChild(this.getElement());
+  /** @const */ var tbody =
+      dom.getLastElementChild(dom.getLastElementChild(this.getElement()));
 
   dom.removeChildren(tbody);
 
