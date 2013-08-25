@@ -9,6 +9,7 @@ goog.require('goog.debug.Logger');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
 goog.require('goog.ui.Component');
+goog.require('goog.userAgent');
 
 goog.require('xcov.Report');
 goog.require('xcov.style');
@@ -16,9 +17,9 @@ goog.require('xcov.ui.Navigation');
 goog.require('xcov.ui.SourceFile');
 goog.require('xcov.ui.SourceFileTable');
 goog.require('xcov.ui.SourceFileTableHelp');
+goog.require('xcov.ui.Tooltip');
 goog.require('xcov.ui.TotalTable');
 goog.require('xcov.ui.TraceFileTable');
-goog.require('xcov.ui.TraceTableHelp');
 
 
 /******************
@@ -58,6 +59,15 @@ xcov.ui.Report = function(report, opt_domHelper) {
    * @private
    */
   this.sourceFileTable_ = null;
+
+  /**
+   * @type {?xcov.ui.Tooltip} The global tooltip instance shared by all widgets
+   *    in this report. Disabled on mobile device since this does not play nice
+   *    with touch screens (i.e. hover on first click, actual click on second
+   *    click).
+   */
+  this.tooltip = goog.userAgent.MOBILE ? null :
+      new xcov.ui.Tooltip(this.getDomHelper());
 };
 goog.inherits(xcov.ui.Report, goog.ui.Component);
 
@@ -247,7 +257,6 @@ xcov.ui.Report.prototype.handleTracesViewEvent = function(e) {
   this.addChild(
       new xcov.ui.TraceFileTable(this.report_.getTraces(), dom),
       true /* opt_render */);
-  this.addChild(new xcov.ui.TraceTableHelp(dom), true /* opt_render */);
 
   this.logger_.info('Navigated to traces table.');
 };

@@ -193,7 +193,7 @@ xcov.ui.TotalTable.prototype.createCoverageSummaryDom_ = function() {
       /** @const */ var cell = dom.createDom(goog.dom.TagName.TD, {
         'class': xcov.getCssName(style, status.style),
         'width': goog.string.buildString(percent, '%'),
-        'title': goog.string.buildString(percent, '% ', status.image)
+        'data-tooltip': goog.string.buildString(percent, '% ', status.image)
       });
 
       dom.appendChild(row, cell);

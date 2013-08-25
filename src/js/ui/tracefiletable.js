@@ -65,10 +65,18 @@ xcov.ui.TraceFileTable.prototype.createDom = function() {
 
   /** @const */ var table = dom.createDom(goog.dom.TagName.TABLE, tableCss,
       dom.createDom(goog.dom.TagName.THEAD, null,
-          dom.createDom(goog.dom.TagName.TH, null, 'Trace Filename'),
-          dom.createDom(goog.dom.TagName.TH, null, 'Program'),
-          dom.createDom(goog.dom.TagName.TH, null, 'Date'),
-          dom.createDom(goog.dom.TagName.TH, null, 'Tag')));
+          dom.createDom(goog.dom.TagName.TH, {
+            'data-tooltip': '<i>The name of the trace file</i>'
+          }, 'Trace Filename'),
+          dom.createDom(goog.dom.TagName.TH, {
+            'data-tooltip': '<i>The name of the executable used</i>'
+          }, 'Program'),
+          dom.createDom(goog.dom.TagName.TH, {
+            'data-tooltip': '<i>When it has been generated</i>'
+          }, 'Date'),
+          dom.createDom(goog.dom.TagName.TH, {
+            'data-tooltip': '<i>The tag associated with this run, if any</i>'
+          }, 'Tag')));
 
   /** @const */ var tableBody = dom.createDom(goog.dom.TagName.TBODY);
 

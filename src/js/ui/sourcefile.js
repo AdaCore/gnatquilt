@@ -19,6 +19,7 @@ goog.require('goog.ui.Zippy');
 goog.require('xcov.SourceFile');
 goog.require('xcov.SourceLine');
 goog.require('xcov.style');
+goog.require('xcov.ui.Tooltip');
 goog.require('xcov.ui.progress');
 
 
@@ -424,6 +425,8 @@ xcov.ui.SourceFile.Line_.prototype.createDom = function() {
           dom.createDom(goog.dom.TagName.PRE, null,
               dom.htmlToDocumentFragment(status.displaySymbol)));
 
+  xcov.ui.Tooltip.attach(coverageSymbolDom, status.image);
+
   /** @const */ var textDom =
       dom.createDom(goog.dom.TagName.DIV, goog.getCssName(style, 'text'),
           dom.createDom(goog.dom.TagName.DIV, goog.getCssName(style, 'code'),
@@ -432,11 +435,13 @@ xcov.ui.SourceFile.Line_.prototype.createDom = function() {
   if (this.source_.hasMessage(this.line_.getNumber())) {
     /** @const */ var mStyle = goog.getCssName(style, 'message');
 
-    dom.insertChildAt(lineNoDom,
-        dom.createDom(goog.dom.TagName.SPAN,
-            goog.getCssName(mStyle, 'mark'),
-            dom.htmlToDocumentFragment('&#9002;')),
-        0 /* index */);
+    /** @const */ var markDom = dom.createDom(goog.dom.TagName.SPAN,
+        goog.getCssName(mStyle, 'mark'),
+        dom.htmlToDocumentFragment('&#9002;'));
+
+    xcov.ui.Tooltip.attach(markDom, 'Click to expand');
+
+    dom.insertChildAt(lineNoDom, markDom, 0 /* index */);
 
     this.messageDom_ = dom.createDom(goog.dom.TagName.DIV, mStyle);
 

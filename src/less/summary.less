@@ -1,11 +1,13 @@
 .xcov-summary {
   width:  100%;
-  height: 10px;
+  height: 12px;
 
   margin: 0;
 
   tbody tr { border: @xcov-summary-table-border; }
-  tbody td { border: none; padding: 0 !important; margin: 0 !important; }
+  tbody td { border: none; }
+
+  tbody tr, tbody td { padding: 0 !important; margin: 0 !important; }
 
   &-no-code                 { /* empty */ }
   &-covered                 { background-color: @xcov-summary-covered;                 }

@@ -90,6 +90,20 @@ pre { font: @xcov-font-size-monospace @xcov-font-family-monospace; }
             user-select: none;
 }
 
+.xcov-box-shadow (@x: 0, @y: 0, @blur: 1px, @spread: 1px,
+                  @color: @shadow-color-default)
+{
+  -webkit-box-shadow: @arguments;
+     -moz-box-shadow: @arguments;
+          box-shadow: @arguments;
+}
+
+.xcov-border-radius(@radius: 1px) {
+  -webkit-border-radius: @radius;
+     -moz-border-radius: @radius;
+          border-radius: @radius;
+}
+
 *:first-child+html .xcov-inline-block,
 * html .xcov-inline-block { display: inline; }
 
@@ -102,4 +116,5 @@ pre { font: @xcov-font-size-monospace @xcov-font-family-monospace; }
 @import "source";
 @import "sources";
 @import "summary";
+@import "tooltip";
 @import "traces";
