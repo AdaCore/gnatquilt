@@ -1,11 +1,12 @@
 To Do items for the version 1.0:
 ################################
 
-    - Revamp TraceTable widget.
     - Add previous & next files in SourceFile widget.
+    - Write Python bundle script.
 
 Completed items:
 ################
 
     - Revamp SourceListTable cell.
+    - Revamp TraceTable widget.
     - Add total table widget.
