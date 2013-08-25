@@ -29,32 +29,38 @@ xcov.coverage.Status = {
   NO_CODE: {
     image: 'No Code',
     style: 'no-code',
-    symbol: '.'
+    symbol: '.',
+    displaySymbol: '·'
   },
   COVERED: {
     image: 'Covered',
     style: 'covered',
-    symbol: '+'
+    symbol: '+',
+    displaySymbol: '+'
   },
   PARTIALLY_COVERED: {
     image: 'Partially Covered',
     style: 'partially-covered',
-    symbol: '!'
+    symbol: '!',
+    displaySymbol: '!'
   },
   NOT_COVERED: {
     image: 'Not Covered',
     style: 'not-covered',
-    symbol: '-'
+    symbol: '-',
+    displaySymbol: '-'
   },
   EXEMPTED_NO_VIOLATION: {
     image: 'Exempted, No Violation',
     style: 'exempted-no-violation',
-    symbol: '#'
+    symbol: '#',
+    displaySymbol: '#'
   },
   EXEMPTED_WITH_VIOLATION: {
     image: 'Exempted, With Violations',
     style: 'exempted-with-violation',
-    symbol: '*'
+    symbol: '*',
+    displaySymbol: '*'
   }
 };
 

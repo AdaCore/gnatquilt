@@ -286,11 +286,9 @@ xcov.ui.SourceFile.prototype.exitDocument = function() {
  *    lines that should be ignored during the processing.
  */
 xcov.ui.SourceFile.prototype.setAllExpanded = function(expanded, opt_exempted) {
-  if (expanded) {
-    // De-activate auto-roll when expanding all messages to avoid an infinite
-    // loop of goog.ui.Zippy.Events.TOGGLE events.
-    this.setAutoRoll(false);
-  }
+  // De-activate auto-roll when expanding all messages and activate in on global
+  // collapse.
+  this.setAutoRoll(!expanded);
 
   goog.object.forEach(this.zippies_,
       /**
@@ -423,7 +421,8 @@ xcov.ui.SourceFile.Line_.prototype.createDom = function() {
 
   /** @const */ var coverageSymbolDom =
       dom.createDom(goog.dom.TagName.DIV, goog.getCssName(style, 'coverage'),
-          dom.createDom(goog.dom.TagName.PRE, null, status.symbol));
+          dom.createDom(goog.dom.TagName.PRE, null,
+              dom.htmlToDocumentFragment(status.displaySymbol)));
 
   /** @const */ var textDom =
       dom.createDom(goog.dom.TagName.DIV, goog.getCssName(style, 'text'),
@@ -435,7 +434,8 @@ xcov.ui.SourceFile.Line_.prototype.createDom = function() {
 
     dom.insertChildAt(lineNoDom,
         dom.createDom(goog.dom.TagName.SPAN,
-            goog.getCssName(mStyle, 'mark'), '!'),
+            goog.getCssName(mStyle, 'mark'),
+            dom.htmlToDocumentFragment('&#9002;')),
         0 /* index */);
 
     this.messageDom_ = dom.createDom(goog.dom.TagName.DIV, mStyle);
