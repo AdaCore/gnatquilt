@@ -9,6 +9,7 @@ goog.require('goog.Disposable');
 goog.require('goog.asserts');
 goog.require('goog.object');
 
+goog.require('xcov.File');
 goog.require('xcov.Message');
 goog.require('xcov.SourceLine');
 goog.require('xcov.Statement');
@@ -28,7 +29,7 @@ goog.require('xcov.coverage');
  * @param {string} coverageLevel The coverage level for the analysis of this
  *    file.
  * @constructor
- * @extends {goog.Disposable}
+ * @extends {xcov.File}
  */
 xcov.SourceFile = function(filename, coverageLevel) {
   goog.base(this);
@@ -82,7 +83,7 @@ xcov.SourceFile = function(filename, coverageLevel) {
    */
   this.messages_ = {};
 };
-goog.inherits(xcov.SourceFile, goog.Disposable);
+goog.inherits(xcov.SourceFile, xcov.File);
 
 
 /*******************************
@@ -90,9 +91,7 @@ goog.inherits(xcov.SourceFile, goog.Disposable);
  *******************************/
 
 
-/**
- * @return {string} The path to the source file.
- */
+/** @inheritDoc */
 xcov.SourceFile.prototype.getFilename = function() {
   return goog.string.path.normalizePath(this.filename_);
 };

@@ -17,17 +17,37 @@ goog.require('xcov.SourceFile');
 
 
 /**
- * Compares two source files using their filename.
+ * Compares two files using their filename.
  *
- * @param {!xcov.SourceFile} file The source file.
- * @param {!xcov.SourceFile} other The other source file to compare the first
- *    one against.
+ * @param {!xcov.File} file The file.
+ * @param {!xcov.File} other The other file to compare the first one against.
  * @return {number} a negative number, zero, or a positive number depending on
  *    whether the first argument is less than, equal to, or greater than the
  *    second.
  */
 xcov.sort.compareFileNames = function(file, other) {
   return goog.string.numerateCompare(file.getFilename(), other.getFilename());
+};
+
+
+/****************************************
+ * xcov.sort.compareTraceGenerationDate *
+ ****************************************/
+
+
+/**
+ * Compares two trace files using their generation date.
+ *
+ * @param {!xcov.TraceFile} file The file.
+ * @param {!xcov.TraceFile} other The other file to compare the first one
+ *    against.
+ * @return {number} a negative number, zero, or a positive number depending on
+ *    whether the first argument is less than, equal to, or greater than the
+ *    second.
+ */
+xcov.sort.compareTraceGenerationDate = function(file, other) {
+  return goog.string.numerateCompare(file.getFormatedDate(),
+      other.getFormatedDate());
 };
 
 

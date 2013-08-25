@@ -9,6 +9,8 @@ goog.require('goog.Disposable');
 goog.require('goog.debug.Logger');
 goog.require('goog.string.path');
 
+goog.require('xcov.File');
+
 
 /******************
  * xcov.TraceFile *
@@ -28,7 +30,7 @@ goog.require('goog.string.path');
  *    file (its creation).
  * @param {string=} opt_tag Optional tag provided by the user before generation.
  * @constructor
- * @extends {goog.Disposable}
+ * @extends {xcov.File}
  */
 xcov.TraceFile = function(filename, program, date, opt_tag) {
   goog.base(this);
@@ -68,7 +70,7 @@ xcov.TraceFile = function(filename, program, date, opt_tag) {
    */
   this.tag_ = opt_tag || null;
 };
-goog.inherits(xcov.TraceFile, goog.Disposable);
+goog.inherits(xcov.TraceFile, xcov.File);
 
 
 /******************************
@@ -76,9 +78,7 @@ goog.inherits(xcov.TraceFile, goog.Disposable);
  ******************************/
 
 
-/**
- * @return {string} The path to the trace file.
- */
+/** @inheritDoc */
 xcov.TraceFile.prototype.getFilename = function() {
   return goog.string.path.normalizePath(this.filename_);
 };

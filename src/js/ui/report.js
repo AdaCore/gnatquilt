@@ -19,7 +19,7 @@ goog.require('xcov.ui.SourceFileTable');
 goog.require('xcov.ui.SourceFileTableHelp');
 goog.require('xcov.ui.Tooltip');
 goog.require('xcov.ui.TotalTable');
-goog.require('xcov.ui.TraceFileTable');
+goog.require('xcov.ui.TraceFileList');
 
 
 /******************
@@ -255,7 +255,7 @@ xcov.ui.Report.prototype.handleTracesViewEvent = function(e) {
       true /* opt_render */);
 
   this.addChild(
-      new xcov.ui.TraceFileTable(this.report_.getTraces(), dom),
+      new xcov.ui.TraceFileList(this.report_.getTraces(), dom),
       true /* opt_render */);
 
   this.logger_.info('Navigated to traces table.');
