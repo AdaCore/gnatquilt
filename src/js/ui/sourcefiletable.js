@@ -188,6 +188,14 @@ xcov.ui.SourceFileTable.createCoverageSummaryDom_ = function(source, dom) {
     }
   });
 
+  if (dom.getChildren(row).length === 0) {
+    dom.appendChild(row, dom.createDom(goog.dom.TagName.TD, {
+      'class': goog.getCssName(style, 'not-applicable'),
+      'width': '100%',
+      'data-tooltip': 'Not Applicable'
+    }));
+  }
+
   return dom.createDom(goog.dom.TagName.TABLE, style,
       dom.createDom(goog.dom.TagName.TBODY, null, row));
 };
