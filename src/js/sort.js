@@ -99,6 +99,27 @@ xcov.sort.compareCoverageCount = function(status, file, other) {
 };
 
 
+/*********************************************
+ * xcov.sort.compareCoveragePercentageStatus *
+ *********************************************/
+
+
+/**
+ * Compares two files using the results for the given status.
+ *
+ * @param {!xcov.coverage.Status} status The status to use for comparison.
+ * @param {!xcov.SourceFile} file The source file.
+ * @param {!xcov.SourceFile} other The other source file to compare the first
+ *    one against.
+ * @return {number} a negative number, zero, or a positive number depending on
+ *    whether the first argument is less than, equal to, or greater than the
+ *    second.
+ */
+xcov.sort.compareCoverageStatusPercentage = function(status, file, other) {
+  return file.comparePercentage(other, status);
+};
+
+
 /***************************************
  * xcov.sort.compareCoveragePercentage *
  ***************************************/

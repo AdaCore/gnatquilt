@@ -113,7 +113,8 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
 
       return dom.createDom(goog.dom.TagName.DIV, cellStyle,
           dom.createDom(goog.dom.TagName.SPAN, null, count.toString()),
-          dom.createDom(goog.dom.TagName.SPAN, null, percent.toString() + '%'));
+          dom.createDom(goog.dom.TagName.SPAN, null,
+              (percent || 0).toString() + '%'));
     }
 
     /** @const */ var row = dom.createDom(goog.dom.TagName.TR, rowStyle,
@@ -224,7 +225,7 @@ xcov.ui.SourceFileTable.prototype.enterDocument = function() {
 
     this.getHandler().listen(elt, goog.events.EventType.CLICK,
         goog.bind(this.onSort_, this,
-            goog.partial(xcov.sort.compareCoverageCount, value)));
+            goog.partial(xcov.sort.compareCoverageStatusPercentage, value)));
 
     elt = dom.getNextElementSibling(elt);
   }, this /* opt_obj */);

@@ -121,7 +121,8 @@ xcov.ui.TotalTable.prototype.createDom = function() {
 
     return dom.createDom(goog.dom.TagName.DIV, cellStyle,
         dom.createDom(goog.dom.TagName.SPAN, null, count.toString()),
-        dom.createDom(goog.dom.TagName.SPAN, null, percent.toString() + '%'));
+        dom.createDom(goog.dom.TagName.SPAN, null,
+            (percent || 0).toString() + '%'));
   }, this /* opt_handler */);
 
   /** @const */ var table = dom.createDom(goog.dom.TagName.TABLE, tableStyle,
