@@ -468,4 +468,4 @@ if __name__ == '__main__':
     parser.parse(os.path.join(report_dir, 'index.xml'))
     print repr(handler)
 
-    sys.exit(1)
+    sys.exit(0)
