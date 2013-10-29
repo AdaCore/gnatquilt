@@ -5,7 +5,6 @@ all: deps check bundle
 bundle: js css
 	rm -rf $(BUNDLE)
 	mkdir -p $(BUNDLE)
-	cp $(TEMPLATES)/index.html $(BUNDLE)/.
 	cp $(JS_TARGET) $(BUNDLE)/.
 	cp $(CSS_TARGET) $(BUNDLE)/.
 
