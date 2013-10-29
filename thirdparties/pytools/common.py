@@ -988,7 +988,7 @@ class InteractiveLogger(object):
         self.__original_msg = message
 
         self.__prefix = '%s.%s' % (self.__tool, self.__step)
-        self.__msg_length = 50
+        self.__msg_length = 48
         self.__msg = Console.truncate(self.__original_msg, self.__msg_length)
         self.__format_prefix = '%s%-20s%s %-' + str(self.__msg_length) + 's  '
 
@@ -998,7 +998,7 @@ class InteractiveLogger(object):
     def started(self):
         """Action started."""
 
-        f = self.__format_prefix + '[%s .. %s]'
+        f = self.__format_prefix + '[%s  ..  %s]'
 
         # Save the values for use in post_step
 
@@ -1017,7 +1017,7 @@ class InteractiveLogger(object):
     def skipped(self):
         """Action skipped."""
 
-        f = self.__format_prefix + '[%s OK %s]'
+        f = self.__format_prefix + '[%s  OK  %s]'
 
         Console.out(f % (Console.fg.MAGENTA, self.__prefix,
                          Console.fg.RESET, self.__msg,
@@ -1030,16 +1030,16 @@ class InteractiveLogger(object):
         if self.__log_length and not Console.is_verbose():
             Console.clear(self.__log_length)
 
-        f = self.__format_prefix + '[%s %0.1f%% %s]'
+        f = self.__format_prefix + '[%s %3d%% %s]'
 
         self.__log_length = len(f % (Console.NO_COLOR, self.__prefix,
                                      Console.NO_COLOR, self.__msg,
-                                     Console.NO_COLOR, percent,
+                                     Console.NO_COLOR, int(percent),
                                      Console.NO_COLOR))
 
         Console.out(f % (Console.fg.MAGENTA, self.__prefix,
                          Console.fg.RESET, self.__msg,
-                         Console.fg.BLUE, percent, Console.fg.RESET),
+                         Console.fg.BLUE, int(percent), Console.fg.RESET),
                     newline=Console.is_verbose())
 
     def completed(self, success=True):
@@ -1051,7 +1051,7 @@ class InteractiveLogger(object):
         color = Console.fg.GREEN if success else Console.fg.RED
         status = 'OK' if success else 'KO'
 
-        f = self.__format_prefix + '[%s %s %s]'
+        f = self.__format_prefix + '[%s  %s  %s]'
 
         Console.out(f % (Console.fg.MAGENTA, self.__prefix,
                          Console.fg.RESET, self.__msg,
