@@ -18,22 +18,26 @@ $(BUILD)/.3rdparties:
 check: $(BUILD)/.gjslint
 
 $(BUILD)/.gjslint: $(JS_SOURCES) $(BUILD)/.3rdparties
+	mkdir -p $(BUILD)/obj
 	$(JS_LINTER) $(JS_LINTER_OPTIONS) $(SOURCE_DIR)/js
 	touch "$@"
 
 deps: $(JS_DEPS_TARGET)
 
 $(JS_DEPS_TARGET): $(JS_SOURCES) $(BUILD)/.3rdparties
+	mkdir -p $(BUILD)/obj
 	$(JS_DEPS_GENERATOR) $(JS_DEPS_GENERATOR_OPTIONS) "--output_file=$@"
 
 js: $(JS_TARGET)
 
 $(JS_TARGET): $(JS_SOURCES) $(BUILD)/.3rdparties
+	mkdir -p $(BUILD)/obj
 	$(JS_COMPILER) $(JS_COMPILER_OPTIONS) "--output_file=$@"
 
 css: $(CSS_TARGET)
 
 $(CSS_TARGET): $(LESS_SOURCE_MAIN) $(LESS_SOURCES) $(BUILD)/.3rdparties
+	mkdir -p $(BUILD)/obj
 	$(LESS_COMPILER) "$<" "$@" $(LESS_COMPILER_OPTIONS)
 
 clean:
