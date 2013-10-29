@@ -1,8 +1,8 @@
 include Makefile.conf
 
-all: deps bundle
+all: deps check bundle
 
-bundle: check js css
+bundle: js css
 	rm -rf $(BUNDLE)
 	mkdir -p $(BUNDLE)
 	cp $(TEMPLATES)/index.html $(BUNDLE)/.
