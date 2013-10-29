@@ -998,7 +998,7 @@ class InteractiveLogger(object):
     def started(self):
         """Action started."""
 
-        f = self.__format_prefix + '[%s  ..  %s]'
+        f = self.__format_prefix + '[%s  --  %s]'
 
         # Save the values for use in post_step
 
