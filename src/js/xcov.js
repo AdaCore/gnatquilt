@@ -128,8 +128,8 @@ xcov.destroy = function() {
 // fields of the exported object *will* be obfuscated.
 
 // Use this symbol in the HTML document to generate the report.
-goog.exportSymbol('xcov.analyse', xcov.analyze);
+goog.exportSymbol('gnatcov.analyse', xcov.analyze);
 
 // Use this symbol in the HTML document to destroy the HTML report once
 // rendered.
-goog.exportSymbol('xcov.destroy', xcov.destroy);
+goog.exportSymbol('gnatcov.destroy', xcov.destroy);
