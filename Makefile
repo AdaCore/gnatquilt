@@ -2,50 +2,50 @@ include Makefile.conf
 
 all: deps check bundle
 
-bundle: js css
-	rm -rf $(BUNDLE)
-	mkdir -p $(BUNDLE)
-	cp $(JS_TARGET) $(BUNDLE)/.
-	cp $(CSS_TARGET) $(BUNDLE)/.
+bundle: $(BUILD)/obj/$(JS_TARGET_VERSION) $(BUILD)/obj/$(CSS_TARGET_VERSION)
+	$(RMDIR) $(BUNDLE)
+	$(MKDIR) $(BUNDLE)
+	$(CP) $(BUILD)/obj/$(JS_TARGET_VERSION) $(BUNDLE)/$(JS_TARGET)
+	$(CP) $(BUILD)/obj/$(CSS_TARGET_VERSION) $(BUNDLE)/$(CSS_TARGET)
 
 3rdparties: $(BUILD)/.3rdparties
 
 $(BUILD)/.3rdparties:
 	(cd thirdparties && python thirdparties.py)
-	mkdir -p $(BUILD)
+	$(MKDIR) $(BUILD)
 	touch "$@"
 
 check: $(BUILD)/.gjslint
 
 $(BUILD)/.gjslint: $(JS_SOURCES) $(BUILD)/.3rdparties
-	mkdir -p $(BUILD)/obj
+	$(MKDIR) $(BUILD)/obj
 	$(JS_LINTER) $(JS_LINTER_OPTIONS) $(SOURCE_DIR)/js
 	touch "$@"
 
-deps: $(JS_DEPS_TARGET)
+deps: $(BUILD)/obj/$(JS_DEPS_TARGET)
 
-$(JS_DEPS_TARGET): $(JS_SOURCES) $(BUILD)/.3rdparties
-	mkdir -p $(BUILD)/obj
+$(BUILD)/obj/$(JS_DEPS_TARGET): $(JS_SOURCES) $(BUILD)/.3rdparties
+	$(MKDIR) $(BUILD)/obj
 	$(JS_DEPS_GENERATOR) $(JS_DEPS_GENERATOR_OPTIONS) "--output_file=$@"
 
-js: $(JS_TARGET)
+js: $(BUILD)/obj/$(JS_TARGET_VERSION)
 
-$(JS_TARGET): $(JS_SOURCES) $(BUILD)/.3rdparties
-	mkdir -p $(BUILD)/obj
+$(BUILD)/obj/$(JS_TARGET_VERSION): $(JS_SOURCES) $(BUILD)/.3rdparties
+	$(MKDIR) $(BUILD)/obj
 	$(JS_COMPILER) $(JS_COMPILER_OPTIONS) "--output_file=$@"
 
-css: $(CSS_TARGET)
+css: $(BUILD)/obj/$(CSS_TARGET_VERSION)
 
-$(CSS_TARGET): $(LESS_SOURCE_MAIN) $(LESS_SOURCES) $(BUILD)/.3rdparties
-	mkdir -p $(BUILD)/obj
+$(BUILD)/obj/$(CSS_TARGET_VERSION): $(LESS_SOURCE_MAIN) $(LESS_SOURCES) $(BUILD)/.3rdparties
+	$(MKDIR) $(BUILD)/obj
 	$(LESS_COMPILER) "$<" "$@" $(LESS_COMPILER_OPTIONS)
 
 clean:
-	rm -f $(CSS_TARGET)
-	rm -f $(JS_TARGET)
-	rm -f $(JS_DEPS_TARGET)
+	$(RM) $(BUILD)/obj/$(CSS_TARGET_VERSION)
+	$(RM) $(BUILD)/obj/$(JS_TARGET_VERSION)
+	$(RM) $(BUILD)/obj/$(JS_DEPS_TARGET)
 
 distclean: clean
-	rm -rf $(BUILD)
+	$(RMDIR) $(BUILD)
 	(cd thirdparties && python thirdparties.py distclean)
 	find . -type f -name '*.pyc' -exec rm -f {} \;
