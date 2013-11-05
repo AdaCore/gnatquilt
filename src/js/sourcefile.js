@@ -296,10 +296,14 @@ xcov.SourceFile.prototype.getLineCount = function(opt_coverageStatus) {
  */
 xcov.SourceFile.prototype.getLinePercentage = function(coverageStatus) {
   /** @const */ var relevantLineCount = this.getLineCount();
-  goog.asserts.assert(relevantLineCount !== 0, 'unexpected division by 0');
+  /** @const */ var lineCount = this.getLineCount(coverageStatus);
 
-  return Math.round(this.getLineCount(coverageStatus) * 100 /
-      relevantLineCount);
+  if (relevantLineCount === 0) {
+    goog.asserts.assert(lineCount === 0, 'unexpected line count: 0');
+    return 0;
+  }
+
+  return Math.round(lineCount * 100 / relevantLineCount);
 };
 
 
