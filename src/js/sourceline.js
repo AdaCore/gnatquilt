@@ -96,7 +96,7 @@ xcov.SourceLine.prototype.getCoverage = function() {
  * @return {string} The line content.
  */
 xcov.SourceLine.prototype.getText = function() {
-  return this.text_;
+  return goog.string.unescapeEntities(this.text_);
 };
 
 
