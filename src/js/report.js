@@ -19,6 +19,7 @@ goog.require('xcov.Message');
 goog.require('xcov.SourceFile');
 goog.require('xcov.Statement');
 goog.require('xcov.TraceFile');
+goog.require('xcov.asserts');
 
 
 /***************
@@ -150,14 +151,13 @@ xcov.Report.prototype.analyze = function(input) {
     return false;
   }
 
-  goog.asserts.assert('coverage_level' in input,
-      'missing "coverage_level" attribute');
+  xcov.asserts.ensureAttribute('coverage_level', input, 'root');
   this.coverageLevel_ = input['coverage_level'];
 
-  goog.asserts.assert('traces' in input, 'missing "traces" attribute');
+  xcov.asserts.ensureAttribute('traces', input, 'root');
   this.analyseTracesAttr_(input['traces']);
 
-  goog.asserts.assert('sources' in input, 'missing "sources" attribute');
+  xcov.asserts.ensureAttribute('sources', input, 'root');
   this.analyseSourcesAttr_(input['sources']);
 
   return true;
@@ -178,23 +178,19 @@ xcov.Report.prototype.analyze = function(input) {
  */
 xcov.Report.prototype.analyseTracesAttr_ = function(traces) {
   goog.array.forEach(traces, function(trace) {
-    goog.asserts.assert('filename' in trace,
-        'missing "filename" attribute of trace');
+    xcov.asserts.ensureAttribute('filename', trace, 'trace');
 
     /** @const */ var filename = trace['filename'];
 
-    goog.asserts.assert('program' in trace,
-        'missing "program" attribute of trace');
+    xcov.asserts.ensureAttribute('program', trace, 'trace');
 
     /** @const */ var program = trace['program'];
 
-    goog.asserts.assert('date' in trace,
-        'missing "date" attribute of trace');
+    xcov.asserts.ensureAttribute('date', trace, 'trace');
 
     /** @const */ var date = new Date(trace['date']);
 
-    goog.asserts.assert('tag' in trace,
-        'missing "tag" attribute of trace');
+    xcov.asserts.ensureAttribute('tag', trace, 'trace');
 
     /** @const */ var tag = trace['tag'];
 
@@ -217,50 +213,45 @@ xcov.Report.prototype.analyseTracesAttr_ = function(traces) {
  */
 xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
   goog.array.forEach(sources, function(source) {
-    goog.asserts.assert('filename' in source,
-        'missing "filename" attribute of source');
 
-    goog.asserts.assert('coverage_level' in source,
-        'missing "coverage_level" attribute of source');
+    xcov.asserts.ensureAttribute('filename', source, 'source');
+    xcov.asserts.ensureAttribute('coverage_level', source, 'source');
 
     /** @const */ var sourceFile =
         new xcov.SourceFile(source['filename'], source['coverage_level']);
 
     goog.array.forEach(source['mappings'], function(mapping) {
-      goog.asserts.assert('coverage' in mapping,
-          'missing "coverage" attribute of mapping');
-
-      goog.asserts.assert('line' in mapping,
-          'missing "line" attribute of mapping');
+      xcov.asserts.ensureAttribute('coverage', mapping, 'mapping');
+      xcov.asserts.ensureAttribute('line', mapping, 'mapping');
 
       /** @const */ var line = mapping['line'];
+
+      xcov.asserts.ensureAttribute('number', line, 'line');
+
       /** @const */ var lineno = line['number'];
 
       /** @const */ var sourceLine = new xcov.SourceLine(lineno,
           xcov.coverage.fromSymbol(mapping['coverage']), line['src']);
 
-      goog.asserts.assert('message' in mapping,
-          'missing "message" attribute of mapping');
+      if ('message' in mapping) {
+        /** @const */ var message = mapping['message'];
 
-      /** @const */ var message = mapping['message'];
-
-      if (!goog.object.isEmpty(message)) {
-        sourceFile.addMessage(lineno,
-            new xcov.Message(message['kind'], message['message'],
-                message['sco']));
+        if (!goog.object.isEmpty(message)) {
+          sourceFile.addMessage(lineno,
+              new xcov.Message(message['kind'], message['message'],
+                  message['sco']));
+        }
       }
 
-      goog.asserts.assert('statements' in mapping,
-          'missing "statements" attribute of mapping');
+      if ('statements' in mapping) {
+        goog.array.forEach(mapping['statements'],
+            goog.partial(xcov.Report.analyseStatement_, sourceFile));
+      }
 
-      goog.array.forEach(mapping['statements'],
-          goog.partial(xcov.Report.analyseStatement_, sourceFile));
-
-      goog.asserts.assert('decisions' in mapping,
-          'missing "decisions" attribute of mapping');
-
-      goog.array.forEach(mapping['decisions'],
-          goog.partial(xcov.Report.analyseDecision_, sourceFile));
+      if ('decisions' in mapping) {
+        goog.array.forEach(mapping['decisions'],
+            goog.partial(xcov.Report.analyseDecision_, sourceFile));
+      }
 
       sourceFile.addLine(sourceLine);
     });
@@ -283,17 +274,10 @@ xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
  * @private
  */
 xcov.Report.analyseStatement_ = function(sourceFile, statement) {
-  goog.asserts.assert('coverage' in statement,
-      'missing "coverage" attribute of statement');
-
-  goog.asserts.assert('id' in statement,
-      'missing "id" attribute of statement');
-
-  goog.asserts.assert('range' in statement,
-      'missing "range" attribute of statement');
-
-  goog.asserts.assert('text' in statement,
-      'missing "text" attribute of statement');
+  xcov.asserts.ensureAttribute('coverage', statement, 'statement');
+  xcov.asserts.ensureAttribute('id', statement, 'statement');
+  xcov.asserts.ensureAttribute('range', statement, 'statement');
+  xcov.asserts.ensureAttribute('text', statement, 'statement');
 
   /** @const */ var range = statement['range'];
 
@@ -321,17 +305,10 @@ xcov.Report.analyseStatement_ = function(sourceFile, statement) {
  * @private
  */
 xcov.Report.analyseCondition_ = function(decision, condition) {
-  goog.asserts.assert('coverage' in condition,
-      'missing "coverage" attribute of condition');
-
-  goog.asserts.assert('id' in condition,
-      'missing "id" attribute of condition');
-
-  goog.asserts.assert('range' in condition,
-      'missing "range" attribute of condition');
-
-  goog.asserts.assert('text' in condition,
-      'missing "text" attribute of condition');
+  xcov.asserts.ensureAttribute('coverage', condition, 'condition');
+  xcov.asserts.ensureAttribute('id', condition, 'condition');
+  xcov.asserts.ensureAttribute('range', condition, 'condition');
+  xcov.asserts.ensureAttribute('text', condition, 'condition');
 
   /** @const */ var range = condition['range'];
 
@@ -359,17 +336,10 @@ xcov.Report.analyseCondition_ = function(decision, condition) {
  * @private
  */
 xcov.Report.analyseDecision_ = function(sourceFile, decision) {
-  goog.asserts.assert('coverage' in decision,
-      'missing "coverage" attribute of decision');
-
-  goog.asserts.assert('id' in decision,
-      'missing "id" attribute of decision');
-
-  goog.asserts.assert('range' in decision,
-      'missing "range" attribute of decision');
-
-  goog.asserts.assert('text' in decision,
-      'missing "text" attribute of decision');
+  xcov.asserts.ensureAttribute('coverage', decision, 'decision');
+  xcov.asserts.ensureAttribute('id', decision, 'decision');
+  xcov.asserts.ensureAttribute('range', decision, 'decision');
+  xcov.asserts.ensureAttribute('text', decision, 'decision');
 
   /** @const */ var range = decision['range'];
 
