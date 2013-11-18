@@ -1603,7 +1603,7 @@ def _set_up(cmdline):
     """
 
     Console.init(tool='3rdparty')
-    Console.log_start('Qualifying Machine Thirdparties')
+    Console.log_start('GNATquilt Thirdparties')
 
     # Set up the KeyboardInterrupt handler
     signal.signal(signal.SIGINT, _sigint_handler)
