@@ -1,0 +1,32 @@
+<!doctype html>
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <title>GNATcoverage Report - Branch</title>
+
+    <!-- Application Style -->
+    <link rel="stylesheet/less" type="text/css" href="../../../../src/less/xcov.less" />
+    <script type="text/javascript" src="../../../../thirdparties/tooling/dist/less-1.4.1.min.js"></script>
+
+    <!-- Application Code -->
+    <script type="text/javascript" src="../../../../thirdparties/tooling/closure/closure/goog/base.js"></script>
+    <script type="text/javascript" src="../../../../build/obj/gnatcov-dhtml-deps.js"></script>
+    <script type="text/javascript" src="gnatcov-report.json"></script>
+    <script type="text/javascript" src="../../../../src/js/xcov.js"></script>
+  </head>
+  <body>
+
+    <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+    <noscript>
+      <div>
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+      </div>
+    </noscript>
+
+    <script>gnatcov.analyse(REPORT);</script>
+
+  </body>
+</html>
