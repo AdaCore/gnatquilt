@@ -16,6 +16,9 @@ goog.require('goog.string.Unicode');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.Zippy');
 
+goog.require('xcov.Instruction');
+goog.require('xcov.InstructionBlock');
+goog.require('xcov.InstructionSet');
 goog.require('xcov.SourceFile');
 goog.require('xcov.SourceLine');
 goog.require('xcov.style');
@@ -67,7 +70,7 @@ xcov.ui.SourceFile = function(source, opt_domHelper) {
 
     /** @const */ var l = new xcov.ui.SourceFile.Line_(source, line, dom);
 
-    if (source.hasMessage(line.getNumber())) {
+    if (this.source_.hasAttachement(line.getNumber())) {
       this.zippies_.push(l);
     }
 
@@ -376,11 +379,17 @@ xcov.ui.SourceFile.Line_ = function(source, line, opt_domHelper) {
 
   /** @const */ var dom = this.getDomHelper();
 
-  this.source_.forEachMessage(this.line_.getNumber(), function(message) {
+  if (source.hasMessage(line.getNumber())) {
     this.addChild(
-        new xcov.ui.SourceFile.LineMessage_(message, source, dom),
+        new xcov.ui.SourceFile.LineMessage_(source, line.getNumber(), dom),
         true /* opt_render */);
-  }, this /* opt_obj */);
+  }
+
+  if (source.hasInstructionSet(line.getNumber())) {
+    this.addChild(
+        new xcov.ui.SourceFile.InstructionSet_(source, line.getNumber(), dom),
+        true /* opt_render */);
+  }
 };
 goog.inherits(xcov.ui.SourceFile.Line_, goog.ui.Component);
 
@@ -453,7 +462,7 @@ xcov.ui.SourceFile.Line_.prototype.createDom = function() {
           dom.createDom(goog.dom.TagName.DIV, goog.getCssName(style, 'code'),
               this.line_.getText() || goog.string.Unicode.NBSP));
 
-  if (this.source_.hasMessage(this.line_.getNumber())) {
+  if (this.source_.hasAttachement(this.line_.getNumber())) {
     /** @const */ var markDom = dom.createDom(goog.dom.TagName.SPAN,
         goog.getCssName(style, 'mark'), dom.htmlToDocumentFragment('&#9002;'));
 
@@ -557,29 +566,13 @@ xcov.ui.SourceFile.Line_.prototype.exitDocument = function() {
 /**
  * A generic attachement to a line.
  *
- * @param {string} title Message title.
- * @param {string|Node} message Message body.
  * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
  * @constructor
  * @extends {goog.ui.Component}
  * @private
  */
-xcov.ui.SourceFile.Attached_ = function(title, message, opt_domHelper) {
+xcov.ui.SourceFile.Attached_ = function(opt_domHelper) {
   goog.base(this, opt_domHelper);
-
-  /**
-   * @type {string}
-   * @const
-   * @private
-   */
-  this.title_ = title;
-
-  /**
-   * @type {string|Node}
-   * @const
-   * @private
-   */
-  this.message_ = message;
 };
 goog.inherits(xcov.ui.SourceFile.Attached_, goog.ui.Component);
 
@@ -594,7 +587,7 @@ goog.inherits(xcov.ui.SourceFile.Attached_, goog.ui.Component);
  * @const
  */
 xcov.ui.SourceFile.Attached_.CSS_CLASS =
-    goog.getCssName(xcov.ui.SourceFile.Line_.CSS_CLASS, 'message');
+    goog.getCssName(xcov.ui.SourceFile.Line_.CSS_CLASS, 'attached');
 
 
 /******************************************
@@ -607,18 +600,65 @@ xcov.ui.SourceFile.Attached_.prototype.createDom = function() {
   /** @const */ var dom = this.getDomHelper();
 
   /** @const */ var style = xcov.ui.SourceFile.Attached_.CSS_CLASS;
-  /** @const */ var messageDom = dom.createDom(goog.dom.TagName.DIV,
-      goog.getCssName(style, 'item'));
 
-  dom.appendChild(messageDom,
-      dom.createDom(goog.dom.TagName.DIV,
-          goog.getCssName(style, 'info'), this.title_));
+  this.setElementInternal(
+      dom.createDom(goog.dom.TagName.TABLE,
+          xcov.ui.SourceFile.Attached_.CSS_CLASS,
+          dom.createDom(goog.dom.TagName.TBODY, null)));
+};
 
-  dom.appendChild(messageDom,
-      dom.createDom(goog.dom.TagName.DIV,
-          goog.getCssName(style, 'body'), this.message_));
 
-  this.setElementInternal(messageDom);
+/************************************
+ * xcov.ui.SourceFile.Attached_.Row *
+ ************************************/
+
+
+
+/**
+ * A row in the attached section.
+ *
+ * @param {string|Node} label Message title.
+ * @param {string|Node} message Message body.
+ * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
+ * @constructor
+ * @extends {goog.ui.Component}
+ */
+xcov.ui.SourceFile.Attached_.Row = function(label, message, opt_domHelper) {
+  goog.base(this, opt_domHelper);
+
+  /**
+   * @type {string|Node}
+   * @const
+   * @private
+   */
+  this.label_ = label;
+
+  /**
+   * @type {string|Node}
+   * @const
+   * @private
+   */
+  this.message_ = message;
+};
+goog.inherits(xcov.ui.SourceFile.Attached_.Row, goog.ui.Component);
+
+
+/**********************************************
+ * xcov.ui.SourceFile.Attached_.Row.createDom *
+ **********************************************/
+
+
+/** @inheritDoc */
+xcov.ui.SourceFile.Attached_.Row.prototype.createDom = function() {
+  /** @const */ var dom = this.getDomHelper();
+  /** @const */ var style =
+      goog.getCssName(xcov.ui.SourceFile.Attached_.CSS_CLASS, 'row');
+
+  this.setElementInternal(dom.createDom(goog.dom.TagName.TR, style,
+      dom.createDom(goog.dom.TagName.TD,
+          goog.getCssName(style, 'label'), this.label_),
+      dom.createDom(goog.dom.TagName.TD,
+          goog.getCssName(style, 'body'), this.message_)));
 };
 
 
@@ -631,30 +671,88 @@ xcov.ui.SourceFile.Attached_.prototype.createDom = function() {
 /**
  * A message associated with a line.
  *
- * @param {xcov.Message} message The message to display.
  * @param {!xcov.SourceFile} source The source file.
+ * @param {number} lineno The source line number.
+ * @param {goog.dom.DomHelper=} opt_domHelper optional DOM helper.
+ * @constructor
+ * @extends {xcov.ui.SourceFile.Attached_}
+ * @private
+ */
+xcov.ui.SourceFile.LineMessage_ = function(source, lineno, opt_domHelper) {
+  goog.base(this, opt_domHelper);
+
+  /** @const */ var dom = this.getDomHelper();
+
+  source.forEachMessage(lineno, function(message) {
+    /** @const */ var buf = new goog.string.StringBuffer();
+
+    if (message.hasSCO()) {
+      /** @const */ var fragment =
+          source.getCoverageInfo(message.getSCOUniqueId());
+
+      buf.append('<span class="',
+          goog.getCssName(xcov.ui.SourceFile.Attached_.CSS_CLASS, 'sco'),
+          '">', fragment.getDescription(), '</span>: ');
+    }
+
+    buf.append(message.getMessage());
+
+    this.addChild(
+        new xcov.ui.SourceFile.Attached_.Row(message.getKind(),
+            goog.dom.htmlToDocumentFragment(buf.toString()), dom),
+        true /* opt_render */);
+  }, this /* opt_obj */);
+};
+goog.inherits(xcov.ui.SourceFile.LineMessage_,
+              xcov.ui.SourceFile.Attached_);
+
+
+/**************************************
+ * xcov.ui.SourceFile.InstructionSet_ *
+ **************************************/
+
+
+
+/**
+ * The instruction set attached to that line.
+ *
+ * @param {!xcov.SourceFile} source The source file.
+ * @param {number} lineno The source line number.
  * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
  * @constructor
  * @extends {xcov.ui.SourceFile.Attached_}
  * @private
  */
-xcov.ui.SourceFile.LineMessage_ = function(message, source, opt_domHelper) {
-  /** @const */ var buf = new goog.string.StringBuffer();
+xcov.ui.SourceFile.InstructionSet_ = function(source, lineno, opt_domHelper) {
+  goog.base(this, opt_domHelper);
 
-  if (message.hasSCO()) {
-    /** @const */ var fragment =
-        source.getCoverageInfo(message.getSCOUniqueId());
+  /** @const */ var dom = this.getDomHelper();
+  /** @const */ var code =
+      goog.getCssName(xcov.ui.SourceFile.Attached_.CSS_CLASS, 'code');
+  /** @const */ var symbol =
+      goog.getCssName(xcov.ui.SourceFile.Attached_.CSS_CLASS, 'symbol');
 
-    buf.append('<span class="',
-        goog.getCssName(xcov.ui.SourceFile.Attached_.CSS_CLASS, 'sco'),
-        '">', fragment.getDescription(), '</span>: ');
-  }
+  source.forEachInstructionSet(lineno, function(insnSet) {
+    insnSet.forEachInstructionBlock(function(insnBlock) {
+      this.addChild(
+          new xcov.ui.SourceFile.Attached_.Row(
+              dom.createDom(goog.dom.TagName.DIV, symbol,
+                  insnBlock.getOffset()),
+              dom.createDom(goog.dom.TagName.DIV, symbol,
+                  insnBlock.getSymbolName()),
+              dom),
+          true /* opt_render */);
 
-  buf.append(message.getMessage());
-
-  goog.base(this, message.getKind(),
-      goog.dom.htmlToDocumentFragment(buf.toString()),
-      opt_domHelper);
+      insnBlock.forEachInstruction(function(insn) {
+        this.addChild(
+            new xcov.ui.SourceFile.Attached_.Row(
+                dom.createDom(goog.dom.TagName.DIV, code, insn.getAddress()),
+                dom.createDom(goog.dom.TagName.DIV, code, insn.getAssembly()),
+                dom),
+            true /* opt_render */);
+      }, this /* opt_obj */);
+    }, this /* opt_obj */);
+  }, this /* opt_obj */);
 };
-goog.inherits(xcov.ui.SourceFile.LineMessage_,
+goog.inherits(xcov.ui.SourceFile.InstructionSet_,
               xcov.ui.SourceFile.Attached_);

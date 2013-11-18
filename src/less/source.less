@@ -1,5 +1,7 @@
 // Full line background
 .bgline (@color) {
+  &:hover { background-color: transparent; }
+
   &, &:hover {
     .xcov-source-line-text { background-color: @color; }
   }
@@ -12,6 +14,8 @@
 
 // Partial line background, full on hover
 .bgline-hover (@color) {
+  &:hover { background-color: transparent; }
+
   &:hover {
     .xcov-source-line-text { background-color: @color; }
   }
@@ -46,6 +50,7 @@
     }
 
     &-line-no {
+      vertical-align: top;
       min-width: 50px;
       width: 1%;
     }
@@ -76,22 +81,20 @@
       border-right: @xcov-table-body-border;
     }
 
-    &-number, &-message-info {
+    &-number {
       text-align: right;
       padding: 0 10px;
 
+      background-color: @xcov-line-number-bgcolor;
+
           width: 3%;
       min-width: 50px;
-
-      background-color: @xcov-line-number-bgcolor;
     }
 
     &-coverage {
       position: absolute;
       top: 0;
-    }
 
-    &-coverage {
       width: 20px;
       padding: 0 5px;
       font-size: 0.6em;
@@ -108,27 +111,46 @@
     &-mark { float: left; position: relative; top: 2px; }
 
     &-message {
+      padding: 10px;
+    }
+
+    &-attached {
       border: @xcov-table-body-border;
       background-color: white;
-      margin: 10px;
 
-      clear: both;
+      width: 100%;
 
-      &, &-info, &-body { min-height: 20px; }
+      margin-bottom: 0;
 
-      &-info, &-body { padding: 5px 10px; }
-      &-info { text-transform: capitalize; }
-      &-body {
-        position: relative;
-        left: 10px;
-        margin-right: 10px;
+      &-row {
+        &-label, &-body { padding: 2px 10px; }
+
+        &-label {
+          width: 1%;
+          text-align: right;
+          text-transform: capitalize;
+
+          background-color: @xcov-line-number-bgcolor;
+          border-right: @xcov-table-body-border;
+        }
+
+        &-body {
+          width: 99%;
+          position: relative;
+          text-align: left;
+        }
       }
 
       &-sco {
         font-weight: bold;
         color: @xcov-link-color;
+      }
+
+      &-symbol, &-sco, &-code {
         font: @xcov-font-size @xcov-font-family-monospace;
       }
+
+      &-symbol { font-weight: bold !important; }
     }
 
     &-no-code:hover {

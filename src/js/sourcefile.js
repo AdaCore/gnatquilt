@@ -10,6 +10,7 @@ goog.require('goog.asserts');
 goog.require('goog.object');
 
 goog.require('xcov.File');
+goog.require('xcov.InstructionSet');
 goog.require('xcov.Message');
 goog.require('xcov.SourceLine');
 goog.require('xcov.Statement');
@@ -82,6 +83,13 @@ xcov.SourceFile = function(filename, coverageLevel) {
    * @private
    */
   this.messages_ = {};
+
+  /**
+   * @type {Object.<string,!Array.<!xcov.InstructionSet>>}
+   * @const
+   * @private
+   */
+  this.insnSets_ = {};
 };
 goog.inherits(xcov.SourceFile, xcov.File);
 
@@ -139,7 +147,7 @@ xcov.SourceFile.prototype.addMessage = function(no, message) {
  * Whether the given line has message(s) attached.
  *
  * @param {number} no The line number.
- * @return {boolean} Whether the line in tagged with one or more messages.
+ * @return {boolean} Whether the line is tagged with one or more messages.
  */
 xcov.SourceFile.prototype.hasMessage = function(no) {
   return !goog.isNull(goog.object.get(this.messages_, no.toString(), null));
@@ -169,6 +177,84 @@ xcov.SourceFile.prototype.forEachMessage = function(no, f, opt_obj) {
       function(message, index) {
         callback(message, index, this);
       }, this /* opt_obj */);
+};
+
+
+/*************************************
+ * xcov.SourceFile.addInstructionSet *
+ *************************************/
+
+
+/**
+ * Registers the instruction set.
+ *
+ * @param {number} no The line number for that message.
+ * @param {!xcov.InstructionSet} insnSet The set.
+ */
+xcov.SourceFile.prototype.addInstructionSet = function(no, insnSet) {
+  /** @const */ var key = no.toString();
+  /** @const */ var cell = goog.object.get(this.insnSets_, key, []);
+
+  cell.push(insnSet);
+  goog.object.set(this.insnSets_, key, cell);
+};
+
+
+/*************************************
+ * xcov.SourceFile.hasInstructionSet *
+ *************************************/
+
+
+/**
+ * Whether the given line has message(s) attached.
+ *
+ * @param {number} no The line number.
+ * @return {boolean} Whether the line is tagged with one or more sets.
+ */
+xcov.SourceFile.prototype.hasInstructionSet = function(no) {
+  return !goog.isNull(goog.object.get(this.insnSets_, no.toString(), null));
+};
+
+
+/*****************************************
+ * xcov.SourceFile.forEachInstructionSet *
+ *****************************************/
+
+
+/**
+ * Calls a function for each instruction set of that line.
+ *
+ * @param {number} no The line number.
+ * @param {?function(this:T,!xcov.InstructionSet,number,?):?} f The function to
+ *    call for every set. This function takes 3 argument (the instruction set
+ *    object, the index and the source file object). The return value is
+ *    ignored.
+ * @param {T=} opt_obj The object to be used as the value of 'this' within f.
+ * @template T
+ */
+xcov.SourceFile.prototype.forEachInstructionSet = function(no, f, opt_obj) {
+  /** @const */ var callback = goog.bind(f, opt_obj);
+
+  goog.array.forEach(goog.object.get(this.insnSets_, no.toString()) || [],
+      function(insnSet, index) {
+        callback(insnSet, index, this);
+      }, this /* opt_obj */);
+};
+
+
+/**********************************
+ * xcov.SourceFile.hasAttachement *
+ **********************************/
+
+
+/**
+ * Whether this line has an attachement or not.
+ *
+ * @param {number} lineno The line number.
+ * @return {boolean} True if this line has an attachement.
+ */
+xcov.SourceFile.prototype.hasAttachement = function(lineno) {
+  return this.hasMessage(lineno) || this.hasInstructionSet(lineno);
 };
 
 

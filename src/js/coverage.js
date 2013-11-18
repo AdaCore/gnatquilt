@@ -85,6 +85,7 @@ xcov.coverage.fromSymbol = function(symbol) {
     }
   });
 
-  goog.asserts.assert(goog.isDefAndNotNull(status), 'unknown coverage symbol');
+  goog.asserts.assert(goog.isDefAndNotNull(status),
+      'unknown coverage symbol: "' + symbol + '"');
   return /** @type {!xcov.coverage.Status} */ (status);
 };

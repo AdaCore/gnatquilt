@@ -15,6 +15,9 @@ goog.require('goog.string');
 
 goog.require('xcov.Condition');
 goog.require('xcov.Decision');
+goog.require('xcov.Instruction');
+goog.require('xcov.InstructionBlock');
+goog.require('xcov.InstructionSet');
 goog.require('xcov.Message');
 goog.require('xcov.SourceFile');
 goog.require('xcov.Statement');
@@ -253,6 +256,11 @@ xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
             goog.partial(xcov.Report.analyseDecision_, sourceFile));
       }
 
+      if ('instruction_set' in mapping) {
+        xcov.Report.analyseInstructionSet_(sourceFile, lineno,
+            mapping['instruction_set']);
+      }
+
       sourceFile.addLine(sourceLine);
     });
 
@@ -355,4 +363,77 @@ xcov.Report.analyseDecision_ = function(sourceFile, decision) {
 
   d.forEachCondition(sourceFile.addCoverageInfo, sourceFile);
   sourceFile.addCoverageInfo(d);
+};
+
+
+/****************************************
+ * xcov.Report.analyseInstructionBlock_ *
+ ****************************************/
+
+
+/**
+ * Retrieves data from an instruction_block JSON object.
+ *
+ * @param {!xcov.InstructionSet} insnSet The instruction set.
+ * @param {!Object} insnBlock JSON representation of an instruction_block.
+ * @private
+ */
+xcov.Report.analyseInstructionBlock_ = function(insnSet, insnBlock) {
+  xcov.asserts.ensureAttribute('coverage', insnBlock, 'insnBlock');
+  xcov.asserts.ensureAttribute('name', insnBlock, 'insnBlock');
+  xcov.asserts.ensureAttribute('offset', insnBlock, 'insnBlock');
+  xcov.asserts.ensureAttribute('instructions', insnBlock, 'insnBlock');
+
+  /** @const */ var block = new xcov.InstructionBlock(
+      xcov.coverage.fromSymbol(insnBlock['coverage']), insnBlock['name'],
+      insnBlock['offset']);
+
+  goog.array.forEach(insnBlock['instructions'], function(insn) {
+    xcov.asserts.ensureAttribute('address', insn, 'insn');
+    xcov.asserts.ensureAttribute('assembly', insn, 'insn');
+    xcov.asserts.ensureAttribute('coverage', insn, 'insn');
+
+    /*
+     * NOTE: The coverage field of an instruction can contain 2 other symbols:
+     *   - ">" for "branch executed"
+     *   - "v" for "branch never executed"
+     * For the moment, we simply store the character for future display. At some
+     * point we will want to have a finer grain parsing and branch-specific
+     * symbols table.
+
+    /** @const */ var instruction = new xcov.Instruction(
+        insn['coverage'], insn['address'], insn['assembly']);
+
+    block.addInstruction(instruction);
+  });
+
+  insnSet.addInstructionBlock(block);
+};
+
+
+/**************************************
+ * xcov.Report.analyseInstructionSet_ *
+ **************************************/
+
+
+/**
+ * Retrieves data from an instruction_set JSON object.
+ *
+ * @param {!xcov.SourceFile} sourceFile The annotated source file.
+ * @param {number} lineno The line number associated with this instruction set.
+ * @param {!Object} insnSet JSON representation of an instruction_set.
+ * @private
+ */
+xcov.Report.analyseInstructionSet_ = function(sourceFile, lineno, insnSet) {
+  xcov.asserts.ensureAttribute('coverage', insnSet, 'insnSet');
+  xcov.asserts.ensureAttribute('instruction_blocks', insnSet, 'insnSet');
+
+  /** @const */ var set = new xcov.InstructionSet(
+      xcov.coverage.fromSymbol(insnSet['coverage']));
+
+  goog.array.forEach(insnSet['instruction_blocks'], function(insnBlock) {
+    xcov.Report.analyseInstructionBlock_(set, insnBlock);
+  });
+
+  sourceFile.addInstructionSet(lineno, set);
 };
