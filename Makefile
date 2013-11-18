@@ -12,6 +12,7 @@ bundle: $(BUILD)/obj/$(JS_TARGET_VERSION) $(BUILD)/obj/$(CSS_TARGET_VERSION)
 
 $(BUILD)/.3rdparties:
 	(cd thirdparties && python thirdparties.py)
+	chmod +x $(TOOLS_DIR)/bin/lessc
 	$(MKDIR) $(BUILD)
 	touch "$@"
 
