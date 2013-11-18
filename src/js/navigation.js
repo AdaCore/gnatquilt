@@ -114,7 +114,9 @@ xcov.navigation.eventTarget = new goog.events.EventTarget();
  */
 xcov.navigation.initialize = function(opt_window) {
   /** @const */ var win = opt_window || window;
-  xcov.navigation.baseURL = win.location.origin + win.location.pathname;
+
+  xcov.navigation.baseURL = goog.string.buildString(win.location.protocol, '//',
+      win.location.pathname);
 
   goog.events.listen(xcov.navigation.history_, goog.history.EventType.NAVIGATE,
       xcov.navigation.onNavigate_);
