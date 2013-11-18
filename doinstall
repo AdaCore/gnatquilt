@@ -29,7 +29,7 @@ printf "
     The install directory will be: $prefix
     Do you want to proceed with the installation now? [y|n]: "
 
-read -n1 confirm
+read confirm
 
 case $confirm in
     [yY])
