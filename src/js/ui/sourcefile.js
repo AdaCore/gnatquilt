@@ -163,8 +163,9 @@ xcov.ui.SourceFile.prototype.createDom = function() {
       this.autoRollCheckbox_,
       dom.createDom(goog.dom.TagName.SPAN, null, 'Auto Collapse'));
 
-  /** @const */ var contentDom = dom.createDom(goog.dom.TagName.DIV,
-      goog.getCssName(style, 'content'));
+  /** @const */ var contentDom =
+      dom.createDom(goog.dom.TagName.TABLE, goog.getCssName(style, 'content'),
+          dom.createDom(goog.dom.TagName.TBODY, null));
 
   this.setElementInternal(dom.createDom(goog.dom.TagName.DIV, style,
       toolbarDom, contentDom));
@@ -178,7 +179,8 @@ xcov.ui.SourceFile.prototype.createDom = function() {
 
 /** @inheritDoc */
 xcov.ui.SourceFile.prototype.getContentElement = function() {
-  return this.getDomHelper().getLastElementChild(this.getElement());
+  /** @const */ var dom = this.getDomHelper();
+  return dom.getFirstElementChild(dom.getLastElementChild(this.getElement()));
 };
 
 
@@ -371,8 +373,28 @@ xcov.ui.SourceFile.Line_ = function(source, line, opt_domHelper) {
    * @private
    */
   this.line_ = line;
+
+  /** @const */ var dom = this.getDomHelper();
+
+  this.source_.forEachMessage(this.line_.getNumber(), function(message) {
+    this.addChild(
+        new xcov.ui.SourceFile.LineMessage_(message, source, dom),
+        true /* opt_render */);
+  }, this /* opt_obj */);
 };
 goog.inherits(xcov.ui.SourceFile.Line_, goog.ui.Component);
+
+
+/**************************************
+ * xcov.ui.SourceFile.Line_.CSS_CLASS *
+ **************************************/
+
+
+/**
+ * @type {string} Default CSS class for this widget.
+ */
+xcov.ui.SourceFile.Line_.CSS_CLASS =
+    goog.getCssName(xcov.ui.SourceFile.CSS_CLASS, 'line');
 
 
 /****************************************
@@ -407,10 +429,9 @@ xcov.ui.SourceFile.Line_.prototype.zippy_ = null;
 /** @inheritDoc */
 xcov.ui.SourceFile.Line_.prototype.createDom = function() {
   /** @const */ var dom = this.getDomHelper();
-  /** @const */ var style =
-      goog.getCssName(xcov.ui.SourceFile.CSS_CLASS, 'line');
+  /** @const */ var style = xcov.ui.SourceFile.Line_.CSS_CLASS;
 
-  /** @const */ var rowStyle = this.line_.getNumber() % 2 === 0 ?
+  /** @const */ var bgStyle = this.line_.getNumber() % 2 === 0 ?
       xcov.style.ROW_EVEN_CSS_CLASS : xcov.style.ROW_ODD_CSS_CLASS;
 
   /** @const */ var lineNoDom =
@@ -433,46 +454,40 @@ xcov.ui.SourceFile.Line_.prototype.createDom = function() {
               this.line_.getText() || goog.string.Unicode.NBSP));
 
   if (this.source_.hasMessage(this.line_.getNumber())) {
-    /** @const */ var mStyle = goog.getCssName(style, 'message');
-
     /** @const */ var markDom = dom.createDom(goog.dom.TagName.SPAN,
-        goog.getCssName(mStyle, 'mark'),
-        dom.htmlToDocumentFragment('&#9002;'));
+        goog.getCssName(style, 'mark'), dom.htmlToDocumentFragment('&#9002;'));
 
     xcov.ui.Tooltip.attach(markDom, 'Click to expand');
-
     dom.insertChildAt(lineNoDom, markDom, 0 /* index */);
 
-    this.messageDom_ = dom.createDom(goog.dom.TagName.DIV, mStyle);
-
-    this.source_.forEachMessage(this.line_.getNumber(),
-        function(message, index) {
-          /** @const */ var buf = new goog.string.StringBuffer();
-
-          if (message.hasSCO()) {
-            /** @const */ var fragment =
-                this.source_.getCoverageInfo(message.getSCOUniqueId());
-            buf.append('<span class="', goog.getCssName(mStyle, 'sco'), '">',
-                fragment.getDescription(), '</span>: ');
-          }
-
-          buf.append(message.getMessage());
-
-          dom.appendChild(this.messageDom_,
-              dom.createDom(goog.dom.TagName.DIV,
-                  goog.getCssName(mStyle, 'info'), message.getKind()));
-
-          dom.appendChild(this.messageDom_,
-              dom.createDom(goog.dom.TagName.DIV,
-                  goog.getCssName(mStyle, 'body'),
-                  dom.htmlToDocumentFragment(buf.toString())));
-        }, this /* opt_obj */);
+    this.messageDom_ = dom.createDom(goog.dom.TagName.DIV,
+        goog.getCssName(style, 'message'));
   }
 
+  /** @const */ var rowStyle =
+      goog.getCssName(xcov.ui.SourceFile.CSS_CLASS, 'row');
+
   this.setElementInternal(
-      dom.createDom(goog.dom.TagName.DIV,
-          [rowStyle, style, xcov.getCssName(style, status.style)],
-          lineNoDom, coverageSymbolDom, textDom, this.messageDom_));
+      dom.createDom(goog.dom.TagName.TR,
+          [bgStyle, style, xcov.getCssName(style, status.style)],
+          dom.createDom(goog.dom.TagName.TD,
+              goog.getCssName(rowStyle, 'line-no'), lineNoDom),
+          dom.createDom(goog.dom.TagName.TD,
+              goog.getCssName(rowStyle, 'cov-symbol'), coverageSymbolDom),
+          dom.createDom(goog.dom.TagName.TD,
+              goog.getCssName(rowStyle, 'text'), textDom,
+          this.messageDom_)));
+};
+
+
+/**********************************************
+ * xcov.ui.SourceFile.Line_.getContentElement *
+ **********************************************/
+
+
+/** @inheritDoc */
+xcov.ui.SourceFile.Line_.prototype.getContentElement = function() {
+  return this.messageDom_;
 };
 
 
@@ -531,3 +546,115 @@ xcov.ui.SourceFile.Line_.prototype.exitDocument = function() {
     this.zippy_ = null;
   }
 };
+
+
+/********************************
+ * xcov.ui.SourceFile.Attached_ *
+ ********************************/
+
+
+
+/**
+ * A generic attachement to a line.
+ *
+ * @param {string} title Message title.
+ * @param {string|Node} message Message body.
+ * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
+ * @constructor
+ * @extends {goog.ui.Component}
+ * @private
+ */
+xcov.ui.SourceFile.Attached_ = function(title, message, opt_domHelper) {
+  goog.base(this, opt_domHelper);
+
+  /**
+   * @type {string}
+   * @const
+   * @private
+   */
+  this.title_ = title;
+
+  /**
+   * @type {string|Node}
+   * @const
+   * @private
+   */
+  this.message_ = message;
+};
+goog.inherits(xcov.ui.SourceFile.Attached_, goog.ui.Component);
+
+
+/******************************************
+ * xcov.ui.SourceFile.Attached_.CSS_CLASS *
+ ******************************************/
+
+
+/**
+ * @type {string} Default CSS class for this widget.
+ * @const
+ */
+xcov.ui.SourceFile.Attached_.CSS_CLASS =
+    goog.getCssName(xcov.ui.SourceFile.Line_.CSS_CLASS, 'message');
+
+
+/******************************************
+ * xcov.ui.SourceFile.Attached_.createDom *
+ ******************************************/
+
+
+/** @inheritDoc */
+xcov.ui.SourceFile.Attached_.prototype.createDom = function() {
+  /** @const */ var dom = this.getDomHelper();
+
+  /** @const */ var style = xcov.ui.SourceFile.Attached_.CSS_CLASS;
+  /** @const */ var messageDom = dom.createDom(goog.dom.TagName.DIV,
+      goog.getCssName(style, 'item'));
+
+  dom.appendChild(messageDom,
+      dom.createDom(goog.dom.TagName.DIV,
+          goog.getCssName(style, 'info'), this.title_));
+
+  dom.appendChild(messageDom,
+      dom.createDom(goog.dom.TagName.DIV,
+          goog.getCssName(style, 'body'), this.message_));
+
+  this.setElementInternal(messageDom);
+};
+
+
+/***********************************
+ * xcov.ui.SourceFile.LineMessage_ *
+ ***********************************/
+
+
+
+/**
+ * A message associated with a line.
+ *
+ * @param {xcov.Message} message The message to display.
+ * @param {!xcov.SourceFile} source The source file.
+ * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
+ * @constructor
+ * @extends {xcov.ui.SourceFile.Attached_}
+ * @private
+ */
+xcov.ui.SourceFile.LineMessage_ = function(message, source, opt_domHelper) {
+  /** @const */ var buf = new goog.string.StringBuffer();
+
+  if (message.hasSCO()) {
+    /** @const */ var fragment =
+        source.getCoverageInfo(message.getSCOUniqueId());
+
+    buf.append('<span class="',
+        goog.getCssName(xcov.ui.SourceFile.Attached_.CSS_CLASS, 'sco'),
+        '">', fragment.getDescription(), '</span>: ');
+  }
+
+  buf.append(message.getMessage());
+
+  goog.base(this, message.getKind(),
+      goog.dom.htmlToDocumentFragment(buf.toString()),
+      opt_domHelper);
+};
+goog.inherits(xcov.ui.SourceFile.LineMessage_,
+              xcov.ui.SourceFile.Attached_);
