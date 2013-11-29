@@ -26,7 +26,14 @@
     }
 
     &-summary    { width: 20%; }
-    &-filename a { display: block; }
+    &-filename {
+      &-project {
+        margin-left: 15px;
+        color: @xcov-disabled-color;
+      }
+
+      a { display: block; }
+    }
 
     a  { display: block; }
     th {

@@ -29,10 +29,12 @@ goog.require('xcov.coverage');
  * @param {string} filename The source file path.
  * @param {string} coverageLevel The coverage level for the analysis of this
  *    file.
+ * @param {?string=} opt_project Optional project name containing this source
+ *    file.
  * @constructor
  * @extends {xcov.File}
  */
-xcov.SourceFile = function(filename, coverageLevel) {
+xcov.SourceFile = function(filename, coverageLevel, opt_project) {
   goog.base(this);
 
   /**
@@ -48,6 +50,13 @@ xcov.SourceFile = function(filename, coverageLevel) {
    * @private
    */
   this.coverageLevel_ = coverageLevel;
+
+  /**
+   * @type {?string}
+   * @const
+   * @private
+   */
+  this.project_ = opt_project || null;
 
   /**
    * @type {Object.<string,!xcov.SourceLine>}
@@ -115,6 +124,20 @@ xcov.SourceFile.prototype.getFilename = function() {
  */
 xcov.SourceFile.prototype.getCoverageLevel = function() {
   return this.coverageLevel_;
+};
+
+
+/**********************************
+ * xcov.SourceFile.getProjectName *
+ **********************************/
+
+
+/**
+ * @return {?string} The name of the project containing this source file, or the
+ *    empty null.
+ */
+xcov.SourceFile.prototype.getProjectName = function() {
+  return this.project_;
 };
 
 

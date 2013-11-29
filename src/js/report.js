@@ -220,8 +220,11 @@ xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
     xcov.asserts.ensureAttribute('filename', source, 'source');
     xcov.asserts.ensureAttribute('coverage_level', source, 'source');
 
+    /** @const */ var project = 'project' in source ? source['project'] : null;
+
     /** @const */ var sourceFile =
-        new xcov.SourceFile(source['filename'], source['coverage_level']);
+        new xcov.SourceFile(source['filename'], source['coverage_level'],
+            project);
 
     goog.array.forEach(source['mappings'], function(mapping) {
       xcov.asserts.ensureAttribute('coverage', mapping, 'mapping');
