@@ -6,4 +6,9 @@ project GNATquilt is
 
    for Main use ("gnatquilt.adb");
 
+   package Compiler is
+      for Default_Switches ("Ada") use
+        ("-fpreserve-control-flow", "-fdump-scos", "-g", "-O0");
+   end Compiler;
+
 end GNATquilt;

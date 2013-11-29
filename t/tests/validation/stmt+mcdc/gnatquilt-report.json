@@ -1,0 +1,380 @@
+var REPORT = {
+    "coverage_level": "stmt+mcdc", 
+    "sources": [
+        {
+            "coverage_level": "stmt+mcdc", 
+            "filename": "gnatquilt.adb", 
+            "mappings": [
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "1", 
+                        "src": "with Ada.Text_IO;"
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "2", 
+                        "src": ""
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "3", 
+                        "src": "function GNATquilt return Integer is"
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "4", 
+                        "src": "   procedure Log (Message : String);"
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "5", 
+                        "src": "   --  Write the given message to the standard output stream."
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "6", 
+                        "src": ""
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "7", 
+                        "src": "   ---------"
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "8", 
+                        "src": "   -- Log --"
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "9", 
+                        "src": "   ---------"
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "10", 
+                        "src": ""
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "11", 
+                        "src": "   procedure Log (Message : String)"
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "12", 
+                        "src": "   is"
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "13", 
+                        "src": "      use Ada.Text_IO;"
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "14", 
+                        "src": "   begin"
+                    }
+                }, 
+                {
+                    "coverage": "+", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "15", 
+                        "src": "      Put_Line (&quot;GNATquilt: &quot; &amp; Message);"
+                    }, 
+                    "statements": [
+                        {
+                            "coverage": "+", 
+                            "id": "1", 
+                            "range": [
+                                [
+                                    15, 
+                                    7
+                                ], 
+                                [
+                                    15, 
+                                    39
+                                ]
+                            ], 
+                            "text": "Put_Line ..."
+                        }
+                    ]
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "16", 
+                        "src": "   end Log;"
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "17", 
+                        "src": ""
+                    }
+                }, 
+                {
+                    "coverage": "+", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "18", 
+                        "src": "   A : Integer := 0;"
+                    }, 
+                    "statements": [
+                        {
+                            "coverage": "+", 
+                            "id": "2", 
+                            "range": [
+                                [
+                                    18, 
+                                    4
+                                ], 
+                                [
+                                    18, 
+                                    19
+                                ]
+                            ], 
+                            "text": "A : Integ..."
+                        }
+                    ]
+                }, 
+                {
+                    "coverage": "+", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "19", 
+                        "src": "   B : Integer;"
+                    }, 
+                    "statements": [
+                        {
+                            "coverage": "+", 
+                            "id": "3", 
+                            "range": [
+                                [
+                                    19, 
+                                    4
+                                ], 
+                                [
+                                    19, 
+                                    14
+                                ]
+                            ], 
+                            "text": "B : Integ..."
+                        }
+                    ]
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "20", 
+                        "src": ""
+                    }
+                }, 
+                {
+                    "coverage": "+", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "21", 
+                        "src": "   Unused : Positive;"
+                    }, 
+                    "statements": [
+                        {
+                            "coverage": "+", 
+                            "id": "4", 
+                            "range": [
+                                [
+                                    21, 
+                                    4
+                                ], 
+                                [
+                                    21, 
+                                    20
+                                ]
+                            ], 
+                            "text": "Unused : ..."
+                        }
+                    ]
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "22", 
+                        "src": ""
+                    }
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "23", 
+                        "src": "begin"
+                    }
+                }, 
+                {
+                    "coverage": "+", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "24", 
+                        "src": "   Log (&quot;Hello World!&quot;);"
+                    }, 
+                    "statements": [
+                        {
+                            "coverage": "+", 
+                            "id": "5", 
+                            "range": [
+                                [
+                                    24, 
+                                    4
+                                ], 
+                                [
+                                    24, 
+                                    21
+                                ]
+                            ], 
+                            "text": "Log (\"Hel..."
+                        }
+                    ]
+                }, 
+                {
+                    "coverage": "+", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "25", 
+                        "src": "   B := A + 1;"
+                    }, 
+                    "statements": [
+                        {
+                            "coverage": "+", 
+                            "id": "6", 
+                            "range": [
+                                [
+                                    25, 
+                                    4
+                                ], 
+                                [
+                                    25, 
+                                    13
+                                ]
+                            ], 
+                            "text": "B := A + ..."
+                        }
+                    ]
+                }, 
+                {
+                    "coverage": "+", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "26", 
+                        "src": "   Log (Integer&apos;Image (B));"
+                    }, 
+                    "statements": [
+                        {
+                            "coverage": "+", 
+                            "id": "7", 
+                            "range": [
+                                [
+                                    26, 
+                                    4
+                                ], 
+                                [
+                                    26, 
+                                    24
+                                ]
+                            ], 
+                            "text": "Log (Inte..."
+                        }
+                    ]
+                }, 
+                {
+                    "coverage": "+", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "27", 
+                        "src": "   return 0;"
+                    }, 
+                    "statements": [
+                        {
+                            "coverage": "+", 
+                            "id": "8", 
+                            "range": [
+                                [
+                                    27, 
+                                    4
+                                ], 
+                                [
+                                    27, 
+                                    11
+                                ]
+                            ], 
+                            "text": "return 0"
+                        }
+                    ]
+                }, 
+                {
+                    "coverage": ".", 
+                    "line": {
+                        "exempted": "FALSE", 
+                        "number": "28", 
+                        "src": "end GNATquilt;"
+                    }
+                }
+            ], 
+            "project": "GNATquilt"
+        }
+    ], 
+    "traces": [
+        {
+            "date": "2013-11-29 16:36:56", 
+            "filename": "gnatquilt.trace", 
+            "program": "/chelles.a/users/delay/GERRIT/gnatquilt/t/src/gnatquilt", 
+            "tag": ""
+        }
+    ]
+}
