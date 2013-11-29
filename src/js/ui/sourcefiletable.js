@@ -100,7 +100,8 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
     if (source.getProjectName()) {
       dom.appendChild(sourceLinkDom,
           dom.createDom(goog.dom.TagName.SPAN,
-              goog.getCssName(filenameCellStyle, 'project'), source.getProjectName()));
+              goog.getCssName(filenameCellStyle, 'project'),
+              source.getProjectName()));
     }
 
     /**
