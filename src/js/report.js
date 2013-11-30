@@ -10,6 +10,8 @@ goog.require('goog.Disposable');
 goog.require('goog.array');
 goog.require('goog.asserts');
 goog.require('goog.debug.Logger');
+goog.require('goog.dom');
+goog.require('goog.dom.TagName');
 goog.require('goog.object');
 goog.require('goog.string');
 
@@ -135,6 +137,38 @@ xcov.Report.prototype.getSource = function(filename) {
 };
 
 
+/************************
+ * xcov.Report.loadHunk *
+ ************************/
+
+
+/**
+ * Loads and analyses the hunk to lazily retrieve coverage information about a
+ * source file.
+ *
+ * @param {Object} hunk The JSON hunk to load.
+ * @return {?xcov.SourceFile} The source filename corresponding to this hunk.
+ *    Returns {@code null} on error.
+ */
+xcov.Report.prototype.loadHunk = function(hunk) {
+  xcov.asserts.ensureAttribute('filename', hunk, 'hunk');
+
+  /** @const */ var filename = hunk['filename'];
+  /** @const */ var sourceFile = goog.object.get(this.sources_, filename, null);
+
+  if (goog.isNull(sourceFile)) {
+    this.logger_.severe('attempting to load a hunk for an unknown source file');
+    return null;
+  }
+
+  goog.asserts.assert(goog.isDef(sourceFile), 'compiler check');
+  this.analyseSource_(hunk, sourceFile);
+
+  this.logger_.info('Hunk loaded: ' + filename);
+  return sourceFile;
+};
+
+
 /***********************
  * xcov.Report.analyse *
  ***********************/
@@ -218,57 +252,104 @@ xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
   goog.array.forEach(sources, function(source) {
 
     xcov.asserts.ensureAttribute('filename', source, 'source');
+    xcov.asserts.ensureAttribute('hunk_filename', source, 'source');
     xcov.asserts.ensureAttribute('coverage_level', source, 'source');
+    xcov.asserts.ensureAttribute('stats', source, 'source');
 
     /** @const */ var project = 'project' in source ? source['project'] : null;
 
     /** @const */ var sourceFile =
         new xcov.SourceFile(source['filename'], source['coverage_level'],
+            xcov.Report.analyseStats_(source['stats']), source['hunk_filename'],
             project);
-
-    goog.array.forEach(source['mappings'], function(mapping) {
-      xcov.asserts.ensureAttribute('coverage', mapping, 'mapping');
-      xcov.asserts.ensureAttribute('line', mapping, 'mapping');
-
-      /** @const */ var line = mapping['line'];
-
-      xcov.asserts.ensureAttribute('number', line, 'line');
-
-      /** @const */ var lineno = line['number'];
-
-      /** @const */ var sourceLine = new xcov.SourceLine(lineno,
-          xcov.coverage.fromSymbol(mapping['coverage']), line['src']);
-
-      if ('message' in mapping) {
-        /** @const */ var message = mapping['message'];
-
-        if (!goog.object.isEmpty(message)) {
-          sourceFile.addMessage(lineno,
-              new xcov.Message(message['kind'], message['message'],
-                  message['sco']));
-        }
-      }
-
-      if ('statements' in mapping) {
-        goog.array.forEach(mapping['statements'],
-            goog.partial(xcov.Report.analyseStatement_, sourceFile));
-      }
-
-      if ('decisions' in mapping) {
-        goog.array.forEach(mapping['decisions'],
-            goog.partial(xcov.Report.analyseDecision_, sourceFile));
-      }
-
-      if ('instruction_set' in mapping) {
-        xcov.Report.analyseInstructionSet_(sourceFile, lineno,
-            mapping['instruction_set']);
-      }
-
-      sourceFile.addLine(sourceLine);
-    });
 
     goog.object.set(this.sources_, sourceFile.getFilename(), sourceFile);
   }, this /* opt_obj */);
+};
+
+
+/******************************
+ * xcov.Report.analyseSource_ *
+ ******************************/
+
+
+/**
+ * Analyses a full source definition (as contained by a hunk file).
+ * Loads the additional data gathered within the given {@code xcov.SourceFile}.
+ *
+ * @param {Object} source The JSON hunk for a source definition.
+ * @param {!xcov.SourceFile} sourceFile The source file to complete with the
+ *    additional data from the JSON object {@code source}.
+ * @private
+ */
+xcov.Report.prototype.analyseSource_ = function(source, sourceFile) {
+  goog.array.forEach(source['mappings'], function(mapping) {
+    xcov.asserts.ensureAttribute('coverage', mapping, 'mapping');
+    xcov.asserts.ensureAttribute('line', mapping, 'mapping');
+
+    /** @const */ var line = mapping['line'];
+
+    xcov.asserts.ensureAttribute('number', line, 'line');
+
+    /** @const */ var lineno = line['number'];
+
+    /** @const */ var sourceLine = new xcov.SourceLine(lineno,
+        xcov.coverage.fromSymbol(mapping['coverage']), line['src']);
+
+    if ('message' in mapping) {
+      /** @const */ var message = mapping['message'];
+
+      if (!goog.object.isEmpty(message)) {
+        sourceFile.addMessage(lineno,
+            new xcov.Message(message['kind'], message['message'],
+                message['sco']));
+      }
+    }
+
+    if ('statements' in mapping) {
+      goog.array.forEach(mapping['statements'],
+          goog.partial(xcov.Report.analyseStatement_, sourceFile));
+    }
+
+    if ('decisions' in mapping) {
+      goog.array.forEach(mapping['decisions'],
+          goog.partial(xcov.Report.analyseDecision_, sourceFile));
+    }
+
+    if ('instruction_set' in mapping) {
+      xcov.Report.analyseInstructionSet_(sourceFile, lineno,
+          mapping['instruction_set']);
+    }
+
+    sourceFile.addLine(sourceLine);
+  });
+
+  // The source file definition is now complete. Mark it as such.
+  sourceFile.setCompletelyLoaded(true);
+};
+
+
+/*****************************
+ * xcov.Report.analyseStats_ *
+ *****************************/
+
+
+/**
+ * Parses the input stats.
+ *
+ * @param {Object} stats The stats to analyse.
+ * @return {!Object.<xcov.coverage.Status,number>} A stats array.
+ * @private
+ */
+xcov.Report.analyseStats_ = function(stats) {
+  /** @const */ var ret = {};
+
+  goog.object.forEach(xcov.coverage.Status, function(status) {
+    xcov.asserts.ensureAttribute(status.internalImage, stats, 'stats');
+    goog.object.set(ret, status.internalImage, stats[status.internalImage]);
+  });
+
+  return ret;
 };
 
 

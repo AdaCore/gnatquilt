@@ -1,7 +1,8 @@
 /**
  * @fileoverview Defines and exposes the coverage report tool entry point.
- *    In particular, make the {@code xcov.analyse} symbol public to be usable
- *    within an HTML document.
+ *    In particular, make the {@code gnatcov.load_report},
+ *    {@code gnatcov.load_hunk} and {@code gnatcov.destroy} symbols public to be
+ *    usable within an HTML document.
  */
 
 
@@ -16,6 +17,18 @@ goog.require('xcov.logging');
 goog.require('xcov.navigation');
 goog.require('xcov.ui.Report');
 goog.require('xcov.ui.progress');
+
+
+/**************
+ * xcov.DEBUG *
+ **************/
+
+
+/**
+ * @define {boolean} Whether we build the application in debug mode or
+ *    production mode. Defaults to production mode.
+ */
+xcov.DEBUG = true;
 
 
 /*******************
@@ -58,23 +71,40 @@ xcov.getCssName = function(className, modifier) {
 };
 
 
-/****************
- * xcov.analyse *
- ****************/
+/*************************
+ * xcov.initializeLogger *
+ *************************/
+
+
+/**
+ * If not already initialized, setup the logging system. Do nothing otherwise.
+ * @private
+ */
+xcov.initializeLogger_ = function() {
+  if (goog.isNull(xcov.logger)) {
+    xcov.logging.initialize();
+    xcov.logger = goog.debug.Logger.getLogger('xcov');
+  }
+};
+
+
+/*******************
+ * xcov.loadReport *
+ *******************/
 
 
 /**
  * Creates a {@code xcov.Report} instance to analyses the input JSON report and
- * generate the HTML report accordingly.
+ * generate the HTML report accordingly. This function must be called before any
+ * use of {@code xcov.loadHunk}.
  *
  * @param {Object} input The JSON report to pass along to the
  *    {@code xcov.Report} instance.
  */
-xcov.analyze = function(input) {
+xcov.loadReport = function(input) {
   // Initialize the xcov logging module.
 
-  xcov.logging.initialize();
-  xcov.logger = goog.debug.Logger.getLogger('xcov');
+  xcov.initializeLogger_();
 
   // Create the report object and run the analysis. Generate the HTML report
   // upon successful analysis.
@@ -89,6 +119,35 @@ xcov.analyze = function(input) {
 
     xcov.htmlReport.render();
   }
+};
+
+
+/*****************
+ * xcov.loadHunk *
+ *****************/
+
+
+/**
+ * Loads and stores the hunk into the {@code xcov.Report} instance. This is used
+ * to lazily load pieces of the coverage report. Fails if
+ * {@code xcov.loadReport} was not called before.
+ *
+ * @param {Object} hunk The JSON hunk to load within the {@code xcov.Report}
+ *    instance.
+ */
+xcov.loadHunk = function(hunk) {
+  if (goog.isNull(xcov.htmlReport)) {
+    // Initialize the logger module if not already done (i.e. in the case where
+    // loadHunk has been called before loadReport).
+    xcov.initializeLogger_();
+
+    xcov.logger.severe('failed to load the hunk: report badly initialized');
+
+    // ???: display an error message in the document for the user to see.
+    return;
+  }
+
+  xcov.htmlReport.hunkLoaded(hunk);
 };
 
 
@@ -128,7 +187,10 @@ xcov.destroy = function() {
 // fields of the exported object *will* be obfuscated.
 
 // Use this symbol in the HTML document to generate the report.
-goog.exportSymbol('gnatcov.analyse', xcov.analyze);
+goog.exportSymbol('gnatcov.load_report', xcov.loadReport);
+
+// Use this symbol to load the content of a hunk.
+goog.exportSymbol('gnatcov.load_hunk', xcov.loadHunk);
 
 // Use this symbol in the HTML document to destroy the HTML report once
 // rendered.

@@ -55,10 +55,10 @@ xcov.logging.console_ = null;
 xcov.logging.initialize = function() {
   goog.debug.LogManager.getRoot().setLevel(goog.debug.Logger.Level.ALL);
 
-  if (COMPILED) {
-    xcov.logging.autoInstallConsole();
-  } else {
+  if (!COMPILED || xcov.DEBUG) {
     xcov.logging.installConsole();
+  } else {
+    xcov.logging.autoInstallConsole();
   }
 };
 

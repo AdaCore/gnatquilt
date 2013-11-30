@@ -5,6 +5,7 @@
 
 goog.provide('xcov.ui.Report');
 
+goog.require('goog.asserts');
 goog.require('goog.debug.Logger');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
@@ -29,7 +30,7 @@ goog.require('xcov.ui.TraceFileList');
 
 
 /**
- * Top-level UI element aggregating the sub-components.  It generates the HTML
+ * Top-level UI element aggregating the sub-components. It generates the HTML
  * report from it. That report is directly injected into the current HTML page.
  *
  * @param {!xcov.Report} report The analysed coverage report.
@@ -70,6 +71,20 @@ xcov.ui.Report = function(report, opt_domHelper) {
       new xcov.ui.Tooltip(this.getDomHelper());
 };
 goog.inherits(xcov.ui.Report, goog.ui.Component);
+
+
+/****************************
+ * xcov.ui.Report.getReport *
+ ****************************/
+
+
+/**
+ * @return {!xcov.Report} The coverage report object.
+ */
+xcov.ui.Report.prototype.getReport = function() {
+  goog.asserts.assert(goog.isDefAndNotNull(this.report_), 'compiler check');
+  return this.report_;
+};
 
 
 /**********************************
@@ -204,11 +219,9 @@ xcov.ui.Report.prototype.getSourceFileTable = function() {
 
 /**
  * Displays the report summary.
- *
- * @param {xcov.navigation.Event} e The navigation event.
  * @protected
  */
-xcov.ui.Report.prototype.handleSummaryViewEvent = function(e) {
+xcov.ui.Report.prototype.handleSummaryViewEvent = function() {
   goog.disposeAll(this.removeChildren(true /* opt_unrender */));
 
   /** @const */ var dom = this.getDomHelper();
@@ -238,11 +251,9 @@ xcov.ui.Report.prototype.handleSummaryViewEvent = function(e) {
 
 /**
  * Displays the traces table.
- *
- * @param {xcov.navigation.Event} e The navigation event.
  * @protected
  */
-xcov.ui.Report.prototype.handleTracesViewEvent = function(e) {
+xcov.ui.Report.prototype.handleTracesViewEvent = function() {
   goog.disposeAll(this.removeChildren(true /* opt_unrender */));
 
   /** @const */ var dom = this.getDomHelper();
@@ -262,6 +273,50 @@ xcov.ui.Report.prototype.handleTracesViewEvent = function(e) {
 };
 
 
+/*****************************
+ * xcov.ui.Report.importHunk *
+ *****************************/
+
+
+/**
+ * Imports a hunk by loading the file pointed to by {@code hunkFilename} by
+ * inserting a {@code <script>} tag in the roort document's {@code <head>}
+ * section.
+ *
+ * @param {string} hunkFilename The name of thi file to import.
+ * @private
+ */
+xcov.ui.Report.prototype.importHunk_ = function(hunkFilename) {
+  /** @const */ var dom = this.getDomHelper();
+  /** @const */ var script = dom.createDom(goog.dom.TagName.SCRIPT, {
+    'type': 'text/javascript',
+    'src': hunkFilename
+  });
+
+  this.logger_.info('Loading hunk: ' + hunkFilename);
+  dom.getDocument().head.appendChild(script);
+};
+
+
+/*****************************
+ * xcov.ui.Report.hunkLoaded *
+ *****************************/
+
+
+/**
+ * Loads and analyses the hunk. Once done, displays the associated source view.
+ *
+ * @param {Object} hunk The JSON hunk to load.
+ */
+xcov.ui.Report.prototype.hunkLoaded = function(hunk) {
+  /** @const */ var source = this.report_.loadHunk(hunk);
+
+  // ???: check for possible null return value.
+  goog.asserts.assert(goog.isDefAndNotNull(source), '??? check for null');
+  this.openSourceFile_(source);
+};
+
+
 /****************************************
  * xcov.ui.Report.handleSourceViewEvent *
  ****************************************/
@@ -277,8 +332,8 @@ xcov.ui.Report.prototype.handleTracesViewEvent = function(e) {
 xcov.ui.Report.prototype.handleSourceViewEvent = function(e) {
   if (!goog.isDefAndNotNull(e.filename)) {
     this.logger_.warning('Unexpected empty value for source filename.');
-    this.logger_.warning('Fallback on summary view.');
-    this.handleSummaryViewEvent(e);
+    this.logger_.warning('Fallback to summary view.');
+    this.handleSummaryViewEvent();
     return;
   }
 
@@ -286,11 +341,35 @@ xcov.ui.Report.prototype.handleSourceViewEvent = function(e) {
 
   if (goog.isNull(source)) {
     this.logger_.warning('Unknown source file name: ' + e.filename);
-    this.logger_.warning('Fallback on summary view.');
-    this.handleSummaryViewEvent(e);
+    this.logger_.warning('Fallback to summary view.');
+    this.handleSummaryViewEvent();
     return;
   }
 
+  if (!source.isCompletelyLoaded()) {
+    // We need to load the data stored in a hunk file for this source.
+    this.importHunk_(source.getHunkFilename());
+
+    // The source view will be displayed once loaded.
+    return;
+  }
+
+  this.openSourceFile_(source);
+};
+
+
+/**********************************
+ * xcov.ui.Report.openSourceFile_ *
+ **********************************/
+
+
+/**
+ * Displays the given source file.
+ *
+ * @param {!xcov.SourceFile} source The source to display.
+ * @private
+ */
+xcov.ui.Report.prototype.openSourceFile_ = function(source) {
   goog.disposeAll(this.removeChildren(true /* opt_unrender */));
 
   /** @const */ var dom = this.getDomHelper();
@@ -310,5 +389,5 @@ xcov.ui.Report.prototype.handleSourceViewEvent = function(e) {
       new xcov.ui.SourceFile(source, this.getDomHelper()),
       true /* opt_render */);
 
-  this.logger_.info('Navigated to source file: ' + e.filename);
+  this.logger_.info('Navigated to source file: ' + source.getFilename());
 };

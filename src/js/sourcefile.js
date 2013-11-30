@@ -29,13 +29,29 @@ goog.require('xcov.coverage');
  * @param {string} filename The source file path.
  * @param {string} coverageLevel The coverage level for the analysis of this
  *    file.
+ * @param {!Object.<xcov.coverage.Status,number>} stats The overall coverage
+ *    numbers for this source file.
+ * @param {?string=} opt_hunkFilename Optional hunk filename to lazily load when
+ *    needed to fetch the whole source file data.
  * @param {?string=} opt_project Optional project name containing this source
  *    file.
  * @constructor
  * @extends {xcov.File}
  */
-xcov.SourceFile = function(filename, coverageLevel, opt_project) {
+xcov.SourceFile = function(filename, coverageLevel, stats, opt_hunkFilename,
+    opt_project) {
+
   goog.base(this);
+
+  /**
+   * @type {boolean} A source file detailled information is lazily loaded. This
+   *    attribute keeps track of the current state regarding to this mechanism.
+   *    If {@code true}, then the full definition has already been retrieved.
+   *    Otherwise, we need to load the correct hunk to gather the complete
+   *    coverage information. Defaults to {@code false}.
+   * @private
+   */
+  this.isCompletelyLoaded_ = false;
 
   /**
    * @type {string}
@@ -57,6 +73,20 @@ xcov.SourceFile = function(filename, coverageLevel, opt_project) {
    * @private
    */
   this.project_ = opt_project || null;
+
+  /**
+   * @type {?string}
+   * @const
+   * @private
+   */
+  this.hunkFilename_ = opt_hunkFilename || null;
+
+  /**
+   * @type {Object.<xcov.coverage.Status,number>}
+   * @const
+   * @private
+   */
+  this.stats_ = stats;
 
   /**
    * @type {Object.<string,!xcov.SourceLine>}
@@ -103,6 +133,37 @@ xcov.SourceFile = function(filename, coverageLevel, opt_project) {
 goog.inherits(xcov.SourceFile, xcov.File);
 
 
+/**************************************
+ * xcov.SourceFile.isCompletelyLoaded *
+ **************************************/
+
+
+/**
+ * @return {boolean} A source file detailled information can be lazily loaded.
+ *    This method keeps track of the current state regarding to this mechanism.
+ *    Returns {@code true} when the full definition has already been retrieved.
+ *    Otherwise, returns {@code false}.
+ */
+xcov.SourceFile.prototype.isCompletelyLoaded = function() {
+  return this.isCompletelyLoaded_;
+};
+
+
+/***************************************
+ * xcov.SourceFile.setCompletelyLoaded *
+ ***************************************/
+
+
+/**
+ * Sets whether the file as been fully loaded in memory or not.
+ *
+ * @param {boolean} completelyLoaded Whether the file has been fully loaded.
+ */
+xcov.SourceFile.prototype.setCompletelyLoaded = function(completelyLoaded) {
+  this.isCompletelyLoaded_ = completelyLoaded;
+};
+
+
 /*******************************
  * xcov.SourceFile.getFilename *
  *******************************/
@@ -111,6 +172,23 @@ goog.inherits(xcov.SourceFile, xcov.File);
 /** @inheritDoc */
 xcov.SourceFile.prototype.getFilename = function() {
   return goog.string.path.normalizePath(this.filename_);
+};
+
+
+/***********************************
+ * xcov.SourceFile.getHunkFilename *
+ ***********************************/
+
+
+/**
+ * @return {string} The filename of the hunk containing the additional coverage
+ *    data, or {@code null} if this file does not exists.
+ */
+xcov.SourceFile.prototype.getHunkFilename = function() {
+  goog.asserts.assert(goog.isDefAndNotNull(this.hunkFilename_),
+      'compiler check');
+
+  return this.hunkFilename_;
 };
 
 
@@ -378,15 +456,17 @@ xcov.SourceFile.prototype.addLine = function(line) {
 xcov.SourceFile.prototype.getLineCount = function(opt_coverageStatus) {
   if (!goog.isDef(opt_coverageStatus)) {
     // Return only the lines that are not tagged as NO_CODE
-    return goog.object.getCount(this.lines_) -
-        this.getLineCount(xcov.coverage.Status.NO_CODE);
+
+    /** @const */ var total = goog.array.reduce(
+        goog.object.getValues(this.stats_), function(count, curr) {
+          return count + curr;
+        }, 0, this /* opt_obj */);
+
+    return total - this.getLineCount(xcov.coverage.Status.NO_CODE);
   }
 
-  /** @const */ var lines =
-      goog.object.get(this.coverage_, opt_coverageStatus.symbol, null);
-
-  goog.asserts.assert(goog.isDefAndNotNull(lines), 'Unknown coverage status');
-  return lines.length;
+  return /** @type {number} */ (
+      goog.object.get(this.stats_, opt_coverageStatus.internalImage, 0));
 };
 
 
