@@ -63,11 +63,26 @@ xcov.Report = function() {
   this.traces_ = [];
 
   /**
-   * @type {Object.<string, !xcov.SourceFile>}
+   * @type {Object.<string,!xcov.SourceFile>}
    * @const
    * @private
    */
   this.sources_ = {};
+
+  /**
+   * @type {Object.<string,!Array.<!xcov.SourceFile>>} Organizes the sources by
+   *    projects for lookup efficiency.
+   * @const
+   * @private
+   */
+  this.projects_ = {};
+
+  /**
+   * @type {Array.<!xcov.SourceFile>} Source files not related to any project.
+   * @const
+   * @private
+   */
+  this.noProjectSources_ = [];
 };
 goog.inherits(xcov.Report, goog.Disposable);
 
@@ -134,6 +149,35 @@ xcov.Report.prototype.getSource = function(filename) {
 
   goog.asserts.assert(goog.isDef(ret), 'compiler check');
   return ret;
+};
+
+
+/******************************
+ * xcov.Report.forEachProject *
+ ******************************/
+
+
+/**
+ * Calls a function for each project.
+ *
+ * @param {function(this:T,?string,Array.<!xcov.SourceFile>):?} f The function
+ *    to call for every message. The function takes 2 arguments (the name of the
+ *    project and the list of sources associated with it). Sources with no
+ *    associated project are also listed, using {@code null} as project name.
+ *    The return value is ignored.
+ * @param {T=} opt_obj The object to be used as the value of 'this' within f.
+ * @template T
+ */
+xcov.Report.prototype.forEachProject = function(f, opt_obj) {
+  /** @const */ var callback = goog.bind(f, opt_obj);
+
+  goog.object.forEach(this.projects_, function(sources, project) {
+    callback(project, sources);
+  }, this /* opt_obj */);
+
+  if (!goog.array.isEmpty(this.noProjectSources_)) {
+    callback(null, this.noProjectSources_);
+  }
 };
 
 
@@ -264,6 +308,14 @@ xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
             project);
 
     goog.object.set(this.sources_, sourceFile.getFilename(), sourceFile);
+
+    if (goog.isNull(project)) {
+      this.noProjectSources_.push(sourceFile);
+    } else {
+      /** @const */ var sources = goog.object.get(this.projects_, project, []);
+      sources.push(sourceFile);
+      goog.object.set(this.projects_, project, sources);
+    }
   }, this /* opt_obj */);
 };
 
