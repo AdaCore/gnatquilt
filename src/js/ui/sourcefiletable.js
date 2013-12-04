@@ -18,6 +18,7 @@ goog.require('xcov.coverage');
 goog.require('xcov.navigation');
 goog.require('xcov.sort');
 goog.require('xcov.style');
+goog.require('xcov.ui.TableUtils');
 
 
 /***************************
@@ -64,75 +65,20 @@ goog.inherits(xcov.ui.SourceFileTable, goog.ui.Component);
 /** @inheritDoc */
 xcov.ui.SourceFileTable.prototype.createDom = function() {
   /** @const */ var dom = this.getDomHelper();
-  /** @const */ var style = goog.getCssName(xcov.style.CSS_CLASS, 'sources');
-  /** @const */ var tableStyle = goog.getCssName(style, 'table');
-  /** @const */ var cellStyle = goog.getCssName(tableStyle, 'cell');
-  /** @const */ var countCellStyle = goog.getCssName(tableStyle, 'count');
-  /** @const */ var summaryCellStyle = goog.getCssName(tableStyle, 'summary');
-  /** @const */ var filenameCellStyle = goog.getCssName(tableStyle, 'filename');
 
-  /** @const */ var table = dom.createDom(goog.dom.TagName.TABLE, tableStyle,
-      dom.createDom(goog.dom.TagName.THEAD, null,
-          dom.createDom(goog.dom.TagName.TH, null, 'Source Filename'),
-          dom.createDom(goog.dom.TagName.TH, countCellStyle, 'Total lines'),
-          dom.createDom(goog.dom.TagName.TH, countCellStyle,
-              xcov.coverage.Status.COVERED.image),
-          dom.createDom(goog.dom.TagName.TH, countCellStyle,
-              xcov.coverage.Status.PARTIALLY_COVERED.image),
-          dom.createDom(goog.dom.TagName.TH, countCellStyle,
-              xcov.coverage.Status.NOT_COVERED.image),
-          dom.createDom(goog.dom.TagName.TH, countCellStyle,
-              xcov.coverage.Status.EXEMPTED_NO_VIOLATION.image),
-          dom.createDom(goog.dom.TagName.TH, countCellStyle,
-              xcov.coverage.Status.EXEMPTED_WITH_VIOLATION.image),
-          dom.createDom(goog.dom.TagName.TH, null, 'Summary')));
+  /** @const */ var table = dom.createDom(goog.dom.TagName.TABLE,
+      xcov.ui.TableUtils.CSS_CLASS,
+      xcov.ui.TableUtils.createTableHead('Source filename', dom));
 
   /** @const */ var tableBody = dom.createDom(goog.dom.TagName.TBODY);
 
   this.sources_.forEach(function(source, index) {
-    /** @const */ var rowStyle = index % 2 === 0 ?
-        xcov.style.ROW_EVEN_CSS_CLASS : xcov.style.ROW_ODD_CSS_CLASS;
-
     /** @const */ var sourceLinkDom = dom.createDom(goog.dom.TagName.A, {
       'href': xcov.navigation.getCanonicalSourceFileURL(source.getFilename())
     }, dom.createDom(goog.dom.TagName.SPAN, null, source.getFilename()));
 
-    /**
-     * Returns a string representation of the total lines of interest in this
-     * file, filtered by coverage status.
-     *
-     * @param {xcov.coverage.Status} coverageStatus Coverage status for
-     *    filtering.
-     * @return {Element} The DOM representation of the total number of lines
-     *    in this source file, given the input rules.
-     * @private
-     */
-    function cellDomContent_(coverageStatus) {
-      /** @const */ var count = source.getLineCount(coverageStatus);
-      /** @const */ var percent = source.getLinePercentage(coverageStatus);
-
-      return dom.createDom(goog.dom.TagName.DIV, cellStyle,
-          dom.createDom(goog.dom.TagName.SPAN, null, count.toString()),
-          dom.createDom(goog.dom.TagName.SPAN, null,
-              (percent || 0).toString() + '%'));
-    }
-
-    /** @const */ var row = dom.createDom(goog.dom.TagName.TR, rowStyle,
-        dom.createDom(goog.dom.TagName.TD, filenameCellStyle, sourceLinkDom),
-        dom.createDom(goog.dom.TagName.TD, countCellStyle,
-            source.getLineCount().toString()),
-        dom.createDom(goog.dom.TagName.TD, countCellStyle,
-            cellDomContent_(xcov.coverage.Status.COVERED)),
-        dom.createDom(goog.dom.TagName.TD, countCellStyle,
-            cellDomContent_(xcov.coverage.Status.PARTIALLY_COVERED)),
-        dom.createDom(goog.dom.TagName.TD, countCellStyle,
-            cellDomContent_(xcov.coverage.Status.NOT_COVERED)),
-        dom.createDom(goog.dom.TagName.TD, countCellStyle,
-            cellDomContent_(xcov.coverage.Status.EXEMPTED_NO_VIOLATION)),
-        dom.createDom(goog.dom.TagName.TD, countCellStyle,
-            cellDomContent_(xcov.coverage.Status.EXEMPTED_WITH_VIOLATION)),
-        dom.createDom(goog.dom.TagName.TD, summaryCellStyle,
-            xcov.ui.SourceFileTable.createCoverageSummaryDom_(source, dom)));
+    /** @const */ var row =
+        xcov.ui.TableUtils.createTableRow(sourceLinkDom, source, dom, index);
 
     dom.appendChild(tableBody, row);
     goog.object.set(this.rows_, source.getFilename(), row);
@@ -140,64 +86,6 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
 
   dom.appendChild(table, tableBody);
   this.setElementInternal(table);
-};
-
-
-/*****************************************************
- * xcov.ui.SourceFileTable.createCoverageSummaryDom_ *
- *****************************************************/
-
-
-/**
- * Creates and returns a DOM element that visually represent the coverage level
- * for the given source.
- *
- * @param {!xcov.SourceFile} source The source file with coverage information.
- * @param {!goog.dom.DomHelper} dom DOM helper.
- * @return {?Element} The DOM element.
- * @private
- */
-xcov.ui.SourceFileTable.createCoverageSummaryDom_ = function(source, dom) {
-  /** @const */ var row = dom.createDom(goog.dom.TagName.TR, null);
-  /** @const */ var style = goog.getCssName(xcov.style.CSS_CLASS, 'summary');
-
-  goog.object.forEach(xcov.coverage.Status, function(status) {
-    /** @const */ var count = source.getLineCount(status);
-
-    if (status === xcov.coverage.Status.NO_CODE || count === 0) {
-      // Display only relevant lines of code
-      return null;
-    }
-
-    // NOTE: We do not use the percent value in the condition above to avoid
-    // triggering a division-by-zero assertion. This case should not happen
-    // unless some bug gets its way until here. In this very case, this code
-    // won't raise an error (given that if the line count for this status is
-    // equal to 0, then the total number of lines should be 0).
-
-    /** @const */ var percent = source.getLinePercentage(status);
-
-    if (percent !== 0) {
-      /** @const */ var cell = dom.createDom(goog.dom.TagName.TD, {
-        'class': xcov.getCssName(style, status.style),
-        'width': goog.string.buildString(percent, '%'),
-        'data-tooltip': goog.string.buildString(percent, '% ', status.image)
-      });
-
-      dom.appendChild(row, cell);
-    }
-  });
-
-  if (dom.getChildren(row).length === 0) {
-    dom.appendChild(row, dom.createDom(goog.dom.TagName.TD, {
-      'class': goog.getCssName(style, 'not-applicable'),
-      'width': '100%',
-      'data-tooltip': 'Not Applicable'
-    }));
-  }
-
-  return dom.createDom(goog.dom.TagName.TABLE, style,
-      dom.createDom(goog.dom.TagName.TBODY, null, row));
 };
 
 
@@ -318,14 +206,7 @@ xcov.ui.SourceFileTable.prototype.onSort_ = function(compareFn) {
 
     goog.asserts.assert(goog.isDefAndNotNull(row), 'Unexpected null row');
 
-    /** @const */ var rowStyle = index % 2 === 0 ?
-        xcov.style.ROW_EVEN_CSS_CLASS : xcov.style.ROW_ODD_CSS_CLASS;
-
-    goog.dom.classes.remove(row, xcov.style.ROW_EVEN_CSS_CLASS);
-    goog.dom.classes.remove(row, xcov.style.ROW_ODD_CSS_CLASS);
-
-    goog.dom.classes.add(row, rowStyle);
-
+    xcov.ui.TableUtils.setRowStyle(row, index);
     dom.appendChild(tbody, row);
   }, this /* opt_obj */);
 };

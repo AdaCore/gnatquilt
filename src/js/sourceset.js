@@ -75,9 +75,9 @@ xcov.SourceSet.prototype.isEmpty = function() {
 };
 
 
-/************************************
- * xcov.SourceSet.getTotalLineCount *
- ************************************/
+/*******************************
+ * xcov.SourceSet.getLineCount *
+ *******************************/
 
 
 /**
@@ -89,7 +89,7 @@ xcov.SourceSet.prototype.isEmpty = function() {
  * @return {number} The total number of lines in all files, given the input
  *    rules.
  */
-xcov.SourceSet.prototype.getTotalLineCount = function(opt_status) {
+xcov.SourceSet.prototype.getLineCount = function(opt_status) {
   var count = 0;
 
   goog.array.forEach(this.sources_, function(source) {
@@ -100,9 +100,9 @@ xcov.SourceSet.prototype.getTotalLineCount = function(opt_status) {
 };
 
 
-/*****************************************
- * xcov.SourceSet.getTotalLinePercentage *
- *****************************************/
+/************************************
+ * xcov.SourceSet.getLinePercentage *
+ ************************************/
 
 
 /**
@@ -113,11 +113,11 @@ xcov.SourceSet.prototype.getTotalLineCount = function(opt_status) {
  * @return {number} The total number of lines in all files, given the input
  *    rules.
  */
-xcov.SourceSet.prototype.getTotalLinePercentage = function(status) {
-  /** @const */ var relevantLineCount = this.getTotalLineCount();
+xcov.SourceSet.prototype.getLinePercentage = function(status) {
+  /** @const */ var relevantLineCount = this.getLineCount();
   goog.asserts.assert(relevantLineCount !== 0, 'unexpected division by 0');
 
-  return Math.round(this.getTotalLineCount(status) * 100 / relevantLineCount);
+  return Math.round(this.getLineCount(status) * 100 / relevantLineCount);
 };
 
 
