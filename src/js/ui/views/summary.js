@@ -63,12 +63,12 @@ xcov.ui.views.Summary = function(report, opt_domHelper) {
       title = new xcov.ui.SectionTitle('Other Sources', dom);
 
       this.logger_.fine(goog.string.buildString('Loading sources associated ',
-          'with no project (', sources.length, ')'));
+          'with no project (', sources.getSize(), ')'));
     } else {
       title = new xcov.ui.SectionTitle(project, dom);
 
       this.logger_.fine(goog.string.buildString('Loading sources for project: ',
-          project, ' (', sources.length, ')'));
+          project, ' (', sources.getSize(), ')'));
     }
 
     goog.asserts.assert(goog.isDefAndNotNull(title), 'compiler check');

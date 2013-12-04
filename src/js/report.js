@@ -22,6 +22,7 @@ goog.require('xcov.InstructionBlock');
 goog.require('xcov.InstructionSet');
 goog.require('xcov.Message');
 goog.require('xcov.SourceFile');
+goog.require('xcov.SourceSet');
 goog.require('xcov.Statement');
 goog.require('xcov.TraceFile');
 goog.require('xcov.asserts');
@@ -70,7 +71,7 @@ xcov.Report = function() {
   this.sources_ = {};
 
   /**
-   * @type {Object.<string,!Array.<!xcov.SourceFile>>} Organizes the sources by
+   * @type {Object.<string,!xcov.SourceSet>} Organizes the sources by
    *    projects for lookup efficiency.
    * @const
    * @private
@@ -78,11 +79,11 @@ xcov.Report = function() {
   this.projects_ = {};
 
   /**
-   * @type {Array.<!xcov.SourceFile>} Source files not related to any project.
+   * @type {xcov.SourceSet} Source files not related to any project.
    * @const
    * @private
    */
-  this.noProjectSources_ = [];
+  this.noProjectSources_ = new xcov.SourceSet();
 };
 goog.inherits(xcov.Report, goog.Disposable);
 
@@ -122,12 +123,33 @@ xcov.Report.prototype.getTraces = function() {
 
 
 /**
- * @return {Array.<!xcov.SourceFile>} The list of source object read from the
- *    coverage report. Returns an empty array if the report as not been
- *    analyzed yet.
+ * Returns a source set containing the list of source files, optionally filtered
+ * by project.
+ *
+ * @param {?string=} opt_project If specified, returns the list of sources for
+ *    that project. If {@code null}, returns the set of source files that
+ *    belongs to no project.
+ * @return {!xcov.SourceSet} The list of source object read from the
+ *    coverage report. Returns an empty set if the report as not been
+ *    analyzed yet or if the project does not exist.
  */
-xcov.Report.prototype.getSources = function() {
-  return goog.object.getValues(this.sources_);
+xcov.Report.prototype.getSources = function(opt_project) {
+  /** @type {xcov.SourceSet} */ var list = null;
+
+  if (!goog.isDef(opt_project)) {
+    list = new xcov.SourceSet(goog.object.getValues(this.sources_));
+
+  } else if (goog.isNull(opt_project)) {
+    list = this.noProjectSources_;
+
+  } else {
+    list = /** @type {!xcov.SourceSet} */ (
+        goog.object.get(this.projects_, opt_project, null) ||
+        new xcov.SourceSet());
+  }
+
+  goog.asserts.assert(goog.isDefAndNotNull(list), 'compiler check');
+  return list;
 };
 
 
@@ -160,8 +182,8 @@ xcov.Report.prototype.getSource = function(filename) {
 /**
  * Calls a function for each project.
  *
- * @param {function(this:T,?string,Array.<!xcov.SourceFile>):?} f The function
- *    to call for every message. The function takes 2 arguments (the name of the
+ * @param {function(this:T,?string,!xcov.SourceSet):?} f The function
+ *    to call for every project. The function takes 2 arguments (the name of the
  *    project and the list of sources associated with it). Sources with no
  *    associated project are also listed, using {@code null} as project name.
  *    The return value is ignored.
@@ -175,7 +197,10 @@ xcov.Report.prototype.forEachProject = function(f, opt_obj) {
     callback(project, sources);
   }, this /* opt_obj */);
 
-  if (!goog.array.isEmpty(this.noProjectSources_)) {
+  goog.asserts.assert(goog.isDefAndNotNull(this.noProjectSources_),
+      'compiler check');
+
+  if (!this.noProjectSources_.isEmpty()) {
     callback(null, this.noProjectSources_);
   }
 };
@@ -311,8 +336,12 @@ xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
 
     if (goog.string.isEmptySafe(project)) {
       this.noProjectSources_.push(sourceFile);
+
     } else {
-      /** @const */ var sources = goog.object.get(this.projects_, project, []);
+      /** @const */ var sources =
+          goog.object.get(this.projects_, project, null) ||
+          new xcov.SourceSet();
+
       sources.push(sourceFile);
       goog.object.set(this.projects_, project, sources);
     }

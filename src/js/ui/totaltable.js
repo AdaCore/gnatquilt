@@ -10,7 +10,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.TagName');
 goog.require('goog.ui.Component');
 
-goog.require('xcov.SourceFile');
+goog.require('xcov.SourceSet');
 goog.require('xcov.style');
 
 
@@ -23,7 +23,7 @@ goog.require('xcov.style');
 /**
  * A table displaying the total for each metrics.
  *
- * @param {Array.<!xcov.SourceFile>} sources List of sources from the coverage
+ * @param {!xcov.SourceSet} sources List of sources from the coverage
  *    report.
  * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
  * @constructor
@@ -33,61 +33,13 @@ xcov.ui.TotalTable = function(sources, opt_domHelper) {
   goog.base(this, opt_domHelper);
 
   /**
-   * @type {Array.<!xcov.SourceFile>}
+   * @type {xcov.SourceSet}
    * @const
    * @private
    */
   this.sources_ = sources;
 };
 goog.inherits(xcov.ui.TotalTable, goog.ui.Component);
-
-
-/****************************************
- * xcov.ui.TotalTable.getTotalLineCount *
- ****************************************/
-
-
-/**
- * Returns the total lines of interest in all files, optionally filtered by
- * coverage status.
- *
- * @param {xcov.coverage.Status=} opt_status Optional coverage status for
- *    filtering.
- * @return {number} The total number of lines in all files, given the input
- *    rules.
- * @private
- */
-xcov.ui.TotalTable.prototype.getTotalLineCount_ = function(opt_status) {
-  var count = 0;
-
-  goog.array.forEach(this.sources_, function(source) {
-    count += source.getLineCount(opt_status);
-  });
-
-  return count;
-};
-
-
-/**********************************************
- * xcov.ui.TotalTable.getTotalLinePercentage_ *
- **********************************************/
-
-
-/**
- * Returns the percentage of line with the given status among the total number
- * of relevant lines.
- *
- * @param {xcov.coverage.Status} status Coverage status for filtering.
- * @return {number} The total number of lines in all files, given the input
- *    rules.
- * @private
- */
-xcov.ui.TotalTable.prototype.getTotalLinePercentage_ = function(status) {
-  /** @const */ var relevantLineCount = this.getTotalLineCount_();
-  goog.asserts.assert(relevantLineCount !== 0, 'unexpected division by 0');
-
-  return Math.round(this.getTotalLineCount_(status) * 100 / relevantLineCount);
-};
 
 
 /********************************
@@ -116,8 +68,9 @@ xcov.ui.TotalTable.prototype.createDom = function() {
    * @private
    */
   var format_ = goog.bind(function(status) {
-    /** @const */ var count = this.getTotalLineCount_(status);
-    /** @const */ var percent = this.getTotalLinePercentage_(status);
+    /** @const */ var count = this.sources_.getTotalLineCount(status);
+    /** @const */ var percent =
+        this.sources_.getTotalLinePercentage(status);
 
     return dom.createDom(goog.dom.TagName.DIV, cellStyle,
         dom.createDom(goog.dom.TagName.SPAN, null, count.toString()),
@@ -144,7 +97,7 @@ xcov.ui.TotalTable.prototype.createDom = function() {
           dom.createDom(goog.dom.TagName.TR, null,
               dom.createDom(goog.dom.TagName.TD, filenameCellStyle, 'Total'),
               dom.createDom(goog.dom.TagName.TD, countCellStyle,
-                  this.getTotalLineCount_().toString()),
+                  this.sources_.getTotalLineCount().toString()),
               dom.createDom(goog.dom.TagName.TD, countCellStyle,
                   format_(xcov.coverage.Status.COVERED)),
               dom.createDom(goog.dom.TagName.TD, countCellStyle,
@@ -162,6 +115,11 @@ xcov.ui.TotalTable.prototype.createDom = function() {
 };
 
 
+/************************************************
+ * xcov.ui.TotalTable.createCoverageSummaryDom_ *
+ ************************************************/
+
+
 /**
  * Creates and returns a DOM element that visually represent the coverage level
  * for the given source.
@@ -175,7 +133,7 @@ xcov.ui.TotalTable.prototype.createCoverageSummaryDom_ = function() {
   /** @const */ var style = goog.getCssName(xcov.style.CSS_CLASS, 'summary');
 
   goog.object.forEach(xcov.coverage.Status, function(status) {
-    /** @const */ var count = this.getTotalLineCount_(status);
+    /** @const */ var count = this.sources_.getTotalLineCount(status);
 
     if (status === xcov.coverage.Status.NO_CODE || count === 0) {
       // Display only relevant lines of code
@@ -188,7 +146,8 @@ xcov.ui.TotalTable.prototype.createCoverageSummaryDom_ = function() {
     // won't raise an error (given that if the line count for this status is
     // equal to 0, then the total number of lines should be 0).
 
-    /** @const */ var percent = this.getTotalLinePercentage_(status);
+    /** @const */ var percent =
+        this.sources_.getTotalLinePercentage(status);
 
     if (percent !== 0) {
       /** @const */ var cell = dom.createDom(goog.dom.TagName.TD, {

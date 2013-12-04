@@ -47,12 +47,10 @@ xcov.ui.views.Source = function(source, opt_domHelper) {
       true /* opt_render */);
 
   this.addChild(
-      new xcov.ui.SourceFileTable([source], this.getDomHelper()),
+      new xcov.ui.SourceFileTable(new xcov.SourceSet([source]), dom),
       true /* opt_render */);
 
-  this.addChild(
-      new xcov.ui.SourceFile(source, this.getDomHelper()),
-      true /* opt_render */);
+  this.addChild(new xcov.ui.SourceFile(source, dom), true /* opt_render */);
 };
 goog.inherits(xcov.ui.views.Source, goog.ui.Component);
 
