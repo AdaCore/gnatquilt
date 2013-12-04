@@ -25,22 +25,14 @@ goog.require('xcov.style');
  * A trace table displaying the list of traces and providing high-level
  * functionalities such as column sorting.
  *
- * @param {string} program The program used to generate those traces.
  * @param {Array.<!xcov.TraceFile>} traces List of traces from the coverage
  *    report.
  * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
  * @constructor
  * @extends {goog.ui.Component}
  */
-xcov.ui.TraceFileTable = function(program, traces, opt_domHelper) {
+xcov.ui.TraceFileTable = function(traces, opt_domHelper) {
   goog.base(this, opt_domHelper);
-
-  /**
-   * @type {string}
-   * @const
-   * @private
-   */
-  this.program_ = program;
 
   /**
    * @type {Array.<!xcov.TraceFile>}
@@ -114,10 +106,8 @@ xcov.ui.TraceFileTable.prototype.createDom = function() {
 
   dom.appendChild(table, tableBody);
 
-  this.setElementInternal(dom.createDom(goog.dom.TagName.DIV, null,
-      dom.createDom(goog.dom.TagName.H2,
-          goog.getCssName(css, 'program'),
-          dom.htmlToDocumentFragment('&#10095; ' + this.program_)), table));
+  this.setElementInternal(dom.createDom(goog.dom.TagName.DIV,
+      goog.getCssName(xcov.style.CSS_CLASS, 'traces'), table));
 };
 
 

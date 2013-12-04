@@ -97,13 +97,6 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
       'href': xcov.navigation.getCanonicalSourceFileURL(source.getFilename())
     }, dom.createDom(goog.dom.TagName.SPAN, null, source.getFilename()));
 
-    if (source.getProjectName()) {
-      dom.appendChild(sourceLinkDom,
-          dom.createDom(goog.dom.TagName.SPAN,
-              goog.getCssName(filenameCellStyle, 'project'),
-              source.getProjectName()));
-    }
-
     /**
      * Returns a string representation of the total lines of interest in this
      * file, filtered by coverage status.

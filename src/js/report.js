@@ -309,7 +309,7 @@ xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
 
     goog.object.set(this.sources_, sourceFile.getFilename(), sourceFile);
 
-    if (goog.isNull(project)) {
+    if (goog.string.isEmptySafe(project)) {
       this.noProjectSources_.push(sourceFile);
     } else {
       /** @const */ var sources = goog.object.get(this.projects_, project, []);

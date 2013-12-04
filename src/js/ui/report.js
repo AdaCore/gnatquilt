@@ -106,8 +106,14 @@ xcov.ui.Report.prototype.getReport = function() {
 xcov.ui.Report.prototype.disposeInternal = function() {
   goog.base(this, 'disposeInternal');
 
-  goog.dispose(this.sourceFileTable_);
-  this.sourceFileTable_ = null;
+  goog.dispose(this.summaryView_);
+  this.summaryView_ = null;
+
+  goog.dispose(this.tracesView_);
+  this.tracesView_ = null;
+
+  goog.dispose(this.sourceView_);
+  this.sourceView_ = null;
 };
 
 
@@ -260,7 +266,7 @@ xcov.ui.Report.prototype.getTracesView = function() {
     goog.asserts.assert(goog.isDefAndNotNull(this.report_), 'compiler check');
 
     this.tracesView_ =
-        new xcov.ui.views.Traces(this.report_, this.getDomHelper());
+        new xcov.ui.views.Traces(this.report_.getTraces(), this.getDomHelper());
   }
 
   return this.tracesView_;
@@ -317,7 +323,7 @@ xcov.ui.Report.prototype.getSourceView = function(source) {
  * @private
  */
 xcov.ui.Report.prototype.openSourceFile_ = function(source) {
-  goog.disposeAll(this.removeChildren(true /* opt_unrender */));
+  this.removeChildren(true /* opt_unrender */);
 
   this.addChild(this.getSourceView(source), true /* opt_render */);
   this.logger_.info('Navigated to source file: ' + source.getFilename());
@@ -334,7 +340,7 @@ xcov.ui.Report.prototype.openSourceFile_ = function(source) {
  * @protected
  */
 xcov.ui.Report.prototype.handleSummaryViewEvent = function() {
-  goog.disposeAll(this.removeChildren(true /* opt_unrender */));
+  this.removeChildren(true /* opt_unrender */);
 
   this.addChild(this.getSummaryView(), true /* opt_render */);
   this.logger_.info('Navigated to summary view.');
@@ -351,7 +357,7 @@ xcov.ui.Report.prototype.handleSummaryViewEvent = function() {
  * @protected
  */
 xcov.ui.Report.prototype.handleTracesViewEvent = function() {
-  goog.disposeAll(this.removeChildren(true /* opt_unrender */));
+  this.removeChildren(true /* opt_unrender */);
 
   this.addChild(this.getTracesView(), true /* opt_render */);
   this.logger_.info('Navigated to traces table.');
