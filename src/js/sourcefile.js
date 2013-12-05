@@ -9,9 +9,9 @@ goog.require('goog.Disposable');
 goog.require('goog.asserts');
 goog.require('goog.object');
 
-goog.require('xcov.File');
 goog.require('xcov.InstructionSet');
 goog.require('xcov.Message');
+goog.require('xcov.Rowable');
 goog.require('xcov.SourceLine');
 goog.require('xcov.Statement');
 goog.require('xcov.coverage');
@@ -36,7 +36,7 @@ goog.require('xcov.coverage');
  * @param {?string=} opt_project Optional project name containing this source
  *    file.
  * @constructor
- * @extends {xcov.File}
+ * @extends {xcov.Rowable}
  */
 xcov.SourceFile = function(filename, coverageLevel, stats, opt_hunkFilename,
     opt_project) {
@@ -130,7 +130,7 @@ xcov.SourceFile = function(filename, coverageLevel, stats, opt_hunkFilename,
    */
   this.insnSets_ = {};
 };
-goog.inherits(xcov.SourceFile, xcov.File);
+goog.inherits(xcov.SourceFile, xcov.Rowable);
 
 
 /**************************************
@@ -169,9 +169,22 @@ xcov.SourceFile.prototype.setCompletelyLoaded = function(completelyLoaded) {
  *******************************/
 
 
-/** @inheritDoc */
+/**
+ * @return {string} The name of the file.
+ */
 xcov.SourceFile.prototype.getFilename = function() {
   return goog.string.path.normalizePath(this.filename_);
+};
+
+
+/***************************
+ * xcov.SourceFile.getName *
+ ***************************/
+
+
+/** @inheritDoc */
+xcov.SourceFile.prototype.getName = function() {
+  return this.getFilename();
 };
 
 
@@ -444,15 +457,7 @@ xcov.SourceFile.prototype.addLine = function(line) {
  ********************************/
 
 
-/**
- * Returns the total lines of interest in this file, optionally filtered by
- * coverage status.
- *
- * @param {xcov.coverage.Status=} opt_coverageStatus Optional coverage status
- *    for filtering.
- * @return {number} The total number of lines in this file, given the input
- *    rules.
- */
+/** @inheritDoc */
 xcov.SourceFile.prototype.getLineCount = function(opt_coverageStatus) {
   if (!goog.isDef(opt_coverageStatus)) {
     // Return only the lines that are not tagged as NO_CODE
@@ -467,32 +472,6 @@ xcov.SourceFile.prototype.getLineCount = function(opt_coverageStatus) {
 
   return /** @type {number} */ (
       goog.object.get(this.stats_, opt_coverageStatus.internalImage, 0));
-};
-
-
-/*************************************
- * xcov.SourceFile.getLinePercentage *
- *************************************/
-
-
-/**
- * Returns the percentage of line with the given status among the total number
- * of relevant lines.
- *
- * @param {xcov.coverage.Status} coverageStatus Coverage status for filtering.
- * @return {number} The total number of lines in this file, given the input
- *    rules.
- */
-xcov.SourceFile.prototype.getLinePercentage = function(coverageStatus) {
-  /** @const */ var relevantLineCount = this.getLineCount();
-  /** @const */ var lineCount = this.getLineCount(coverageStatus);
-
-  if (relevantLineCount === 0) {
-    goog.asserts.assert(lineCount === 0, 'unexpected line count: 0');
-    return 0;
-  }
-
-  return Math.round(lineCount * 100 / relevantLineCount);
 };
 
 
@@ -560,89 +539,4 @@ xcov.SourceFile.prototype.forEachCoverageInfo = function(f, opt_obj) {
  */
 xcov.SourceFile.prototype.addCoverageInfo = function(info) {
   goog.object.set(this.coverageInfo_, info.getUniqueId(), info);
-};
-
-
-/*************************************
- * xcov.SourceFile.comparePercentage *
- *************************************/
-
-
-/**
- * Compares this file against the provided one.
- *
- * @param {!xcov.SourceFile} other The other source file to compare the first
- *    one against.
- * @param {xcov.coverage.Status=} opt_status Optional status to use for
- *    comparison. Compares against all statuses if not specified.
- * @return {number} a negative number, zero, or a positive number depending on
- *    whether the first argument is less than, equal to, or greater than the
- *    second.
- */
-xcov.SourceFile.prototype.comparePercentage = function(other, opt_status) {
-  /** @const */ var ORDERED_STATUS = goog.isDefAndNotNull(opt_status) ?
-      [opt_status] : [
-        xcov.coverage.Status.COVERED,
-        xcov.coverage.Status.PARTIALLY_COVERED,
-        xcov.coverage.Status.NOT_COVERED,
-        xcov.coverage.Status.EXEMPTED_NO_VIOLATION,
-        xcov.coverage.Status.EXEMPTED_WITH_VIOLATION
-      ];
-
-  /** @type {number} */ var result = 0;
-
-  goog.array.forEach(ORDERED_STATUS, function(status) {
-    if (result !== 0) {
-      return;
-    }
-
-    if (this.getLinePercentage(status) !== other.getLinePercentage(status)) {
-      result = this.getLinePercentage(status) <
-          other.getLinePercentage(status) ? -1 : 1;
-    }
-  }, this /* opt_obj */);
-
-  return result;
-};
-
-
-/********************************
- * xcov.SourceFile.compareCount *
- ********************************/
-
-
-/**
- * Compares this file against the provided one.
- *
- * @param {!xcov.SourceFile} other The other source file to compare the first
- *    one against.
- * @param {xcov.coverage.Status=} opt_status Optional status to use for
- *    comparison. Compares against all statuses if not specified.
- * @return {number} a negative number, zero, or a positive number depending on
- *    whether the first argument is less than, equal to, or greater than the
- *    second.
- */
-xcov.SourceFile.prototype.compareCount = function(other, opt_status) {
-  /** @const */ var ORDERED_STATUS = goog.isDefAndNotNull(opt_status) ?
-      [opt_status] : [
-        xcov.coverage.Status.COVERED,
-        xcov.coverage.Status.PARTIALLY_COVERED,
-        xcov.coverage.Status.NOT_COVERED,
-        xcov.coverage.Status.EXEMPTED_NO_VIOLATION,
-        xcov.coverage.Status.EXEMPTED_WITH_VIOLATION
-      ];
-
-  /** @type {number} */ var result = 0;
-
-  goog.array.forEach(ORDERED_STATUS, function(status) {
-    if (result !== 0) {
-      return;
-    }
-
-    if (this.getLineCount(status) !== other.getLineCount(status)) {
-      result = this.getLineCount(status) < other.getLineCount(status) ? -1 : 1;
-    }
-  }, this /* opt_obj */);
-
-  return result;
 };

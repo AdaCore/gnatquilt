@@ -56,7 +56,7 @@ xcov.ui.TotalTable.prototype.createDom = function() {
 
   /** @const */ var table = dom.createDom(goog.dom.TagName.TABLE,
       xcov.ui.TableUtils.CSS_CLASS,
-      xcov.ui.TableUtils.createTableHead('Total lines', dom),
+      xcov.ui.TableUtils.createTableHead(null /* title */, dom),
       dom.createDom(goog.dom.TagName.TBODY, null,
           xcov.ui.TableUtils.createTableRow('Total', this.sources_, dom)));
 

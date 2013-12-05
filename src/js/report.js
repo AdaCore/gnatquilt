@@ -117,6 +117,29 @@ xcov.Report.prototype.getTraces = function() {
 };
 
 
+/*****************************
+ * xcov.Report.getProjectSet *
+ *****************************/
+
+
+/**
+ * @return {!xcov.ProjectSet} The set of project for that report.
+ */
+xcov.Report.prototype.getProjectSet = function() {
+  /** @const */ var set = new xcov.ProjectSet();
+
+  goog.object.forEach(this.projects_, function(sources, project) {
+    set.push(new xcov.Project(project, sources));
+  }, this /* opt_obj */);
+
+  goog.asserts.assert(goog.isDefAndNotNull(this.noProjectSources_),
+      'compiler check');
+
+  set.push(new xcov.Project('', this.noProjectSources_));
+  return set;
+};
+
+
 /**************************
  * xcov.Report.getSources *
  **************************/

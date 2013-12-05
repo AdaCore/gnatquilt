@@ -13,6 +13,7 @@ goog.require('goog.ui.Component');
 goog.require('xcov.Report');
 goog.require('xcov.navigation');
 goog.require('xcov.ui.Navigation');
+goog.require('xcov.ui.ProjectTable');
 goog.require('xcov.ui.SectionTitle');
 goog.require('xcov.ui.SourceFileTable');
 goog.require('xcov.ui.SourceFileTableHelp');
@@ -53,7 +54,15 @@ xcov.ui.views.Summary = function(report, opt_domHelper) {
       true /* opt_render */);
 
   this.addChild(
+      new xcov.ui.SectionTitle('Overview', dom),
+      true /* opt_render */);
+
+  this.addChild(
       new xcov.ui.TotalTable(report.getSources(), dom),
+      true /* opt_render */);
+
+  this.addChild(
+      new xcov.ui.ProjectTable(report.getProjectSet(), dom),
       true /* opt_render */);
 
   report.forEachProject(function(project, sources) {

@@ -11,6 +11,7 @@ goog.require('goog.dom.TagName');
 goog.require('goog.object');
 goog.require('goog.string');
 
+goog.require('xcov.Enumerable');
 goog.require('xcov.coverage');
 goog.require('xcov.style');
 
@@ -80,8 +81,8 @@ xcov.ui.TableUtils.createTableHead = function(label, dom) {
  * Creates the table row.
  *
  * @param {null|string|Element} label Label to use for the first column.
- * @param {!xcov.SourceFile|!xcov.SourceSet} enumerable Either a source file or
- *    a source set. ??? Should be an interface.
+ * @param {!xcov.Enumerable} enumerable Either a source file or
+ *    a source set.
  * @param {goog.dom.DomHelper} dom DOM helper to use to create the final
  *    element.
  * @param {?number=} opt_index Optional index to handle row style.
@@ -171,8 +172,8 @@ xcov.ui.TableUtils.setRowStyle = function(row, index) {
  * Creates and returns a DOM element that visually represent the coverage level
  * for the given source or set of source.
  *
- * @param {!xcov.SourceFile|!xcov.SourceSet} enumerable Either a source file or
- *    a source set. ??? Should be an interface.
+ * @param {!xcov.Enumerable} enumerable Either a source file or
+ *    a source set.
  * @param {goog.dom.DomHelper} dom DOM helper to use to create the final
  *    element.
  * @return {Element} The DOM element.

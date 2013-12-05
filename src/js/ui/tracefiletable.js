@@ -178,7 +178,7 @@ xcov.ui.TraceFileTable.prototype.onSort_ = function(compareFn) {
 
   goog.array.forEach(ordered, function(file, index) {
     /** @const */ var row =
-        goog.object.get(this.rows_, file.getFilename(), null /* oopt_val */);
+        goog.object.get(this.rows_, file.getFilename(), null /* opt_val */);
 
     goog.asserts.assert(goog.isDefAndNotNull(row), 'Unexpected null row');
 

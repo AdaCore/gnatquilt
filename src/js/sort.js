@@ -8,7 +8,9 @@ goog.provide('xcov.sort');
 
 goog.require('goog.string');
 
+goog.require('xcov.Enumerable');
 goog.require('xcov.SourceFile');
+goog.require('xcov.TraceFile');
 
 
 /******************************
@@ -19,14 +21,35 @@ goog.require('xcov.SourceFile');
 /**
  * Compares two files using their filename.
  *
- * @param {!xcov.File} file The file.
- * @param {!xcov.File} other The other file to compare the first one against.
+ * @param {!xcov.SourceFile|!xcov.TraceFile} file The file.
+ * @param {!xcov.SourceFile|!xcov.TraceFile} other The other file to
+ *    compare the first one against.
  * @return {number} a negative number, zero, or a positive number depending on
  *    whether the first argument is less than, equal to, or greater than the
  *    second.
  */
 xcov.sort.compareFileNames = function(file, other) {
   return goog.string.numerateCompare(file.getFilename(), other.getFilename());
+};
+
+
+/*************************
+ * xcov.sort.compareName *
+ *************************/
+
+
+/**
+ * Compares two rowable using their name.
+ *
+ * @param {!xcov.Rowable} rowable The rowable.
+ * @param {!xcov.Rowable} other The other rowable to compare the first one
+ *    against.
+ * @return {number} a negative number, zero, or a positive number depending on
+ *    whether the first argument is less than, equal to, or greater than the
+ *    second.
+ */
+xcov.sort.compareName = function(rowable, other) {
+  return goog.string.numerateCompare(rowable.getName(), other.getName());
 };
 
 
@@ -84,18 +107,18 @@ xcov.sort.compareLineCount = function(file, other) {
 
 
 /**
- * Compares two files using the results for the given status.
+ * Compares two enumerables using the results for the given status.
  *
  * @param {!xcov.coverage.Status} status The status to use for comparison.
- * @param {!xcov.SourceFile} file The source file.
- * @param {!xcov.SourceFile} other The other source file to compare the first
+ * @param {!xcov.Enumerable} enumerable The enumerable.
+ * @param {!xcov.Enumerable} other The other enumerable to compare the first
  *    one against.
  * @return {number} a negative number, zero, or a positive number depending on
  *    whether the first argument is less than, equal to, or greater than the
  *    second.
  */
-xcov.sort.compareCoverageCount = function(status, file, other) {
-  return file.compareCount(other, status);
+xcov.sort.compareCoverageCount = function(status, enumerable, other) {
+  return enumerable.compareCount(other, status);
 };
 
 
@@ -105,18 +128,20 @@ xcov.sort.compareCoverageCount = function(status, file, other) {
 
 
 /**
- * Compares two files using the results for the given status.
+ * Compares two enumerables using the results for the given status.
  *
  * @param {!xcov.coverage.Status} status The status to use for comparison.
- * @param {!xcov.SourceFile} file The source file.
- * @param {!xcov.SourceFile} other The other source file to compare the first
+ * @param {!xcov.Enumerable} enumerable The enumerable.
+ * @param {!xcov.Enumerable} other The other enumerable to compare the first
  *    one against.
  * @return {number} a negative number, zero, or a positive number depending on
  *    whether the first argument is less than, equal to, or greater than the
  *    second.
  */
-xcov.sort.compareCoverageStatusPercentage = function(status, file, other) {
-  return file.comparePercentage(other, status);
+xcov.sort.compareCoverageStatusPercentage = function(status, enumerable,
+    other) {
+
+  return enumerable.comparePercentage(other, status);
 };
 
 
@@ -128,13 +153,13 @@ xcov.sort.compareCoverageStatusPercentage = function(status, file, other) {
 /**
  * Compares two coverage results set.
  *
- * @param {!xcov.SourceFile} file The source file.
- * @param {!xcov.SourceFile} other The other source file to compare the first
+ * @param {!xcov.Enumerable} enumerable The enumerable.
+ * @param {!xcov.Enumerable} other The other enumerable to compare the first
  *    one against.
  * @return {number} a negative number, zero, or a positive number depending on
  *    whether the first argument is less than, equal to, or greater than the
  *    second.
  */
-xcov.sort.compareCoveragePercentage = function(file, other) {
-  return file.comparePercentage(other);
+xcov.sort.compareCoveragePercentage = function(enumerable, other) {
+  return enumerable.comparePercentage(other);
 };
