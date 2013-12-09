@@ -16,7 +16,7 @@
 .bgline-hover (@color) {
   &:hover { background-color: transparent; }
 
-  &:hover {
+  &.goog-zippy-expanded, &:hover {
     .xcov-source-line-text { background-color: @color; }
   }
   .xcov-source-line-coverage { background-color: @color; }
@@ -67,9 +67,13 @@
   &-line {
     outline: 0;
 
-    &.goog-zippy-expanded .xcov-source {
-      &-row-line-no, &-line-number {
-        background-color: @xcov-line-number-bgcolor-hover;
+    &.goog-zippy-expanded {
+      background-color: transparent;
+
+      .xcov-source {
+        &-row-line-no, &-line-number {
+          background-color: @xcov-line-number-bgcolor-hover;
+        }
       }
     }
 
@@ -120,35 +124,60 @@
 
       margin-bottom: 0;
 
-      &-row {
-        &-label, &-body { padding: 2px 10px; }
-
-        &-label {
+      tr {
+        td {
           width: 1%;
-          text-align: right;
-          text-transform: capitalize;
 
-          background-color: @xcov-line-number-bgcolor;
+          * { padding: 2px 10px; }
+
           border-right: @xcov-table-body-border;
+          background-color: @xcov-line-number-bgcolor;
+
+          &:last-child {
+            width: 99%;
+
+            border-right: none;
+            background-color: transparent;
+          }
         }
 
-        &-body {
-          width: 99%;
-          position: relative;
-          text-align: left;
+        &:hover {
+          td {
+            background-color: @xcov-line-number-bgcolor-hover;
+
+            &:last-child { background-color: transparent; }
+          }
+        }
+      }
+
+      &-message {
+        &-label {
+          text-align: right;
+          text-transform: capitalize;
         }
       }
 
       &-sco {
         font-weight: bold;
         color: @xcov-link-color;
-      }
-
-      &-symbol, &-sco, &-code {
         font: @xcov-font-size @xcov-font-family-monospace;
       }
 
-      &-symbol { font-weight: bold !important; }
+      &-insn {
+        &-symbol { font-weight: bold !important; }
+
+        &-offset, &-address, &-coverage, &-asm {
+          font: @xcov-font-size @xcov-font-family-monospace;
+        }
+
+        &-coverage {
+          &-covered                 { background-color: @xcov-line-covered;                 }
+          &-partially-covered       { background-color: @xcov-line-partially-covered;       }
+          &-not-covered             { background-color: @xcov-line-not-covered;             }
+          &-exempted-no-violation   { background-color: @xcov-line-exempted-no-violation;   }
+          &-exempted-with-violation { background-color: @xcov-line-exempted-with-violation; }
+        }
+      }
     }
 
     &-no-code:hover {

@@ -24,7 +24,10 @@ xcov.coverage.CSS_CLASS = goog.getCssName(xcov.style.CSS_CLASS, 'coverage');
  ************************/
 
 
-/** @enum {{image: string, style: string, symbol: string}} */
+/**
+ * @enum {{image:string,style:string,internalImage:string,symbol:string,
+ *         displaySymbol:string}}
+ */
 xcov.coverage.Status = {
   NO_CODE: {
     image: 'No Code',
@@ -71,6 +74,61 @@ xcov.coverage.Status = {
 };
 
 
+/******************************
+ * xcov.coverage.BranchStatus *
+ ******************************/
+
+
+/**
+ * @enum {{image:string,style:string,internalImage:string,symbol:string,
+ *         displaySymbol:string}}
+ */
+xcov.coverage.BranchStatus = {
+  UNKNOWN: {
+    image: 'Unknown',
+    style: 'unknown',
+    internalImage: 'unknown',
+    symbol: '?',
+    displaySymbol: '?'
+  },
+  COVERED: {
+    image: 'Covered',
+    style: 'covered',
+    internalImage: 'covered',
+    symbol: '+',
+    displaySymbol: '+'
+  },
+  BRANCH_TAKEN: {
+    image: 'Branch Taken',
+    style: 'partially-covered',
+    internalImage: 'branch_taken',
+    symbol: '>',
+    displaySymbol: '→'
+  },
+  FALLTHROUGH_TAKEN: {
+    image: 'Fallthrough Taken',
+    style: 'partially-covered',
+    internalImage: 'fallthrough_taken',
+    symbol: 'v',
+    displaySymbol: '↓'
+  },
+  NOT_COVERED: {
+    image: 'Not Covered',
+    style: 'not-covered',
+    internalImage: 'not_covered',
+    symbol: '-',
+    displaySymbol: '-'
+  },
+  BOTH_TAKEN: {
+    image: 'Both Taken',
+    style: 'covered',
+    internalImage: 'both_taken',
+    symbol: '+',
+    displaySymbol: '+'
+  }
+};
+
+
 /****************************
  * xcov.coverage.fromSymbol *
  ****************************/
@@ -93,5 +151,36 @@ xcov.coverage.fromSymbol = function(symbol) {
 
   goog.asserts.assert(goog.isDefAndNotNull(status),
       'unknown coverage symbol: "' + symbol + '"');
+
   return /** @type {!xcov.coverage.Status} */ (status);
+};
+
+
+/**********************************
+ * xcov.coverage.fromBranchSymbol *
+ **********************************/
+
+
+/**
+ * Returns the adequate branch status constant for the given symbol.
+ *
+ * @param {string} symbol The symbol as specified in the report.
+ * @return {xcov.coverage.BranchStatus} The correct status for the given symbol.
+ */
+xcov.coverage.fromBranchSymbol = function(symbol) {
+  /** @type {?xcov.coverage.BranchStatus} */ var status = null;
+
+  // ???: This loop should never return BOTH_TAKEN since its symbol is the same
+  // as COVERED.
+
+  goog.object.forEach(xcov.coverage.BranchStatus, function(value) {
+    if (value.symbol === symbol) {
+      status = value;
+    }
+  });
+
+  goog.asserts.assert(goog.isDefAndNotNull(status),
+      'unknown coverage symbol: "' + symbol + '"');
+
+  return /** @type {!xcov.coverage.BranchStatus} */ (status);
 };

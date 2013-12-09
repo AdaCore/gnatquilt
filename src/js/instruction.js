@@ -9,6 +9,8 @@ goog.require('goog.Disposable');
 goog.require('goog.asserts');
 goog.require('goog.object');
 
+goog.require('xcov.coverage');
+
 
 /********************
  * xcov.Instruction *
@@ -30,11 +32,11 @@ xcov.Instruction = function(coverageSymbol, address, assembly) {
   goog.base(this);
 
   /**
-   * @type {string}
+   * @type {xcov.coverage.BranchStatus}
    * @const
    * @private
    */
-  this.coverage_ = coverageSymbol;
+  this.coverage_ = xcov.coverage.fromBranchSymbol(coverageSymbol);
 
   /**
    * @type {string}
@@ -59,8 +61,8 @@ goog.inherits(xcov.Instruction, goog.Disposable);
 
 
 /**
- * @return {string} The coverage status for this instruction (string
- *    representation).
+ * @return {xcov.coverage.BranchStatus} The coverage status for this
+ *    instruction.
  */
 xcov.Instruction.prototype.getCoverage = function() {
   return this.coverage_;
