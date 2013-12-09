@@ -77,13 +77,6 @@ xcov.Report = function() {
    * @private
    */
   this.projects_ = {};
-
-  /**
-   * @type {xcov.SourceSet} Source files not related to any project.
-   * @const
-   * @private
-   */
-  this.noProjectSources_ = new xcov.SourceSet();
 };
 goog.inherits(xcov.Report, goog.Disposable);
 
@@ -124,6 +117,8 @@ xcov.Report.prototype.getTraces = function() {
 
 /**
  * @return {!xcov.ProjectSet} The set of project for that report.
+ *    ???: Should be put in cache to avoid creating a new set each time this
+ *    function is called.
  */
 xcov.Report.prototype.getProjectSet = function() {
   /** @const */ var set = new xcov.ProjectSet();
@@ -132,10 +127,6 @@ xcov.Report.prototype.getProjectSet = function() {
     set.push(new xcov.Project(project, sources));
   }, this /* opt_obj */);
 
-  goog.asserts.assert(goog.isDefAndNotNull(this.noProjectSources_),
-      'compiler check');
-
-  set.push(new xcov.Project('', this.noProjectSources_));
   return set;
 };
 
@@ -149,9 +140,9 @@ xcov.Report.prototype.getProjectSet = function() {
  * Returns a source set containing the list of source files, optionally filtered
  * by project.
  *
- * @param {?string=} opt_project If specified, returns the list of sources for
- *    that project. If {@code null}, returns the set of source files that
- *    belongs to no project.
+ * @param {string=} opt_project If specified, returns the list of sources for
+ *    that project. If {@code xcov.Project.NO_PROJECT}, returns the set of
+ *    source files that belongs to no project.
  * @return {!xcov.SourceSet} The list of source object read from the
  *    coverage report. Returns an empty set if the report as not been
  *    analyzed yet or if the project does not exist.
@@ -161,9 +152,6 @@ xcov.Report.prototype.getSources = function(opt_project) {
 
   if (!goog.isDef(opt_project)) {
     list = new xcov.SourceSet(goog.object.getValues(this.sources_));
-
-  } else if (goog.isNull(opt_project)) {
-    list = this.noProjectSources_;
 
   } else {
     list = /** @type {!xcov.SourceSet} */ (
@@ -194,38 +182,6 @@ xcov.Report.prototype.getSource = function(filename) {
 
   goog.asserts.assert(goog.isDef(ret), 'compiler check');
   return ret;
-};
-
-
-/******************************
- * xcov.Report.forEachProject *
- ******************************/
-
-
-/**
- * Calls a function for each project.
- *
- * @param {function(this:T,?string,!xcov.SourceSet):?} f The function
- *    to call for every project. The function takes 2 arguments (the name of the
- *    project and the list of sources associated with it). Sources with no
- *    associated project are also listed, using {@code null} as project name.
- *    The return value is ignored.
- * @param {T=} opt_obj The object to be used as the value of 'this' within f.
- * @template T
- */
-xcov.Report.prototype.forEachProject = function(f, opt_obj) {
-  /** @const */ var callback = goog.bind(f, opt_obj);
-
-  goog.object.forEach(this.projects_, function(sources, project) {
-    callback(project, sources);
-  }, this /* opt_obj */);
-
-  goog.asserts.assert(goog.isDefAndNotNull(this.noProjectSources_),
-      'compiler check');
-
-  if (!this.noProjectSources_.isEmpty()) {
-    callback(null, this.noProjectSources_);
-  }
 };
 
 
@@ -357,17 +313,15 @@ xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
 
     goog.object.set(this.sources_, sourceFile.getFilename(), sourceFile);
 
-    if (goog.string.isEmptySafe(project)) {
-      this.noProjectSources_.push(sourceFile);
+    /** @const */ var key = goog.string.isEmptySafe(project) ?
+        xcov.Project.NO_PROJECT : project;
 
-    } else {
-      /** @const */ var sources =
-          goog.object.get(this.projects_, project, null) ||
-          new xcov.SourceSet();
+    /** @const */ var sources =
+        goog.object.get(this.projects_, key, null) ||
+        new xcov.SourceSet();
 
-      sources.push(sourceFile);
-      goog.object.set(this.projects_, project, sources);
-    }
+    sources.push(sourceFile);
+    goog.object.set(this.projects_, key, sources);
   }, this /* opt_obj */);
 };
 

@@ -195,7 +195,7 @@ xcov.navigation.getCanonicalTraceTableURL = function() {
 
 
 /**
- * Crafts an URL ot the given source file name.
+ * Crafts an URL to the given source file name.
  *
  * @param {string} filename The source file name.
  * @return {string} The URL pointing to the given source file from the HTML
@@ -205,6 +205,41 @@ xcov.navigation.getCanonicalTraceTableURL = function() {
 xcov.navigation.getCanonicalSourceFileURL = function(filename) {
   return goog.string.buildString(xcov.navigation.baseURL,
       '#', xcov.navigation.Views.SOURCE, filename);
+};
+
+
+/******************************************
+ * xcov.navigation.getCanonicalProjectURL *
+ ******************************************/
+
+
+/**
+ * Crafts an URL to the given project entry.
+ *
+ * @param {string} project The project name.
+ * @return {string} The URL pointing to the given project from the HTML
+ *    report.  Returns {@code null} if the navigation engine has not been
+ *    initialized yet.
+ */
+xcov.navigation.getCanonicalProjectURL = function(project) {
+  return goog.string.buildString(xcov.navigation.baseURL,
+      '#', xcov.navigation.Views.SUMMARY, '/', project);
+};
+
+
+/************************************
+ * xcov.navigation.getProjectAnchor *
+ ************************************/
+
+
+/**
+ * Returns an identifier for the given project.
+ *
+ * @param {string} project The project name.
+ * @return {string} The identifier.
+ */
+xcov.navigation.getProjectAnchor = function(project) {
+  return 'project-' + project;
 };
 
 
@@ -257,8 +292,13 @@ xcov.navigation.parseHash_ = function(hash) {
     payload: null
   };
 
+  /** @const */ var projectAnchor = xcov.navigation.Views.SUMMARY + '/';
+
   if (goog.string.isEmpty(hash)) {
     // token.view is already set to SUMMARY (default behavior).
+
+  } else if (goog.string.startsWith(hash, projectAnchor)) {
+    token.payload = goog.string.remove(hash, projectAnchor);
 
   } else if (goog.string.startsWith(hash, xcov.navigation.Views.SUMMARY)) {
     // token.view is already set to SUMMARY (default behavior).
@@ -322,20 +362,21 @@ xcov.navigation.onNavigate_ = function(e) {
  * preventDefault and stopPropagation.
  *
  * @param {xcov.navigation.Views} view The view to display.
- * @param {?string=} opt_filename Optional filename attached to the event.
+ * @param {?string=} opt_payload Optional parameter attached to the event.
  * @param {Object=} opt_target Reference to the object that is the target of
  *      this event. It has to implement the {@code EventTarget} interface
  *      declared at {@link http://developer.mozilla.org/en/DOM/EventTarget}.
  * @constructor
  * @extends {goog.events.Event}
  */
-xcov.navigation.Event = function(view, opt_filename, opt_target) {
+xcov.navigation.Event = function(view, opt_payload, opt_target) {
   goog.base(this, view, opt_target);
 
   /**
-   * @type {?string} Optional filename used for the
-   *    {@code xcov.navigation.View.SOURCE} view.
+   * @type {?string} Optional parameter used for the
+   *    {@code xcov.navigation.View.SOURCE} and
+   *    {@code xcov.navigation.Views.SUMMARY} views.
    */
-  this.filename = opt_filename || null;
+  this.payload = opt_payload || null;
 };
 goog.inherits(xcov.navigation.Event, goog.events.Event);

@@ -52,4 +52,21 @@ xcov.ui.SectionTitle.prototype.createDom = function() {
       dom.createDom(goog.dom.TagName.H2,
           goog.getCssName(xcov.style.CSS_CLASS, 'section-title'),
           dom.htmlToDocumentFragment('&#10095; ' + this.label_)));
+
+  this.setId(this.getId());
+};
+
+
+/******************************
+ * xcov.ui.SectionTitle.setId *
+ ******************************/
+
+
+/** @inheritDoc */
+xcov.ui.SectionTitle.prototype.setId = function(id) {
+  goog.base(this, 'setId', id);
+
+  if (this.getElement()) {
+    this.getDomHelper().setProperties(this.getElement(), {'id': id});
+  }
 };

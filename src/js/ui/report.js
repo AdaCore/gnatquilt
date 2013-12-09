@@ -54,7 +54,8 @@ xcov.ui.Report = function(report, opt_domHelper) {
   this.report_ = report;
 
   /**
-   * @type {goog.ui.Component} The cached summary widget if already rendered.
+   * @type {xcov.ui.views.Summary} The cached summary widget if already
+   *    rendered.
    * @private
    */
   this.summaryView_ = null;
@@ -239,7 +240,7 @@ xcov.ui.Report.prototype.hunkLoaded = function(hunk) {
 
 
 /**
- * @return {!goog.ui.Component} The summary widget.
+ * @return {!xcov.ui.views.Summary} The summary widget.
  */
 xcov.ui.Report.prototype.getSummaryView = function() {
   if (goog.isNull(this.summaryView_)) {
@@ -337,12 +338,19 @@ xcov.ui.Report.prototype.openSourceFile_ = function(source) {
 
 /**
  * Displays the report summary.
+ *
+ * @param {xcov.navigation.Event=} opt_e The navigation event.
  * @protected
  */
-xcov.ui.Report.prototype.handleSummaryViewEvent = function() {
+xcov.ui.Report.prototype.handleSummaryViewEvent = function(opt_e) {
   this.removeChildren(true /* opt_unrender */);
 
   this.addChild(this.getSummaryView(), true /* opt_render */);
+
+  if (goog.isDefAndNotNull(opt_e) && !goog.isNull(opt_e.payload)) {
+    this.getSummaryView().showProject(opt_e.payload, this.getElement());
+  }
+
   this.logger_.info('Navigated to summary view.');
 };
 
@@ -377,17 +385,17 @@ xcov.ui.Report.prototype.handleTracesViewEvent = function() {
  * @protected
  */
 xcov.ui.Report.prototype.handleSourceViewEvent = function(e) {
-  if (!goog.isDefAndNotNull(e.filename)) {
+  if (!goog.isDefAndNotNull(e.payload)) {
     this.logger_.warning('Unexpected empty value for source filename.');
     this.logger_.warning('Fallback to summary view.');
     this.handleSummaryViewEvent();
     return;
   }
 
-  /** @const */ var source = this.report_.getSource(e.filename);
+  /** @const */ var source = this.report_.getSource(e.payload);
 
   if (goog.isNull(source)) {
-    this.logger_.warning('Unknown source file name: ' + e.filename);
+    this.logger_.warning('Unknown source file name: ' + e.payload);
     this.logger_.warning('Fallback to summary view.');
     this.handleSummaryViewEvent();
     return;

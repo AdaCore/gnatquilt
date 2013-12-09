@@ -94,6 +94,20 @@ xcov.RowableSet.prototype.getLineCount = function(opt_status) {
 };
 
 
+/**********************************
+ * xcov.RowableSet.getSetInternal *
+ **********************************/
+
+
+/**
+ * @return {Array.<!xcov.Rowable>} The set of rowable.
+ * @protected
+ */
+xcov.RowableSet.prototype.getSetInternal = function() {
+  return this.set_;
+};
+
+
 /***************************
  * xcov.RowableSet.forEach *
  ***************************/

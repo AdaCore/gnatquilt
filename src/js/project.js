@@ -45,6 +45,18 @@ xcov.Project = function(name, sources) {
 goog.inherits(xcov.Project, xcov.Rowable);
 
 
+/***************************
+ * xcov.Project.NO_PROJECT *
+ ***************************/
+
+
+/**
+ * @define {string} The project name to use for the sources that are associated
+ *    with no project.
+ */
+xcov.Project.NO_PROJECT = '_';
+
+
 /************************
  * xcov.Project.getName *
  ************************/

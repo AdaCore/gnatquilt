@@ -11,6 +11,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.TagName');
 goog.require('goog.ui.Component');
 
+goog.require('xcov.Project');
 goog.require('xcov.ProjectSet');
 goog.require('xcov.coverage');
 goog.require('xcov.navigation');
@@ -74,14 +75,14 @@ xcov.ui.ProjectTable.prototype.createDom = function() {
   this.projects_.forEach(function(project) {
     var projectLinkDom = null;
 
-    if (goog.string.isEmpty(project.getName())) {
+    if (project.getName() === xcov.Project.NO_PROJECT) {
       projectLinkDom = dom.createDom(goog.dom.TagName.A, {
-        'href': ''  // ??? xcov.navigation.getCanonicalProjectURL(project)
+        'href': xcov.navigation.getCanonicalProjectURL(xcov.Project.NO_PROJECT)
       }, dom.createDom(goog.dom.TagName.SPAN, null, 'Other sources'));
 
     } else {
       projectLinkDom = dom.createDom(goog.dom.TagName.A, {
-        'href': ''  // ??? xcov.navigation.getCanonicalProjectURL(project)
+        'href': xcov.navigation.getCanonicalProjectURL(project.getName())
       }, dom.createDom(goog.dom.TagName.SPAN, null, project.getName()));
     }
 

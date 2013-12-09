@@ -8,8 +8,10 @@ goog.provide('xcov.ui.views.Summary');
 
 goog.require('goog.debug.Logger');
 goog.require('goog.string');
+goog.require('goog.style');
 goog.require('goog.ui.Component');
 
+goog.require('xcov.Project');
 goog.require('xcov.Report');
 goog.require('xcov.navigation');
 goog.require('xcov.ui.Navigation');
@@ -65,29 +67,54 @@ xcov.ui.views.Summary = function(report, opt_domHelper) {
       new xcov.ui.ProjectTable(report.getProjectSet(), dom),
       true /* opt_render */);
 
-  report.forEachProject(function(project, sources) {
+  report.getProjectSet().forEach(function(project) {
     /** @type {goog.ui.Component} */ var title = null;
 
-    if (goog.isNull(project)) {
+    if (project.getName() === xcov.Project.NO_PROJECT) {
       title = new xcov.ui.SectionTitle('Other Sources', dom);
 
       this.logger_.fine(goog.string.buildString('Loading sources associated ',
-          'with no project (', sources.getSize(), ')'));
+          'with no project (', project.getSources().getSize(), ')'));
+
     } else {
-      title = new xcov.ui.SectionTitle(project, dom);
+      title = new xcov.ui.SectionTitle(project.getName(), dom);
 
       this.logger_.fine(goog.string.buildString('Loading sources for project: ',
-          project, ' (', sources.getSize(), ')'));
+          project, ' (', project.getSources().getSize(), ')'));
     }
 
     goog.asserts.assert(goog.isDefAndNotNull(title), 'compiler check');
 
+    title.setId(xcov.navigation.getProjectAnchor(project.getName()));
+
     this.addChild(title, true /* opt_render */);
     this.addChild(
-        new xcov.ui.SourceFileTable(sources, dom),
+        new xcov.ui.SourceFileTable(project.getSources(), dom),
         true /* opt_render */);
   }, this /* opt_obj */);
 
   this.addChild(new xcov.ui.SourceFileTableHelp(dom), true /* opt_render */);
 };
 goog.inherits(xcov.ui.views.Summary, goog.ui.Component);
+
+
+/*************************************
+ * xcov.ui.views.Summary.showProject *
+ *************************************/
+
+
+/**
+ * Jumps to the source table of the given project.
+ *
+ * @param {string} project The project to show.
+ * @param {Element} container The container in which this widget is rendered.
+ */
+xcov.ui.views.Summary.prototype.showProject = function(project, container) {
+  /** @const */ var section =
+      this.getDomHelper().getElement(xcov.navigation.getProjectAnchor(project));
+
+  this.logger_.info(goog.string.buildString('Scrolling to section ',
+      project === xcov.Project.NO_PROJECT ? 'Other Sources' : project));
+
+  goog.style.scrollIntoContainerView(section, container, true /* opt_center */);
+};
