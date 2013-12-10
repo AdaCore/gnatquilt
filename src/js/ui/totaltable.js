@@ -26,11 +26,13 @@ goog.require('xcov.ui.TableUtils');
  *
  * @param {!xcov.SourceSet} sources List of sources from the coverage
  *    report.
+ * @param {boolean} withExempted Whether to display the exemption-related
+ *    columns or not.
  * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
  * @constructor
  * @extends {goog.ui.Component}
  */
-xcov.ui.TotalTable = function(sources, opt_domHelper) {
+xcov.ui.TotalTable = function(sources, withExempted, opt_domHelper) {
   goog.base(this, opt_domHelper);
 
   /**
@@ -39,6 +41,13 @@ xcov.ui.TotalTable = function(sources, opt_domHelper) {
    * @private
    */
   this.sources_ = sources;
+
+  /**
+   * @type {boolean}
+   * @const
+   * @private
+   */
+  this.withExempted_ = withExempted;
 };
 goog.inherits(xcov.ui.TotalTable, goog.ui.Component);
 
@@ -56,9 +65,11 @@ xcov.ui.TotalTable.prototype.createDom = function() {
 
   /** @const */ var table = dom.createDom(goog.dom.TagName.TABLE,
       xcov.ui.TableUtils.CSS_CLASS,
-      xcov.ui.TableUtils.createTableHead(null /* title */, dom),
+      xcov.ui.TableUtils.createTableHead(
+          null /* title */, dom, this.withExempted_),
       dom.createDom(goog.dom.TagName.TBODY, null,
-          xcov.ui.TableUtils.createTableRow('Total', this.sources_, dom)));
+          xcov.ui.TableUtils.createTableRow(
+              'Total', this.sources_, dom, this.withExempted_)));
 
   this.setElementInternal(table);
 };

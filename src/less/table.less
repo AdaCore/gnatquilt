@@ -16,15 +16,19 @@
     }
   }
 
-  &-count   {
+  &-count {
     width: 10%;
+
+    &.xcov-no-exemtion { width: 15% !important; }
+
     text-align: right;
 
     padding-left:  8px !important;
     padding-right: 8px !important;
   }
 
-  &-summary    { width: 20%; }
+  &-summary, &-filename { width: 20%; }
+
   &-filename {
     &-project {
       margin-left: 15px;
@@ -35,10 +39,7 @@
   }
 
   a  { display: block; }
-  th {
-    .xcov-disable-user-selection;
-    // &:hover { &:before { content: '↕ '; } }
-  }
+  th { .xcov-disable-user-selection; }
 
   tr, th, td, &-filename {
     padding: 4px 3px;

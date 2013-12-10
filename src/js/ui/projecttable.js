@@ -29,11 +29,13 @@ goog.require('xcov.ui.TableUtils');
  * A table that lists the projects from the report.
  *
  * @param {!xcov.ProjectSet} projects The project list from the report.
+ * @param {boolean} withExempted Whether to display the exemption-related
+ *    columns or not.
  * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
  * @constructor
  * @extends {goog.ui.Component}
  */
-xcov.ui.ProjectTable = function(projects, opt_domHelper) {
+xcov.ui.ProjectTable = function(projects, withExempted, opt_domHelper) {
   goog.base(this, opt_domHelper);
 
   /**
@@ -42,6 +44,13 @@ xcov.ui.ProjectTable = function(projects, opt_domHelper) {
    * @private
    */
   this.projects_ = projects;
+
+  /**
+   * @type {boolean}
+   * @const
+   * @private
+   */
+  this.withExempted_ = withExempted;
 
   /**
    * @type {Object.<string,!Node>} Table rows stored for easy sorting. This
@@ -66,7 +75,7 @@ xcov.ui.ProjectTable.prototype.createDom = function() {
 
   /** @const */ var table = dom.createDom(goog.dom.TagName.TABLE,
       xcov.ui.TableUtils.CSS_CLASS,
-      xcov.ui.TableUtils.createTableHead('Projects', dom));
+      xcov.ui.TableUtils.createTableHead('Projects', dom, this.withExempted_));
 
   /** @const */ var tableBody = dom.createDom(goog.dom.TagName.TBODY);
 
@@ -88,7 +97,7 @@ xcov.ui.ProjectTable.prototype.createDom = function() {
 
     /** @const */ var row =
         xcov.ui.TableUtils.createTableRow(projectLinkDom,
-            project.getSources(), dom, index);
+            project.getSources(), dom, this.withExempted_, index);
 
     dom.appendChild(tableBody, row);
     goog.object.set(this.rows_, project.getName(), row);
@@ -110,6 +119,15 @@ xcov.ui.ProjectTable.prototype.createDom = function() {
 xcov.ui.ProjectTable.prototype.enterDocument = function() {
   goog.base(this, 'enterDocument');
 
+  this.enableAccessibilityNavigation_();
+
+  // The following code is related to the sorting capabilities. We want to avoid
+  // this when not needed, ie. when we have zero or one line.
+
+  if (goog.object.getCount(this.rows_) < 2) {
+    return;
+  }
+
   /** @const */ var dom = this.getDomHelper();
   /** @const */ var thead = dom.getFirstElementChild(this.getElement());
   /** @const */ var projectTitleCell = dom.getFirstElementChild(thead);
@@ -126,8 +144,17 @@ xcov.ui.ProjectTable.prototype.enterDocument = function() {
 
   /** @type {Element} */ var elt = dom.getNextElementSibling(totalTitleCell);
 
+  /** @const */ var EXEMPTIONS = [
+    xcov.coverage.Status.EXEMPTED_NO_VIOLATION,
+    xcov.coverage.Status.EXEMPTED_WITH_VIOLATION
+  ];
+
   goog.object.forEach(xcov.coverage.Status, function(value) {
     if (value === xcov.coverage.Status.NO_CODE) {
+      return;
+    }
+
+    if (goog.array.contains(EXEMPTIONS, value) && !this.withExempted_) {
       return;
     }
 
@@ -141,8 +168,6 @@ xcov.ui.ProjectTable.prototype.enterDocument = function() {
   this.getHandler().listen(summaryTitleCell, goog.events.EventType.CLICK,
       goog.bind(this.onSort_, this,
           xcov.sort.compareCoveragePercentage));
-
-  this.enableAccessibilityNavigation_();
 };
 
 
@@ -199,9 +224,10 @@ xcov.ui.ProjectTable.prototype.enableAccessibilityNavigation_ = function() {
  *    arguments to compare, and return a negative number, zero, or a positive
  *    number depending on whether the first argument is less than, equal to, or
  *    greater than the second.
+ * @param {goog.events.Event} e Event object.
  * @private
  */
-xcov.ui.ProjectTable.prototype.onSort_ = function(compareFn) {
+xcov.ui.ProjectTable.prototype.onSort_ = function(compareFn, e) {
   goog.asserts.assert(!goog.isNull(this.getElement()),
       'Table need to be rendered first');
   goog.asserts.assert(!goog.isNull(this.rows_), 'Missing internal structures');
@@ -209,6 +235,7 @@ xcov.ui.ProjectTable.prototype.onSort_ = function(compareFn) {
   this.projects_.sort(compareFn);
 
   /** @const */ var dom = this.getDomHelper();
+  /** @const */ var thead = dom.getFirstElementChild(this.getElement());
   /** @const */ var tbody = dom.getLastElementChild(this.getElement());
 
   dom.removeChildren(tbody);
@@ -221,5 +248,8 @@ xcov.ui.ProjectTable.prototype.onSort_ = function(compareFn) {
 
     xcov.ui.TableUtils.setRowStyle(row, index);
     dom.appendChild(tbody, row);
-  }, this /* opt_obj */);
+  }, this /* opt_obj */, false /* opt_noProjectLast */);
+
+  xcov.ui.TableUtils.showSortArrow(thead,
+      /** @type {Element} */ (e.target), dom);
 };

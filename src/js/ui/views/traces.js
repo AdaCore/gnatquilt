@@ -36,7 +36,7 @@ xcov.ui.views.Traces = function(traces, opt_domHelper) {
 
   this.addChild(
       new xcov.ui.Navigation(
-          '⇪ Up to sources list',
+          '⇪ Back to sources list',
           xcov.navigation.getCanonicalSummaryTableURL(),
           dom /* opt_domHelper */),
       true /* opt_render */);

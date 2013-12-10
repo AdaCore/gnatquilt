@@ -10,6 +10,7 @@ goog.require('goog.ui.Component');
 goog.require('xcov.Report');
 goog.require('xcov.navigation');
 goog.require('xcov.ui.Navigation');
+goog.require('xcov.ui.SectionTitle');
 goog.require('xcov.ui.SourceFile');
 
 
@@ -23,11 +24,13 @@ goog.require('xcov.ui.SourceFile');
  * The summary view component.
  *
  * @param {!xcov.SourceFile} source The source file.
+ * @param {boolean} withExempted Whether to display the exemption-related
+ *    columns or not.
  * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
  * @constructor
  * @extends {goog.ui.Component}
  */
-xcov.ui.views.Source = function(source, opt_domHelper) {
+xcov.ui.views.Source = function(source, withExempted, opt_domHelper) {
   goog.base(this, opt_domHelper);
 
   /** @const */ var dom = this.getDomHelper();
@@ -41,13 +44,18 @@ xcov.ui.views.Source = function(source, opt_domHelper) {
 
   this.addChild(
       new xcov.ui.Navigation(
-          '⇪ Up to sources list',
+          '⇪ Back to sources list',
           xcov.navigation.getCanonicalSummaryTableURL(),
           dom /* opt_domHelper */),
       true /* opt_render */);
 
   this.addChild(
-      new xcov.ui.SourceFileTable(new xcov.SourceSet([source]), dom),
+      new xcov.ui.SectionTitle(source.getFilename(), dom),
+      true /* opt_render */);
+
+  this.addChild(
+      new xcov.ui.SourceFileTable(
+          new xcov.SourceSet([source]), withExempted, dom),
       true /* opt_render */);
 
   this.addChild(new xcov.ui.SourceFile(source, dom), true /* opt_render */);

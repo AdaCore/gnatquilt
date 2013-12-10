@@ -16,7 +16,7 @@
 .bgline-hover (@color) {
   &:hover { background-color: transparent; }
 
-  &.goog-zippy-expanded, &:hover {
+  &-expanded, &:hover {
     .xcov-source-line-text { background-color: @color; }
   }
   .xcov-source-line-coverage { background-color: @color; }
@@ -53,6 +53,7 @@
       vertical-align: top;
       min-width: 50px;
       width: 1%;
+      outline: 0;
     }
 
     &-cov-symbol {
@@ -67,7 +68,7 @@
   &-line {
     outline: 0;
 
-    &.goog-zippy-expanded {
+    &-expanded {
       background-color: transparent;
 
       .xcov-source {
@@ -169,6 +170,9 @@
         &-offset, &-address, &-coverage, &-asm {
           font: @xcov-font-size @xcov-font-family-monospace;
         }
+
+        &-padding { text-align: center; color: @xcov-disabled-color; }
+        &-tooltip { font-size: 12px; }
 
         &-coverage {
           &-covered                 { background-color: @xcov-line-covered;                 }

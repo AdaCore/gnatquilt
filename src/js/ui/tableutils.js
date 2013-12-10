@@ -6,6 +6,7 @@
 
 goog.provide('xcov.ui.TableUtils');
 
+goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
 goog.require('goog.object');
@@ -50,25 +51,85 @@ xcov.ui.TableUtils.COUNT_CELL_CSS_CLASS =
  * @param {null|string|Element} label Label to use for the first column.
  * @param {goog.dom.DomHelper} dom DOM helper to use to create the final
  *    element.
+ * @param {?boolean=} opt_withExempted Whether to generate the exemption-related
+ *    columns. Default to {@code true}.
  * @return {Element} The DOM element.
  */
-xcov.ui.TableUtils.createTableHead = function(label, dom) {
-  /** @const */ var countCellStyle = xcov.ui.TableUtils.COUNT_CELL_CSS_CLASS;
+xcov.ui.TableUtils.createTableHead = function(label, dom, opt_withExempted) {
+  /** @const */ var withExempted = goog.isDefAndNotNull(opt_withExempted) ?
+      opt_withExempted : true;
 
-  return dom.createDom(goog.dom.TagName.THEAD, null,
-      dom.createDom(goog.dom.TagName.TH, null, label),
-      dom.createDom(goog.dom.TagName.TH, countCellStyle, 'Total lines'),
+  var countCellStyle = xcov.ui.TableUtils.COUNT_CELL_CSS_CLASS;
+
+  if (withExempted) {
+    countCellStyle = [
+      countCellStyle,
+      goog.getCssName(xcov.style.CSS_CLASS, 'no-exemption')
+    ];
+  }
+
+  function createSortArrow() {
+    /** @const */ var elt = dom.createDom(goog.dom.TagName.SPAN,
+        {'style': 'float:left'}, dom.htmlToDocumentFragment('&#8595;'));
+    goog.style.showElement(elt, false);
+    return elt;
+  };
+
+  /** @const */ var elt = dom.createDom(goog.dom.TagName.THEAD, null,
+      dom.createDom(goog.dom.TagName.TH, null,
+          createSortArrow(), label),
       dom.createDom(goog.dom.TagName.TH, countCellStyle,
-          xcov.coverage.Status.COVERED.image),
+          createSortArrow(), 'Total lines'),
       dom.createDom(goog.dom.TagName.TH, countCellStyle,
-          xcov.coverage.Status.PARTIALLY_COVERED.image),
+          createSortArrow(), xcov.coverage.Status.COVERED.image),
       dom.createDom(goog.dom.TagName.TH, countCellStyle,
-          xcov.coverage.Status.NOT_COVERED.image),
+          createSortArrow(), xcov.coverage.Status.PARTIALLY_COVERED.image),
       dom.createDom(goog.dom.TagName.TH, countCellStyle,
-          xcov.coverage.Status.EXEMPTED_NO_VIOLATION.image),
-      dom.createDom(goog.dom.TagName.TH, countCellStyle,
-          xcov.coverage.Status.EXEMPTED_WITH_VIOLATION.image),
-      dom.createDom(goog.dom.TagName.TH, null, 'Summary'));
+          createSortArrow(), xcov.coverage.Status.NOT_COVERED.image));
+
+  if (withExempted) {
+    dom.appendChild(elt, dom.createDom(goog.dom.TagName.TH, countCellStyle,
+        createSortArrow(), xcov.coverage.Status.EXEMPTED_NO_VIOLATION.image));
+    dom.appendChild(elt, dom.createDom(goog.dom.TagName.TH, countCellStyle,
+        createSortArrow(),
+        xcov.coverage.Status.EXEMPTED_WITH_VIOLATION.image));
+  }
+
+  dom.appendChild(elt,
+      dom.createDom(goog.dom.TagName.TH, null, createSortArrow(), 'Summary'));
+
+  return elt;
+};
+
+
+/************************************
+ * xcov.ui.TableUtils.showSortArrow *
+ ************************************/
+
+
+/**
+ * Hides all sort arrow from the header but the one in the provided TD.
+ *
+ * @param {Element} thead Table HEAD.
+ * @param {Element} td Table cell.
+ * @param {goog.dom.DomHelper} dom DOM helper.
+ */
+xcov.ui.TableUtils.showSortArrow = function(thead, td, dom) {
+  /**
+   * Returns the arrow in the given cell.
+   *
+   * @param {Element} cell The cell element.
+   * @return {Element} The arrow element.
+   */
+  function getArrow(cell) {
+    return dom.getFirstElementChild(cell);
+  };
+
+  goog.array.forEach(dom.getChildren(thead), function(child) {
+    goog.style.showElement(getArrow(child), false);
+  });
+
+  goog.style.showElement(getArrow(td), true);
 };
 
 
@@ -85,11 +146,16 @@ xcov.ui.TableUtils.createTableHead = function(label, dom) {
  *    a source set.
  * @param {goog.dom.DomHelper} dom DOM helper to use to create the final
  *    element.
+ * @param {?boolean=} opt_withExempted Whether to generate the exemption-related
+ *    columns. Default to {@code true}.
  * @param {?number=} opt_index Optional index to handle row style.
  * @return {Element} The DOM element.
  */
 xcov.ui.TableUtils.createTableRow = function(label, enumerable, dom,
-    opt_index) {
+    opt_withExempted, opt_index) {
+
+  /** @const */ var withExempted = goog.isDefAndNotNull(opt_withExempted) ?
+      opt_withExempted : true;
 
   /** @type {?string} */ var rowStyle = null;
 
@@ -120,7 +186,7 @@ xcov.ui.TableUtils.createTableRow = function(label, enumerable, dom,
 
   /** @const */ var countCellStyle = xcov.ui.TableUtils.COUNT_CELL_CSS_CLASS;
 
-  return dom.createDom(goog.dom.TagName.TR, rowStyle,
+  /** @const */ var elt = dom.createDom(goog.dom.TagName.TR, rowStyle,
       dom.createDom(goog.dom.TagName.TD,
           goog.getCssName(xcov.ui.TableUtils.CSS_CLASS, 'filename'), label),
       dom.createDom(goog.dom.TagName.TD, countCellStyle,
@@ -130,14 +196,20 @@ xcov.ui.TableUtils.createTableRow = function(label, enumerable, dom,
       dom.createDom(goog.dom.TagName.TD, countCellStyle,
           format_(xcov.coverage.Status.PARTIALLY_COVERED)),
       dom.createDom(goog.dom.TagName.TD, countCellStyle,
-          format_(xcov.coverage.Status.NOT_COVERED)),
-      dom.createDom(goog.dom.TagName.TD, countCellStyle,
-          format_(xcov.coverage.Status.EXEMPTED_NO_VIOLATION)),
-      dom.createDom(goog.dom.TagName.TD, countCellStyle,
-          format_(xcov.coverage.Status.EXEMPTED_WITH_VIOLATION)),
-      dom.createDom(goog.dom.TagName.TD,
-          goog.getCssName(xcov.ui.TableUtils.CSS_CLASS, 'summary'),
-          xcov.ui.TableUtils.createCoverageSummaryDom(enumerable, dom)));
+          format_(xcov.coverage.Status.NOT_COVERED)));
+
+  if (withExempted) {
+    dom.appendChild(elt, dom.createDom(goog.dom.TagName.TD, countCellStyle,
+        format_(xcov.coverage.Status.EXEMPTED_NO_VIOLATION)));
+    dom.appendChild(elt, dom.createDom(goog.dom.TagName.TD, countCellStyle,
+        format_(xcov.coverage.Status.EXEMPTED_WITH_VIOLATION)));
+  }
+
+  dom.appendChild(elt, dom.createDom(goog.dom.TagName.TD,
+      goog.getCssName(xcov.ui.TableUtils.CSS_CLASS, 'summary'),
+      xcov.ui.TableUtils.createCoverageSummaryDom(enumerable, dom)));
+
+  return elt;
 };
 
 

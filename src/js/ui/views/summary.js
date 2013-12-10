@@ -7,9 +7,11 @@
 goog.provide('xcov.ui.views.Summary');
 
 goog.require('goog.debug.Logger');
+goog.require('goog.object');
 goog.require('goog.string');
 goog.require('goog.style');
 goog.require('goog.ui.Component');
+goog.require('goog.ui.Zippy');
 
 goog.require('xcov.Project');
 goog.require('xcov.Report');
@@ -46,6 +48,13 @@ xcov.ui.views.Summary = function(report, opt_domHelper) {
    */
   this.logger_ = goog.debug.Logger.getLogger('xcov.ui.views.Summary');
 
+  /**
+   * @type {Object.<string,!goog.ui.Zippy>}
+   * @const
+   * @private
+   */
+  this.zippies_ = {};
+
   /** @const */ var dom = this.getDomHelper();
 
   this.addChild(
@@ -60,11 +69,12 @@ xcov.ui.views.Summary = function(report, opt_domHelper) {
       true /* opt_render */);
 
   this.addChild(
-      new xcov.ui.TotalTable(report.getSources(), dom),
+      new xcov.ui.TotalTable(report.getSources(), report.hasExempted(), dom),
       true /* opt_render */);
 
   this.addChild(
-      new xcov.ui.ProjectTable(report.getProjectSet(), dom),
+      new xcov.ui.ProjectTable(
+          report.getProjectSet(), report.hasExempted(), dom),
       true /* opt_render */);
 
   report.getProjectSet().forEach(function(project) {
@@ -85,12 +95,21 @@ xcov.ui.views.Summary = function(report, opt_domHelper) {
 
     goog.asserts.assert(goog.isDefAndNotNull(title), 'compiler check');
 
-    title.setId(xcov.navigation.getProjectAnchor(project.getName()));
+    /** @const */ var titleId =
+        xcov.navigation.getProjectAnchor(project.getName());
+    /** @const */ var table =
+        new xcov.ui.SourceFileTable(
+            project.getSources(), report.hasExempted(), dom);
+
+    title.setId(titleId);
 
     this.addChild(title, true /* opt_render */);
-    this.addChild(
-        new xcov.ui.SourceFileTable(project.getSources(), dom),
-        true /* opt_render */);
+    this.addChild(table, true /* opt_render */);
+
+    var zippy = new goog.ui.Zippy(title.getElement(), table.getElement(),
+        true /* opt_expanded */);
+
+    goog.object.set(this.zippies_, titleId, zippy);
   }, this /* opt_obj */);
 
   this.addChild(new xcov.ui.SourceFileTableHelp(dom), true /* opt_render */);
@@ -110,11 +129,17 @@ goog.inherits(xcov.ui.views.Summary, goog.ui.Component);
  * @param {Element} container The container in which this widget is rendered.
  */
 xcov.ui.views.Summary.prototype.showProject = function(project, container) {
-  /** @const */ var section =
-      this.getDomHelper().getElement(xcov.navigation.getProjectAnchor(project));
+  /** @const */ var titleId = xcov.navigation.getProjectAnchor(project);
+  /** @const */ var section = this.getDomHelper().getElement(titleId);
 
   this.logger_.info(goog.string.buildString('Scrolling to section ',
       project === xcov.Project.NO_PROJECT ? 'Other Sources' : project));
 
   goog.style.scrollIntoContainerView(section, container, true /* opt_center */);
+
+  /** @const */ var zippy = goog.object.get(this.zippies_, titleId, null);
+
+  if (!goog.isNull(zippy)) {
+    zippy.setExpanded(true);
+  }
 };

@@ -15,6 +15,7 @@ goog.require('goog.userAgent');
 goog.require('xcov.Report');
 goog.require('xcov.style');
 goog.require('xcov.ui.Navigation');
+goog.require('xcov.ui.Scroller');
 goog.require('xcov.ui.Tooltip');
 goog.require('xcov.ui.views.Source');
 goog.require('xcov.ui.views.Summary');
@@ -248,6 +249,10 @@ xcov.ui.Report.prototype.getSummaryView = function() {
 
     this.summaryView_ =
         new xcov.ui.views.Summary(this.report_, this.getDomHelper());
+
+    this.summaryView_.addChild(
+        new xcov.ui.Scroller(this.getElement(), this.getDomHelper()),
+        true /* opt_render */);
   }
 
   return this.summaryView_;
@@ -268,6 +273,10 @@ xcov.ui.Report.prototype.getTracesView = function() {
 
     this.tracesView_ =
         new xcov.ui.views.Traces(this.report_.getTraces(), this.getDomHelper());
+
+    this.tracesView_.addChild(
+        new xcov.ui.Scroller(this.getElement(), this.getDomHelper()),
+        true /* opt_render */);
   }
 
   return this.tracesView_;
@@ -287,14 +296,20 @@ xcov.ui.Report.prototype.getTracesView = function() {
  * @return {!goog.ui.Component} A source view widget.
  */
 xcov.ui.Report.prototype.getSourceView = function(source) {
+  /** @const */ var elt = this.getElement();
   /** @const */ var dom = this.getDomHelper();
+  /** @const */ var hasExempted = this.report_.hasExempted();
   /** @const */ var filename = source.getFilename();
 
   /**
    * @return {!goog.ui.Component} The source view for filename.
    */
   function createSourceView() {
-    return new xcov.ui.views.Source(source, dom);
+    /** @const */ var view =
+        new xcov.ui.views.Source(source, hasExempted, dom);
+    view.addChild(new xcov.ui.Scroller(elt, dom), true /* opt_render */);
+
+    return view;
   }
 
   if (goog.isNull(this.sourceView_)) {

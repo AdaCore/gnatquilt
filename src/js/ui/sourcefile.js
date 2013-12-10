@@ -714,12 +714,16 @@ xcov.ui.SourceFile.LineMessage_ = function(source, lineno, opt_domHelper) {
     /** @const */ var buf = new goog.string.StringBuffer();
 
     if (message.hasSCO()) {
-      /** @const */ var fragment =
-          source.getCoverageInfo(message.getSCOUniqueId());
+      /** @const */ var sco = message.parseSCO();
+      goog.asserts.assert(!goog.isNull(sco), 'missing sco information');
+
+      /** @const */ var fragment = source.getCoverageInfo(sco.id);
+      /** @const */ var range = fragment.getRange();
 
       buf.append('<span class="',
           goog.getCssName(xcov.ui.SourceFile.Attached_.CSS_CLASS, 'sco'),
-          '">', fragment.getDescription(), '</span>: ');
+          '">', sco.kind, ' "', fragment.getDescription(), '" at ',
+          range.start.line, ':', range.start.column, '</span> ');
     }
 
     buf.append(message.getMessage());
@@ -728,7 +732,7 @@ xcov.ui.SourceFile.LineMessage_ = function(source, lineno, opt_domHelper) {
         goog.getCssName(xcov.ui.SourceFile.Attached_.CSS_CLASS, 'message');
 
     this.addChild(
-        new xcov.ui.SourceFile.Attached_.Row(dom, message.getKind(),
+        new xcov.ui.SourceFile.Attached_.Row(dom,
             dom.createDom(goog.dom.TagName.TD,
                 goog.getCssName(style, 'label'), message.getKind()),
             dom.createDom(goog.dom.TagName.TD,
@@ -771,21 +775,29 @@ xcov.ui.SourceFile.InstructionSet_ = function(source, lineno, opt_domHelper) {
   /** @const */ var symbolStyle = goog.getCssName(style, 'symbol');
 
   source.forEachInstructionSet(lineno, function(insnSet) {
+    /** @type {?string} */ var symbolName = null;
+
     insnSet.forEachInstructionBlock(function(insnBlock) {
       this.addChild(
           new xcov.ui.SourceFile.Attached_.Row(dom,
+              dom.createDom(goog.dom.TagName.DIV, offsetStyle),
               dom.createDom(goog.dom.TagName.DIV,
-                  [offsetStyle, symbolStyle],
-                  xcov.string.normalizeHexadecimal(insnBlock.getOffset())),
-              dom.createDom(goog.dom.TagName.DIV, addressStyle),
+                  goog.getCssName(style, 'padding'),
+                  dom.htmlToDocumentFragment('&#8942;')),  // vertical ellipsis
               dom.createDom(goog.dom.TagName.DIV, addressStyle),
               dom.createDom(goog.dom.TagName.DIV,
-                  [asmStyle, symbolStyle], insnBlock.getSymbolName())),
+                  [asmStyle, symbolStyle],
+                  symbolName === insnBlock.getSymbolName() ?
+                      null : insnBlock.getSymbolName())),
           true /* opt_render */);
 
-      /** @const */ var covStyle = goog.getCssName(style, 'coverage');
+      symbolName = insnBlock.getSymbolName();
 
-      insnBlock.forEachInstruction(function(insn) {
+      /** @const */ var covStyle = goog.getCssName(style, 'coverage');
+      /** @const */ var offset =
+          xcov.string.normalizeHexadecimal(insnBlock.getOffset());
+
+      insnBlock.forEachInstruction(function(insn, index) {
         /** @const */ var status = insn.getCoverage();
         /** @const */ var coverageSymbolDom =
             dom.createDom(goog.dom.TagName.DIV,
@@ -794,9 +806,24 @@ xcov.ui.SourceFile.InstructionSet_ = function(source, lineno, opt_domHelper) {
 
         xcov.ui.Tooltip.attach(coverageSymbolDom, status.image);
 
+        var offsetDom = null;
+
+        if (index === 0) {
+          offsetDom = dom.createDom(goog.dom.TagName.DIV,
+              [offsetStyle, symbolStyle], index === 0 ? offset : null);
+
+          xcov.ui.Tooltip.attach(offsetDom,
+              goog.string.buildString('<pre class="',
+                  goog.getCssName(style, 'tooltip'), '">',
+                  insnBlock.getSymbolName(), ' + ', offset, '</pre>'));
+
+        } else {
+          offsetDom = dom.createDom(goog.dom.TagName.DIV, offsetStyle);
+        }
+
         this.addChild(
             new xcov.ui.SourceFile.Attached_.Row(dom,
-                dom.createDom(goog.dom.TagName.DIV, offsetStyle),
+                offsetDom,
                 dom.createDom(goog.dom.TagName.DIV, addressStyle,
                     xcov.string.normalizeHexadecimal(insn.getAddress())),
                 coverageSymbolDom,
