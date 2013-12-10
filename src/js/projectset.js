@@ -59,22 +59,26 @@ xcov.ProjectSet.prototype.sort;
  *    (the row, its index in the array and the set). The return value
  *    is ignored.
  * @param {T=} opt_obj The object to be used as the value of 'this' within f.
+ * @param {boolean=} opt_noProjectLast Whether to force "Other Sources" to be
+ *    the last item or keep it sorted. Defaults to {@code true}.
  * @template T
  * @override
  */
-xcov.ProjectSet.prototype.forEach = function(f, opt_obj) {
+xcov.ProjectSet.prototype.forEach = function(f, opt_obj, opt_noProjectLast) {
   /** @const */ var callback = goog.bind(f, opt_obj);
+  /** @const */ var noProjectLast = goog.isDefAndNotNull(opt_noProjectLast) ?
+      opt_noProjectLast : true;
   var noProject = null;
 
   goog.array.forEach(this.getSetInternal(), function(project, index) {
     project = /** @type {!xcov.Project} */ (project);
 
-    if (project.getName() === xcov.Project.NO_PROJECT) {
+    if (noProjectLast && project.getName() === xcov.Project.NO_PROJECT) {
       noProject = project;
       return;
     }
 
-    callback(project, index, this);
+    callback(project, goog.isNull(noProject) ? index : index - 1, this);
   }, this /* opt_obj */);
 
   if (!goog.isNull(noProject)) {
