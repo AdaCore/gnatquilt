@@ -101,22 +101,24 @@ xcov.Message.prototype.hasSCO = function() {
 };
 
 
-/*******************************
- * xcov.Message.getSCOUniqueId *
- *******************************/
+/*************************
+ * xcov.Message.parseSCO *
+ *************************/
 
 
 /**
- * @return {number} The SCO unique ID if any, {@code 0} otherwise.
+ * @return {?{id:number,kind:string}} The SCO information: unique ID if any,
+ *    {@code 0} otherwise, and target (statement, condition, ...).
  */
-xcov.Message.prototype.getSCOUniqueId = function() {
+xcov.Message.prototype.parseSCO = function() {
   if (goog.isNull(this.sco_)) {
-    return 0;
+    return null;
   }
 
-  /** @const */ var match = /^SCO #([0-9]+): .*$/.exec(this.sco_);
+  /** @const */ var match = /^SCO #([0-9]+): (.*)$/.exec(this.sco_);
   /** @const */ var id = goog.string.parseInt(match[1]);
+  /** @const */ var kind = match[2].toLowerCase();
 
   goog.asserts.assert(goog.isNumber(id), 'compiler check');
-  return id;
+  return {id: id, kind: kind};
 };
