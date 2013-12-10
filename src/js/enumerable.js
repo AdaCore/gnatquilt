@@ -63,7 +63,6 @@ xcov.Enumerable.prototype.getLineCount = goog.abstractMethod;
  */
 xcov.Enumerable.prototype.getLinePercentage = function(status) {
   /** @const */ var relevantLineCount = this.getLineCount();
-  goog.asserts.assert(relevantLineCount !== 0, 'unexpected division by 0');
 
   if (relevantLineCount === 0) {
     return 0;
