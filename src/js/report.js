@@ -500,8 +500,10 @@ xcov.Report.analyseDecision_ = function(sourceFile, decision) {
           new xcov.SLOC(range[0][0], range[0][1]),
           new xcov.SLOC(range[1][0], range[1][1])));
 
-  goog.array.forEach(decision['conditions'],
-      goog.partial(xcov.Report.analyseCondition_, d));
+  if ('conditions' in decision) {
+    goog.array.forEach(decision['conditions'],
+        goog.partial(xcov.Report.analyseCondition_, d));
+  }
 
   d.forEachCondition(sourceFile.addCoverageInfo, sourceFile);
   sourceFile.addCoverageInfo(d);
