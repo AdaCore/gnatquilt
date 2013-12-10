@@ -77,8 +77,27 @@ xcov.Report = function() {
    * @private
    */
   this.projects_ = {};
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.hasExempted_ = false;
 };
 goog.inherits(xcov.Report, goog.Disposable);
+
+
+/***************************
+ * xcov.Report.hasExempted *
+ ***************************/
+
+
+/**
+ * @return {boolean} Whether we should display the exemption-related columns.
+ */
+xcov.Report.prototype.hasExempted = function() {
+  return this.hasExempted_;
+};
 
 
 /********************************
@@ -403,6 +422,13 @@ xcov.Report.analyseStats_ = function(stats) {
   /** @const */ var ret = {};
 
   goog.object.forEach(xcov.coverage.Status, function(status) {
+    if ((status === xcov.coverage.Status.EXEMPTED_NO_VIOLATION ||
+         status === xcov.coverage.Status.EXEMPTED_WITH_VIOLATION) &&
+        stats[status.internalImage] !== 0)
+    {
+      this.hasExempted_ = true;
+    }
+
     xcov.asserts.ensureAttribute(status.internalImage, stats, 'stats');
     goog.object.set(ret, status.internalImage, stats[status.internalImage]);
   });
