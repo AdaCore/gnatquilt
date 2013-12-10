@@ -360,7 +360,7 @@ xcov.Report.prototype.analyseSource_ = function(source, sourceFile) {
       if (!goog.object.isEmpty(message)) {
         sourceFile.addMessage(lineno,
             new xcov.Message(message['kind'], message['message'],
-                message['sco']));
+                message['SCO']));
       }
     }
 
