@@ -514,6 +514,12 @@ xcov.ui.SourceFile.Line_.prototype.getContentElement = function() {
  * @protected
  */
 xcov.ui.SourceFile.Line_.prototype.handleZippyToggleEvent = function(e) {
+  /** @const */ var method = e.expanded ?
+      goog.dom.classes.add : goog.dom.classes.remove;
+
+  method(this.getElement(),
+      goog.getCssName(xcov.ui.SourceFile.Line_.CSS_CLASS, 'expanded'));
+
   e.target = this;
   this.dispatchEvent(e);
 };
@@ -528,15 +534,42 @@ xcov.ui.SourceFile.Line_.prototype.handleZippyToggleEvent = function(e) {
 xcov.ui.SourceFile.Line_.prototype.enterDocument = function() {
   goog.base(this, 'enterDocument');
 
+  /** @const */ var dom = this.getDomHelper();
+  /** @const */ var numberDom = dom.getFirstElementChild(this.getElement());
+  /** @const */ var coverageDom = dom.getNextElementSibling(numberDom);
+  /** @const */ var textDom = dom.getFirstElementChild(
+      dom.getNextElementSibling(coverageDom));
+
   if (!goog.isNull(this.messageDom_)) {
     goog.asserts.assert(goog.isNull(this.zippy_));
 
-    this.zippy_ = new goog.ui.Zippy(
-        this.getElement(), this.messageDom_, false /* opt_expanded */);
+    this.zippy_ = new goog.ui.Zippy(numberDom,
+        this.messageDom_, false /* opt_expanded */);
 
     this.getHandler().listen(this.zippy_, goog.ui.Zippy.Events.TOGGLE,
         this.handleZippyToggleEvent);
   }
+
+  this.getHandler().listen(coverageDom, goog.events.EventType.CLICK,
+      this.handleRowClick_);
+
+  this.getHandler().listen(textDom, goog.events.EventType.CLICK,
+      this.handleRowClick_);
+};
+
+
+/********************************************
+ * xcov.ui.SourceFile.Line_.handleRowClick_ *
+ ********************************************/
+
+
+/**
+ * Toggles the zippy.
+ *
+ * @private
+ */
+xcov.ui.SourceFile.Line_.prototype.handleRowClick_ = function() {
+  this.zippy_.toggle();
 };
 
 
