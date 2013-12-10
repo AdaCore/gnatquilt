@@ -188,7 +188,7 @@ xcov.ui.Tooltip.setPosition = function(element, opt_position) {
  * @param {boolean} enable Whether to enable the tooltip or not.
  */
 xcov.ui.Tooltip.setEnabled = function(element, enable) {
-  element.setAttribute('tooltip-enable', enable.toString());
+  element.setAttribute('data-tooltip-enable', enable.toString());
 };
 
 
