@@ -28,10 +28,17 @@ xcov.RowableSet = function(opt_set) {
 
   /**
    * @type {Array.<!xcov.Rowable>}
-   * @const
    * @private
    */
   this.set_ = opt_set || [];
+
+  /**
+   * @type {Array.<!xcov.Rowable>} A second instance of the array used for a
+   *    stable sort.
+   * @const
+   * @private
+   */
+  this.originalSet_ = goog.array.clone(this.set_);
 };
 goog.inherits(xcov.RowableSet, xcov.Enumerable);
 
@@ -48,6 +55,7 @@ goog.inherits(xcov.RowableSet, xcov.Enumerable);
  */
 xcov.RowableSet.prototype.push = function(rowable) {
   this.set_.push(rowable);
+  this.originalSet_.push(rowable);
 };
 
 
@@ -147,5 +155,6 @@ xcov.RowableSet.prototype.forEach = function(f, opt_obj) {
  *    equal to, or greater than the second.
  */
 xcov.RowableSet.prototype.sort = function(opt_compareFn) {
+  this.set_ = goog.array.clone(this.originalSet_);
   goog.array.sort(this.set_, opt_compareFn);
 };
