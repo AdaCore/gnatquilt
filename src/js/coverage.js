@@ -5,6 +5,9 @@
 
 goog.provide('xcov.coverage');
 
+goog.require('goog.asserts');
+goog.require('goog.object');
+
 goog.require('xcov.style');
 
 

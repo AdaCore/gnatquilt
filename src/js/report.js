@@ -327,7 +327,7 @@ xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
 
     /** @const */ var sourceFile =
         new xcov.SourceFile(source['filename'], source['coverage_level'],
-            xcov.Report.analyseStats_(source['stats']), source['hunk_filename'],
+            this.analyseStats_(source['stats']), source['hunk_filename'],
             project);
 
     goog.object.set(this.sources_, sourceFile.getFilename(), sourceFile);
@@ -418,10 +418,12 @@ xcov.Report.prototype.analyseSource_ = function(source, sourceFile) {
  * @return {!Object.<xcov.coverage.Status,number>} A stats array.
  * @private
  */
-xcov.Report.analyseStats_ = function(stats) {
+xcov.Report.prototype.analyseStats_ = function(stats) {
   /** @const */ var ret = {};
 
   goog.object.forEach(xcov.coverage.Status, function(status) {
+    xcov.asserts.ensureAttribute(status.internalImage, stats, 'stats');
+
     if ((status === xcov.coverage.Status.EXEMPTED_NO_VIOLATION ||
          status === xcov.coverage.Status.EXEMPTED_WITH_VIOLATION) &&
         stats[status.internalImage] !== 0)
@@ -429,9 +431,8 @@ xcov.Report.analyseStats_ = function(stats) {
       this.hasExempted_ = true;
     }
 
-    xcov.asserts.ensureAttribute(status.internalImage, stats, 'stats');
     goog.object.set(ret, status.internalImage, stats[status.internalImage]);
-  });
+  }, this /* opt_obj */);
 
   return ret;
 };
