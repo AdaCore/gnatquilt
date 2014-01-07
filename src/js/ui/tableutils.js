@@ -61,10 +61,9 @@ xcov.ui.TableUtils.createTableHead = function(label, dom, opt_withExempted) {
 
   var countCellStyle = xcov.ui.TableUtils.COUNT_CELL_CSS_CLASS;
 
-  if (withExempted) {
+  if (!withExempted) {
     countCellStyle = [
-      countCellStyle,
-      goog.getCssName(xcov.style.CSS_CLASS, 'no-exemption')
+      countCellStyle, goog.getCssName(xcov.style.CSS_CLASS, 'no-exemption')
     ];
   }
 
