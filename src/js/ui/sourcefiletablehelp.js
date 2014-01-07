@@ -23,12 +23,21 @@ goog.require('xcov.style');
 /**
  * The help and legend text.
  *
+ * @param {boolean} withExempted Whether to display the exemption-related
+ *    columns or not.
  * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
  * @constructor
  * @extends {goog.ui.Component}
  */
-xcov.ui.SourceFileTableHelp = function(opt_domHelper) {
+xcov.ui.SourceFileTableHelp = function(withExempted, opt_domHelper) {
   goog.base(this, opt_domHelper);
+
+  /**
+   * @type {boolean}
+   * @const
+   * @private
+   */
+  this.withExempted_ = withExempted;
 };
 goog.inherits(xcov.ui.SourceFileTableHelp, goog.ui.Component);
 
@@ -73,15 +82,11 @@ xcov.ui.SourceFileTableHelp.prototype.createDom = function() {
 
   /** @const */ var legend = dom.createDom(goog.dom.TagName.TR);
 
-  goog.object.forEach(xcov.coverage.Status, function(status) {
-    if (status === xcov.coverage.Status.NO_CODE) {
-      return;
-    }
-
+  xcov.coverage.forEachStatus(function(status) {
     dom.appendChild(legend,
         dom.createDom(goog.dom.TagName.TD,
             xcov.getCssName(style, status.style), status.image));
-  });
+  }, this /* opt_obj */, this.withExempted_);
 
   this.setElementInternal(dom.createDom(goog.dom.TagName.DIV, style,
       paragraph1, list1, paragraph2,

@@ -112,7 +112,9 @@ xcov.ui.views.Summary = function(report, opt_domHelper) {
     goog.object.set(this.zippies_, titleId, zippy);
   }, this /* opt_obj */);
 
-  this.addChild(new xcov.ui.SourceFileTableHelp(dom), true /* opt_render */);
+  this.addChild(
+      new xcov.ui.SourceFileTableHelp(report.hasExempted(), dom),
+      true /* opt_render */);
 };
 goog.inherits(xcov.ui.views.Summary, goog.ui.Component);
 

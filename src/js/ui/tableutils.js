@@ -254,10 +254,10 @@ xcov.ui.TableUtils.createCoverageSummaryDom = function(enumerable, dom) {
   /** @const */ var row = dom.createDom(goog.dom.TagName.TR, null);
   /** @const */ var style = goog.getCssName(xcov.style.CSS_CLASS, 'summary');
 
-  goog.object.forEach(xcov.coverage.Status, function(status) {
+  xcov.coverage.forEachStatus(function(status) {
     /** @const */ var count = enumerable.getLineCount(status);
 
-    if (status === xcov.coverage.Status.NO_CODE || count === 0) {
+    if (count === 0) {
       // Display only relevant lines of code
       return null;
     }

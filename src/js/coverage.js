@@ -184,3 +184,44 @@ xcov.coverage.fromBranchSymbol = function(symbol) {
 
   return /** @type {!xcov.coverage.BranchStatus} */ (status);
 };
+
+
+/*******************************
+ * xcov.coverage.forEachStatus *
+ *******************************/
+
+
+/**
+ * Calls a function for each status.
+ *
+ * @param {?function(this:T,!xcov.coverage.Status,number):?} f The function to
+ *    call for every status. This function takes 2 argument (the status
+ *    and the index). The return value is ignored.
+ * @param {T=} opt_obj The object to be used as the value of 'this' within f.
+ * @param {boolean=} opt_withExempted Whether to display the exemption-related
+ *    status or not.
+ * @template T
+ */
+xcov.coverage.forEachStatus = function(f, opt_obj, opt_withExempted) {
+  /** @const */ var withExempted = goog.isDefAndNotNull(opt_withExempted) ?
+      opt_withExempted : true;
+  /** @const */ var callback = goog.bind(f, opt_obj);
+
+  var count = 0;
+
+  goog.object.forEach(xcov.coverage.Status, function(status) {
+    if (status === xcov.coverage.Status.NO_CODE) {
+      return;
+    }
+
+    if (!withExempted &&
+        (status === xcov.coverage.Status.EXEMPTED_NO_VIOLATION ||
+         status === xcov.coverage.Status.EXEMPTED_WITH_VIOLATION))
+    {
+      return;
+    }
+
+    callback(status, count);
+    count = count + 1;
+  });
+};
