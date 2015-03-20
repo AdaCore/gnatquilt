@@ -9,6 +9,7 @@ goog.provide('xcov.navigation');
 
 goog.require('goog.Disposable');
 goog.require('goog.History');
+goog.require('goog.Uri');
 goog.require('goog.array');
 goog.require('goog.debug.Logger');
 goog.require('goog.dom');
@@ -115,8 +116,8 @@ xcov.navigation.eventTarget = new goog.events.EventTarget();
 xcov.navigation.initialize = function(opt_window) {
   /** @const */ var win = opt_window || window;
 
-  xcov.navigation.baseURL = goog.string.buildString(win.location.protocol, '//',
-      win.location.hostname, win.location.pathname);
+  xcov.navigation.baseURL = new goog.Uri(win.location)
+          .setFragment('').setQueryData(null).toString();
 
   goog.events.listen(xcov.navigation.history_, goog.history.EventType.NAVIGATE,
       xcov.navigation.onNavigate_);
