@@ -62,6 +62,14 @@ xcov.ui.SourceFileTable = function(sources, withExempted, opt_domHelper) {
    * @private
    */
   this.rows_ = {};
+
+  /**
+   * @type {?function(!xcov.SourceFile,!xcov.SourceFile):number} Last sort
+   *    function used. This is used to save the state of the last sort and thus
+   *    provide reverse sorting on second left-click.
+   * @private
+   */
+  this.lastCompareFn_ = null;
 };
 goog.inherits(xcov.ui.SourceFileTable, goog.ui.Component);
 
@@ -237,6 +245,15 @@ xcov.ui.SourceFileTable.prototype.onSort_ = function(compareFn, e) {
   goog.asserts.assert(!goog.isNull(this.rows_), 'Missing internal structures');
 
   this.sources_.sort(compareFn);
+  /** @const */ var descending =
+      this.lastCompareFn_ && this.lastCompareFn_ === compareFn;
+
+  if (descending) {
+    this.sources_.reverse();
+    this.lastCompareFn_ = null;
+  } else {
+    this.lastCompareFn_ = compareFn;
+  }
 
   /** @const */ var dom = this.getDomHelper();
   /** @const */ var thead = dom.getFirstElementChild(this.getElement());
@@ -255,5 +272,5 @@ xcov.ui.SourceFileTable.prototype.onSort_ = function(compareFn, e) {
   }, this /* opt_obj */);
 
   xcov.ui.TableUtils.showSortArrow(thead,
-      /** @type {Element} */ (e.target), dom);
+      /** @type {Element} */ (e.target), !descending /* ascending */);
 };

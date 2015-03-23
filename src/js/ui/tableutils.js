@@ -68,8 +68,8 @@ xcov.ui.TableUtils.createTableHead = function(label, dom, opt_withExempted) {
   }
 
   function createSortArrow() {
-    /** @const */ var elt = dom.createDom(goog.dom.TagName.SPAN,
-        {'style': 'float:left'}, dom.htmlToDocumentFragment('&#8595;'));
+    /** @const */ var elt =
+        dom.createDom(goog.dom.TagName.SPAN, {'style': 'float:left'});
     goog.style.showElement(elt, false);
     return elt;
   };
@@ -111,9 +111,13 @@ xcov.ui.TableUtils.createTableHead = function(label, dom, opt_withExempted) {
  *
  * @param {Element} thead Table HEAD.
  * @param {Element} td Table cell.
- * @param {goog.dom.DomHelper} dom DOM helper.
+ * @param {boolean=} opt_ascending Whether the arrow should suggest and
+ *    ascending or descending sort order. Defaults to {@code true}, ie.
+ *    ascending.
  */
-xcov.ui.TableUtils.showSortArrow = function(thead, td, dom) {
+xcov.ui.TableUtils.showSortArrow = function(thead, td, opt_ascending) {
+  /** @const */ var dom = goog.dom.getDomHelper(thead);
+
   /**
    * Returns the arrow in the given cell.
    *
@@ -125,10 +129,18 @@ xcov.ui.TableUtils.showSortArrow = function(thead, td, dom) {
   };
 
   goog.array.forEach(dom.getChildren(thead), function(child) {
-    goog.style.showElement(getArrow(child), false);
+    /** @const */ var arrow = getArrow(child);
+    dom.removeChildren(arrow);
+    goog.style.showElement(arrow, false);
   });
 
-  goog.style.showElement(getArrow(td), true);
+  /** @const */ var arrow = getArrow(td);
+  /** @const */ var ascendingSort =
+      goog.isDefAndNotNull(opt_ascending) ? opt_ascending : true;
+
+  goog.style.showElement(arrow, true);
+  dom.appendChild(arrow,
+        dom.htmlToDocumentFragment(ascendingSort ? '&#8595;' : '&#8593;'));
 };
 
 

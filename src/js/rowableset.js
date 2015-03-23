@@ -158,3 +158,18 @@ xcov.RowableSet.prototype.sort = function(opt_compareFn) {
   this.set_ = goog.array.clone(this.originalSet_);
   goog.array.sort(this.set_, opt_compareFn);
 };
+
+
+/***************************
+ * xcov.RowableSet.reverse *
+ ***************************/
+
+
+/**
+ * Reverses the set.
+ */
+xcov.RowableSet.prototype.reverse = function() {
+  /** @const */ var reverseSet = [];
+  goog.array.forEachRight(this.set_, function(elt) { reverseSet.push(elt); });
+  this.set_ = reverseSet;
+};

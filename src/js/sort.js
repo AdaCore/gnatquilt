@@ -138,9 +138,8 @@ xcov.sort.compareCoverageCount = function(status, enumerable, other) {
  *    whether the first argument is less than, equal to, or greater than the
  *    second.
  */
-xcov.sort.compareCoverageStatusPercentage = function(status, enumerable,
-    other) {
-
+xcov.sort.compareCoverageStatusPercentage = function(status, enumerable, other)
+{
   return enumerable.comparePercentage(other, status);
 };
 
