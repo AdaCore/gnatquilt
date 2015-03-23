@@ -19,6 +19,7 @@ goog.require('goog.events.EventTarget');
 goog.require('goog.history.EventType');
 goog.require('goog.string');
 
+goog.require('xcov.SourceFile');
 goog.require('xcov.history.Html5History');
 
 
@@ -198,14 +199,14 @@ xcov.navigation.getCanonicalTraceTableURL = function() {
 /**
  * Crafts an URL to the given source file name.
  *
- * @param {string} filename The source file name.
+ * @param {!xcov.SourceFile} source The source file.
  * @return {string} The URL pointing to the given source file from the HTML
  *    report.  Returns {@code null} if the navigation engine has not been
  *    initialized yet.
  */
-xcov.navigation.getCanonicalSourceFileURL = function(filename) {
+xcov.navigation.getCanonicalSourceFileURL = function(source) {
   return goog.string.buildString(xcov.navigation.baseURL,
-      '#', xcov.navigation.Views.SOURCE, filename);
+      '#', xcov.navigation.Views.SOURCE, source.getHunkFilename());
 };
 
 

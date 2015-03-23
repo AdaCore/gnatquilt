@@ -82,16 +82,32 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
   /** @const */ var tableBody = dom.createDom(goog.dom.TagName.TBODY);
 
   this.sources_.forEach(function(source, index) {
+    /** @const */ var fname = source.getFilename();
+    /** @const */ var fnameDom = dom.createDom(goog.dom.TagName.SPAN);
+    /** @const */ var basename = goog.string.path.basename(fname);
+
+    if (basename == fname) {
+      dom.setTextContent(fnameDom, fname);
+
+    } else {
+      /** @const */ var css = goog.getCssName(xcov.style.CSS_CLASS, 'path');
+      /** @const */ var dirname = goog.string.path.dirname(fname) + '/';
+
+      dom.append(fnameDom,
+            dom.createDom(goog.dom.TagName.SPAN, css, dirname),
+            dom.createDom(goog.dom.TagName.SPAN, null, basename));
+    }
+
     /** @const */ var sourceLinkDom = dom.createDom(goog.dom.TagName.A, {
-      'href': xcov.navigation.getCanonicalSourceFileURL(source.getFilename())
-    }, dom.createDom(goog.dom.TagName.SPAN, null, source.getFilename()));
+      'href': xcov.navigation.getCanonicalSourceFileURL(source)
+    }, fnameDom);
 
     /** @const */ var row =
         xcov.ui.TableUtils.createTableRow(sourceLinkDom, source, dom,
             this.withExempted_, index);
 
     dom.appendChild(tableBody, row);
-    goog.object.set(this.rows_, source.getFilename(), row);
+    goog.object.set(this.rows_, source.getUniqueId(), row);
   }, this /* opt_obj */);
 
   dom.appendChild(table, tableBody);
@@ -230,7 +246,7 @@ xcov.ui.SourceFileTable.prototype.onSort_ = function(compareFn, e) {
 
   this.sources_.forEach(function(file, index) {
     /** @const */ var row =
-        goog.object.get(this.rows_, file.getFilename(), null /* opt_val */);
+        goog.object.get(this.rows_, file.getUniqueId(), null /* opt_val */);
 
     goog.asserts.assert(goog.isDefAndNotNull(row), 'Unexpected null row');
 

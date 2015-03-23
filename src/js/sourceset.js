@@ -44,3 +44,22 @@ goog.inherits(xcov.SourceSet, xcov.RowableSet);
  *    equal to, or greater than the second.
  */
 xcov.SourceSet.prototype.sort;
+
+
+
+/**************************
+ * xcov.SourceSet.forEach *
+ **************************/
+
+
+/**
+ * Calls a function for each project of the set.
+ *
+ * @param {function(this:T,!xcov.SourceFile,number,!xcov.SourceSet):?} f The
+ *    function to call for every row. The function takes 3 arguments
+ *    (the row, its index in the array and the set). The return value
+ *    is ignored.
+ * @param {T=} opt_obj The object to be used as the value of 'this' within f.
+ * @template T
+ */
+xcov.SourceSet.prototype.forEach;

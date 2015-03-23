@@ -31,14 +31,14 @@ goog.require('xcov.coverage');
  *    file.
  * @param {!Object.<xcov.coverage.Status,number>} stats The overall coverage
  *    numbers for this source file.
- * @param {?string=} opt_hunkFilename Optional hunk filename to lazily load when
+ * @param {string} hunkFilename Optional hunk filename to lazily load when
  *    needed to fetch the whole source file data.
  * @param {?string=} opt_project Optional project name containing this source
  *    file.
  * @constructor
  * @extends {xcov.Rowable}
  */
-xcov.SourceFile = function(filename, coverageLevel, stats, opt_hunkFilename,
+xcov.SourceFile = function(filename, coverageLevel, stats, hunkFilename,
     opt_project) {
 
   goog.base(this);
@@ -68,18 +68,18 @@ xcov.SourceFile = function(filename, coverageLevel, stats, opt_hunkFilename,
   this.coverageLevel_ = coverageLevel;
 
   /**
-   * @type {?string}
+   * @type {string}
    * @const
    * @private
    */
-  this.project_ = opt_project || null;
+  this.hunkFilename_ = hunkFilename;
 
   /**
    * @type {?string}
    * @const
    * @private
    */
-  this.hunkFilename_ = opt_hunkFilename || null;
+  this.project_ = opt_project || null;
 
   /**
    * @type {Object.<xcov.coverage.Status,number>}
@@ -161,6 +161,19 @@ xcov.SourceFile.prototype.isCompletelyLoaded = function() {
  */
 xcov.SourceFile.prototype.setCompletelyLoaded = function(completelyLoaded) {
   this.isCompletelyLoaded_ = completelyLoaded;
+};
+
+
+/*******************************
+ * xcov.SourceFile.getUniqueId *
+ *******************************/
+
+
+/**
+ * @return {string} A unique ID.
+ */
+xcov.SourceFile.prototype.getUniqueId = function() {
+  return this.getHunkFilename();
 };
 
 

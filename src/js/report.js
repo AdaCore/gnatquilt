@@ -218,9 +218,9 @@ xcov.Report.prototype.getSource = function(filename) {
  *    Returns {@code null} on error.
  */
 xcov.Report.prototype.loadHunk = function(hunk) {
-  xcov.asserts.ensureAttribute('filename', hunk, 'hunk');
+  xcov.asserts.ensureAttribute('hunk_filename', hunk, 'hunk');
 
-  /** @const */ var filename = hunk['filename'];
+  /** @const */ var filename = hunk['hunk_filename'];
   /** @const */ var sourceFile = goog.object.get(this.sources_, filename, null);
 
   if (goog.isNull(sourceFile)) {
@@ -330,7 +330,7 @@ xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
             this.analyseStats_(source['stats']), source['hunk_filename'],
             project);
 
-    goog.object.set(this.sources_, sourceFile.getFilename(), sourceFile);
+    goog.object.set(this.sources_, sourceFile.getHunkFilename(), sourceFile);
 
     /** @const */ var key = goog.string.isEmptySafe(project) ?
         xcov.Project.NO_PROJECT : project;
