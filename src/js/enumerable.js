@@ -105,9 +105,16 @@ xcov.Enumerable.prototype.comparePercentage = function(other, opt_status) {
       return;
     }
 
-    if (this.getLinePercentage(status) !== other.getLinePercentage(status)) {
-      result = this.getLinePercentage(status) <
-          other.getLinePercentage(status) ? -1 : 1;
+    /** @const */ var aPercentage = this.getLinePercentage(status);
+    /** @const */ var bPercentage = other.getLinePercentage(status);
+
+    /** @const */ var aCount = this.getLineCount(status);
+    /** @const */ var bCount = other.getLineCount(status);
+
+    if (aPercentage !== bPercentage) {
+      result = aPercentage < bPercentage ? -1 : 1;
+    } else if (aCount !== bCount) {
+      result = aCount < bCount ? -1 : 1;
     }
   }, this /* opt_obj */);
 
