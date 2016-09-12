@@ -39,6 +39,13 @@ xcov.coverage.Status = {
     symbol: '.',
     displaySymbol: '·'
   },
+  NOT_COVERABLE: {
+    image: 'Not Coverable',
+    style: 'not-coverable',
+    internalImage: 'not_coverable',
+    symbol: '0',
+    displaySymbol: '0'
+  },
   COVERED: {
     image: 'Covered',
     style: 'covered',

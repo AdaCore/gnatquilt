@@ -178,6 +178,7 @@
           &-covered                 { background-color: @xcov-line-covered;                 }
           &-partially-covered       { background-color: @xcov-line-partially-covered;       }
           &-not-covered             { background-color: @xcov-line-not-covered;             }
+          &-not-coverable           { background-color: @xcov-line-not-coverable;           }
           &-exempted-no-violation   { background-color: @xcov-line-exempted-no-violation;   }
           &-exempted-with-violation { background-color: @xcov-line-exempted-with-violation; }
         }
@@ -195,6 +196,7 @@
     &-covered                 { .bgline-hover(@xcov-line-covered);           }
     &-partially-covered       { .bgline(@xcov-line-partially-covered);       }
     &-not-covered             { .bgline(@xcov-line-not-covered);             }
+    &-not-coverable           { .bgline-hover(@xcov-line-not-coverable);     }
     &-exempted-no-violation   { .bgline(@xcov-line-exempted-no-violation);   }
     &-exempted-with-violation { .bgline(@xcov-line-exempted-with-violation); }
   }
