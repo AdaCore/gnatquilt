@@ -64,7 +64,10 @@ xcov.ui.SourceFileTableHelp.prototype.createDom = function() {
           'criteria;'),
       dom.createDom(goog.dom.TagName.LI, null,
           'the number of such lines that are part of an exemption ' +
-          'region, with or without actually exempted violations'),
+          'region, with or without actually exempted violations;'),
+      dom.createDom(goog.dom.TagName.LI, null,
+          'the number of such lines that are not coverable because no' +
+          'machine code is generated (if requested by --not-coverable);'),
       dom.createDom(goog.dom.TagName.LI, null,
           'a visual summary of this coverage data.'));
 
