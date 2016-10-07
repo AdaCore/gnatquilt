@@ -1,6 +1,5 @@
 [gerrit]
-host=git.adacore.com
-port=29418
-project=gnatquilt
-defaultbranch=master
-defaultremote=origin
+host = git.adacore.com
+project = gnatquilt
+defaultbranch = 17
+defaultremote = origin
