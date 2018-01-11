@@ -322,13 +322,14 @@ xcov.Report.prototype.analyseSourcesAttr_ = function(sources) {
     xcov.asserts.ensureAttribute('hunk_filename', source, 'source');
     xcov.asserts.ensureAttribute('coverage_level', source, 'source');
     xcov.asserts.ensureAttribute('stats', source, 'source');
+    xcov.asserts.ensureAttribute('missing_source', source, 'source');
 
     /** @const */ var project = 'project' in source ? source['project'] : null;
 
     /** @const */ var sourceFile =
         new xcov.SourceFile(source['filename'], source['coverage_level'],
             this.analyseStats_(source['stats']), source['hunk_filename'],
-            project);
+            source['missing_source'], project);
 
     goog.object.set(this.sources_, sourceFile.getHunkFilename(), sourceFile);
 

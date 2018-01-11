@@ -105,10 +105,22 @@ xcov.ui.SourceFileTable.prototype.createDom = function() {
             dom.createDom(goog.dom.TagName.SPAN, css, dirname),
             dom.createDom(goog.dom.TagName.SPAN, null, basename));
     }
-
-    /** @const */ var sourceLinkDom = dom.createDom(goog.dom.TagName.A, {
-      'href': xcov.navigation.getCanonicalSourceFileURL(source)
+    var sourceLinkDom = dom.createDom(goog.dom.TagName.A, {
+        'href': xcov.navigation.getCanonicalSourceFileURL(source)
     }, fnameDom);
+
+    if (source.isMissing) {
+        dom.append(fnameDom,
+                   dom.createDom(
+                       goog.dom.TagName.SPAN,
+                       goog.getCssName(
+                           xcov.style.CSS_CLASS, 'table-missing-source-note'),
+                       '(missing source, not executed?)'));
+        sourceLinkDom = dom.createDom(goog.dom.TagName.SPAN, {
+            'class': goog.getCssName(
+                xcov.style.CSS_CLASS, 'table-missing-source')
+        }, fnameDom);
+    }
 
     /** @const */ var row =
         xcov.ui.TableUtils.createTableRow(sourceLinkDom, source, dom,
