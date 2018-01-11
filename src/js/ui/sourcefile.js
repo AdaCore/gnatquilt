@@ -154,7 +154,7 @@ xcov.ui.SourceFile.prototype.createDom = function() {
 
   this.autoRollCheckbox_ = dom.createDom(goog.dom.TagName.INPUT, {
     'type': 'checkbox',
-    'checked': true,
+    'checked': this.source_.isMissing ? false : true,
     'class': goog.getCssName(style, 'autoroll')
   });
 
@@ -173,6 +173,13 @@ xcov.ui.SourceFile.prototype.createDom = function() {
 
   this.setElementInternal(dom.createDom(goog.dom.TagName.DIV, style,
       toolbarDom, contentDom));
+
+  // Expand the message box when the source is missing
+  if (this.source_.isMissing) {
+      try {
+          setTimeout(this.expandAll.bind(this), 500);
+      } catch (err) {}
+  }
 };
 
 

@@ -39,7 +39,7 @@ goog.require('xcov.coverage');
  * @extends {xcov.Rowable}
  */
 xcov.SourceFile = function(filename, coverageLevel, stats, hunkFilename,
-    opt_project) {
+    is_missing, opt_project) {
 
   goog.base(this);
 
@@ -129,6 +129,12 @@ xcov.SourceFile = function(filename, coverageLevel, stats, hunkFilename,
    * @private
    */
   this.insnSets_ = {};
+
+   /**
+   * @type {boolean}
+   * @const
+   */
+  this.isMissing = is_missing;
 };
 goog.inherits(xcov.SourceFile, xcov.Rowable);
 
