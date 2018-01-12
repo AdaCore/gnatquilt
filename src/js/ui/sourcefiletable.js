@@ -179,6 +179,10 @@ xcov.ui.SourceFileTable.prototype.enterDocument = function() {
       return;
     }
 
+    if (value === xcov.coverage.Status.NOT_COVERABLE) {
+      return;
+    }
+
     if (goog.array.contains(EXEMPTIONS, value) && !this.withExempted_) {
       return;
     }
