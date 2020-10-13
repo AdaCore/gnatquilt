@@ -1,0 +1,11 @@
+<table class="xcov-summary">
+  <tbody>
+  <tr>
+    <td *ngFor="let status of ctx.properties"
+        class="xcov-summary{{status.classSuffix}}"
+        width="{{enumerable.statsPercent.get(status.status)}}%"
+        matTooltip="{{enumerable.statsPercent.get(status.status)}}% {{status.name}}"
+    ></td>
+  </tr>
+  </tbody>
+</table>

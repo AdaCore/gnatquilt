@@ -1,0 +1,6 @@
+<td class="xcov-table-filename">{{source.getName()}}</td>
+<td [style.width.%]=ctx.width class="xcov-table-count">{{source.totalLines}}</td>
+<td class="xcov-table-count" *ngFor="let status of ctx.properties">
+<div class="xcov-table-cell"><span>{{source.stats.get(status.status)}}</span><span>{{source.statsPercent.get(status.status)}}%</span></div>
+</td>
+<td class="xcov-table-summary"><app-summary [ctx]="ctx" [enumerable]="source"></app-summary></td>

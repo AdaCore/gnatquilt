@@ -1,0 +1,22 @@
+@import "../../styles";
+
+.xcov-summary {
+  width:  100%;
+  height: 18px;
+
+  margin: 0;
+
+  tbody tr { border: $xcov-summary-table-border; }
+  tbody td { border: none; }
+
+  tbody tr, tbody td { padding: 0 !important; margin: 0 !important; }
+
+  &-no-code                 { /* empty */ }
+  &-not-applicable          { background-color: $xcov-summary-not-applicable;          }
+  &-covered                 { background-color: $xcov-summary-covered;                 }
+  &-partially-covered       { background-color: $xcov-summary-partially-covered;       }
+  &-not-covered             { background-color: $xcov-summary-not-covered;             }
+  &-not-coverable           { background-color: $xcov-summary-not-coverable;           }
+  &-exempted-no-violation   { background-color: $xcov-summary-exempted-no-violation;   }
+  &-exempted-with-violation { background-color: $xcov-summary-exempted-with-violation; }
+}
