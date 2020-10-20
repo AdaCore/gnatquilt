@@ -1,6 +1,10 @@
-import {Enumerable, Enumerables, IStats} from '../interface/report.model';
+import {Enumerable, Enumerables, EnumerableService, EnumerablesService, IStats} from '../interface/report.model';
 import {IReport, ISource} from '../interface/data.model';
 import {Status} from '../models/app-enum';
+import {Injectable} from '@angular/core';
+import {LoadJsonService} from './load-json.service';
+import {Observable, of} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 /**
  * computes the percentage statistics from statistics and total number of lines
@@ -12,7 +16,6 @@ import {Status} from '../models/app-enum';
 function computePercentages(totalLines: number, stats: Map<string, number>): Map<string, number> {
   const percentages: Map<string, number> = new Map<string,number>();
   for (const covStat of stats.entries()) {
-    console.log(totalLines);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     totalLines !== 0 ?
       percentages.set(covStat[0], Math.round(100 * covStat[1] / totalLines)) :
@@ -114,30 +117,32 @@ export class Project implements IStats, Enumerable, Enumerables {
 }
 
 export class Report implements Enumerables, Enumerable {
-  projects: Map<string, Project> = new Map<string, Project>();
+  projects: Project[];
   totalLines: number;
   stats: Map<string, number>;
   statsPercent: Map<string, number>;
 
   constructor(data: IReport) {
+    const projects: Map<string, Project> = new Map<string, Project>();
     for (const source of data.sources) {
       const key = source.project;
-      const project = this.projects.get(key) || new Project(key);
+      const project = projects.get(key) || new Project(key);
       project.addSource(new Source(source));
-      this.projects.set(key, project);
+      projects.set(key, project);
     }
-    for (const item of this.projects.entries()){
+    for (const item of projects.entries()){
       const project = item[1];
       project.computeStats();
     }
-    [this.totalLines, this.stats] = computeAggregatedStats(Array.from(this.projects.values()));
+    [this.totalLines, this.stats] = computeAggregatedStats(Array.from(projects.values()));
     this.statsPercent = computePercentages(this.totalLines, this.stats);
+    this.projects = Array.from(projects.values());
   }
 
-  getName = () => 'Total';
+  getName: () => string = () => 'Total';
 
   getEnumerables(): Array<Enumerable> {
-    return Array.from(this.projects.values());
+    return this.projects;
   }
 
   getHeadName(): string {
@@ -145,52 +150,44 @@ export class Report implements Enumerables, Enumerable {
   }
 }
 
-export class StatusWihProperties {
-  status: Status;
-  name: string;
-  classSuffix: string;
-}
+@Injectable({
+  providedIn: 'root'
+})
 
-export class Ctx {
-  properties: Array<StatusWihProperties>;
-  width: number;
+export class ReportService  {
+  report: Observable<Report>;
+  total: Observable<Enumerables>;
 
-  constructor(aggregatedStats: Enumerable){
-    this.properties = this.propertiesOfInterest(aggregatedStats);
-    this.width = this.computeWidth(this.properties);
-    console.log(this.width);
-  }
-  /**
-   * [computes the coverage statuses we want to report based of the project statistics]
-   *
-   * @param aggregatedStats [stats overview, to know for which coverage status it is interesting reporting.
-   * as an example, if a project has 0 exempted lines, no need to report on exemptions]
-   * @return [list of coverage status to report]
-   */
-  propertiesOfInterest(aggregatedStats: Enumerable): Array<StatusWihProperties> {
-    const properties: Array<StatusWihProperties> = [
-      {status: Status.covered, name: 'Covered', classSuffix: '-covered'},
-      {status: Status.partiallyCovered, name: 'Partially Covered', classSuffix: '-partially-covered'},
-      {status: Status.notCovered, name: 'Not Covered', classSuffix: '-not-covered'},
-      {status: Status.notCoverable, name: 'Not Coverable', classSuffix: '-not-coverable'},
-      {status: Status.exemptedNoViolation, name: 'Exempted no Violation', classSuffix: '-exempted-no-violation'},
-      {status: Status.exemptedWithViolation, name: 'Exempted with Violation', classSuffix: '-exempted-with-violation'}
-    ];
-    return properties.filter(
-      (statProp) =>
-        aggregatedStats.stats.get(statProp.status) !== 0
+  constructor(private loadJSONService: LoadJsonService) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const data: Observable<IReport> = this.loadJSONService.getJSON();
+    this.report =   data.pipe(
+      map(ireport => new Report(ireport)));
+    this.total = this.report.pipe(
+      map(report =>
+        new class implements Enumerables {
+          enumerable: Enumerable;
+          constructor(enumerable: Enumerable){
+            this.enumerable = enumerable;
+          }
+          getEnumerables(): Array<Enumerable> {
+            return [this.enumerable];
+          }
+
+          getHeadName(): string {
+            return '';
+          }
+        }(report)
+      )
     );
   }
 
-  /**
-   * [computes the width of a coverage status table column given the number of status to be reported]
-   *
-   * @param pOfInterest [list of status]
-   * @return [width in the coverage summary table for each status]
-   */
-  computeWidth(pOfInterest: Array<StatusWihProperties> ): number{
-    const fullWidth = 60; // td `xcov-count` get 60% of the whole array.
-    return fullWidth / (pOfInterest.length + 1); // totalLines is not included in propertiesOfInterest and should be included there
+  getReport(): Observable<Report> {
+    return this.report;
+  }
+
+  getTotal(): Observable<Enumerables> {
+    return this.total;
   }
 
 }

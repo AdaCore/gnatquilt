@@ -97,7 +97,7 @@ module.exports = {
         ],
         "@typescript-eslint/consistent-type-assertions": "error",
         "@typescript-eslint/dot-notation": "error",
-        "@typescript-eslint/explicit-module-boundary-types": "warn",
+        "@typescript-eslint/explicit-module-boundary-types": "error",
         "@typescript-eslint/indent": [
             "error",
             2,
@@ -280,7 +280,7 @@ module.exports = {
         "no-throw-literal": "error",
         "no-trailing-spaces": "error",
         "no-undef-init": "error",
-        "no-underscore-dangle": "error",
+        //"no-underscore-dangle": "error",
         "no-unsafe-finally": "error",
         "no-unused-labels": "error",
         "no-unused-vars": "off",

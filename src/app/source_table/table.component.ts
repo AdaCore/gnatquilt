@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Sort} from '@angular/material/sort';
 import {Status} from '../../models/app-enum';
 import {Enumerable, Enumerables} from '../../interface/report.model';
-import {Ctx} from '../report.service';
+import {Ctx, CtxService} from '../ctx.service';
 
 @Component({
   selector: 'app-table',
@@ -37,8 +37,6 @@ export class TableComponent implements OnInit {
         return compare(a.totalLines, b.totalLines, isAsc);
       default:
         const status = sort.active;
-        console.log(status);
-        console.log(Status[status]);
         return Status[status] !== undefined ?
           compare(a.stats.get(status), b.stats.get(status), isAsc) :
           0;

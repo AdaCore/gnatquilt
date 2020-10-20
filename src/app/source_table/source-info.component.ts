@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {Enumerable} from '../../interface/report.model';
-import {Ctx} from '../report.service';
+import {Ctx, CtxService} from '../ctx.service';
 
 @Component({
   selector: 'app-source-info, [app-source-info]',
