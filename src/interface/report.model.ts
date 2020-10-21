@@ -1,18 +1,12 @@
 import {Observable} from 'rxjs';
-
-export interface IStats {
-  totalLines: number;
-  stats: Map<string, number>;
-  statsPercent: Map<string, number>;
-}
+import {Status} from '../models/app-enum';
 
 export interface Enumerable{
   totalLines: number;
-  stats: Map<string, number>;
-  statsPercent: Map<string, number>;
+  stats: Record<Status, number>;
+  statsPercent: Record<Status, number>;
   getName(): string;
 }
-
 
 export interface EnumerableService{
   getEnumerable(): Observable<Enumerable>;

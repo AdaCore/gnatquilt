@@ -1,10 +1,11 @@
-import {Enumerable, Enumerables, EnumerableService, EnumerablesService, IStats} from '../interface/report.model';
+import {Enumerable, Enumerables, EnumerableService, EnumerablesService} from '../interface/report.model';
 import {IReport, ISource} from '../interface/data.model';
-import {Status} from '../models/app-enum';
+import {initStatus, Status} from '../models/app-enum';
 import {Injectable} from '@angular/core';
 import {LoadJsonService} from './load-json.service';
 import {Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {Properties, statusProperties} from './ctx.service';
 
 /**
  * computes the percentage statistics from statistics and total number of lines
@@ -13,13 +14,12 @@ import {map} from 'rxjs/operators';
  * @param stats statistics that give for each status the number of lines
  * @return percentage stats
  */
-function computePercentages(totalLines: number, stats: Map<string, number>): Map<string, number> {
-  const percentages: Map<string, number> = new Map<string,number>();
-  for (const covStat of stats.entries()) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+function computePercentages(totalLines: number, stats: Record<Status, number>): Record<Status, number> {
+  const percentages: Record<Status, number> = initStatus();
+  for (const [status, covStat] of Object.entries(stats)) {
+    percentages[status] =
     totalLines !== 0 ?
-      percentages.set(covStat[0], Math.round(100 * covStat[1] / totalLines)) :
-      percentages.set(covStat[0], 0);
+      Math.round(100 * covStat / totalLines): 0;
   }
   return percentages;
 }
@@ -30,50 +30,54 @@ function computePercentages(totalLines: number, stats: Map<string, number>): Map
  * @param aggregate list of enumerable, i.e. object that have totalLines and stats properties
  * @return [aggregated total number of lines, aggregated statistics]
  */
-function computeAggregatedStats(aggregate: Array<Enumerable> ): [number, Map<string, number>] {
+function computeAggregatedStats(aggregate: Array<Enumerable> ): [number, Record<Status, number>] {
   const totalLines: number =
         aggregate
-          .map(enumerable => enumerable.totalLines)
-          .reduce((totalProject, totalForFile) =>
+          .map((enumerable: Enumerable) => enumerable.totalLines)
+          .reduce((totalProject: number, totalForFile: number) =>
             totalProject + totalForFile);
 
-  const stats: Map<string, number> = new Map<string, number>();
+
+  const stats: Record<Status, number> = initStatus();
   aggregate
-    .map(enumerable => enumerable.stats)
-    .forEach(sourceStats => {
-      for (const [status, stat] of sourceStats.entries()) {
-        stats.set(status, (stats.get(status) || 0) + stat);
+    .map((enumerable: Enumerable) => enumerable.stats)
+    .forEach((sourceStats: Record<Status, number>) => {
+      for (const [status, stat] of Object.entries(sourceStats)) {
+        // have to add a type assertion because status is a string
+        // (there is no way to only loop over the `Status` properties
+        // of the Record object).
+        // For that reason, property access may not be a number (even though the
+        // surrounding type is `Record<Status, number>`, JS objects are extensible
+        // and a property could be runtime added).
+        // The resulting expression may then be `any` type, and it is rejected by the compiler
+        // without the type assertion.
+        stats[status] = (stats[status] as number)  + stat;
       }
     });
   return [totalLines, stats];
 }
 
-export class Source implements IStats, Enumerable {
+export class Source implements ISource, Enumerable {
   filename: string;
-  stats: Map<string, number> = new Map<string, number>();
-  statsPercent: Map<string, number> = new Map<string, number>();
+  stats: Record<Status, number> = initStatus();
+  statsPercent: Record<Status, number> = initStatus();
   hunkFilename: string;
   missingSource: boolean;
   project: string;
   totalLines = 0;
 
-  constructor(source: ISource) {
-    this.filename = source.filename;
-    this.hunkFilename = source.hunkFilename;
-    this.missingSource = source.missingSource;
-    this.project = source.project;
-    for (const status of Object.keys(source.stats)){
-      this.stats.set(status, source.stats[status]);
-    }
+  constructor(source: ISource, debug = false) {
+    Object.assign(this, source);
     this.totalLines = this.computeLines(this.stats);
+    if(debug){
+      console.log(this.totalLines);
+    }
     this.statsPercent = computePercentages(this.totalLines, this.stats);
   }
 
-  computeLines(stats: Map<string, number>): number {
-    for (status of Object.keys(Status)){
-      this.totalLines += stats.get(status);
-    }
-    this.totalLines -= stats.get('noCode');
+  computeLines(stats: Record<Status, number>): number {
+    this.totalLines = Object.values(stats).reduce((sum: number, current: number) => sum + current);
+    this.totalLines -= stats.noCode;
     return this.totalLines;
   }
 
@@ -82,10 +86,10 @@ export class Source implements IStats, Enumerable {
   }
 }
 
-export class Project implements IStats, Enumerable, Enumerables {
+export class Project implements  Enumerable, Enumerables {
   totalLines: number;
-  stats: Map<string, number>;
-  statsPercent: Map<string, number> = new Map<string, number>();
+  stats: Record<Status, number> = initStatus();
+  statsPercent: Record<Status, number> = initStatus();
   projectFiles: Source[] = [];
 
   constructor(public projectName: string) {
@@ -119,19 +123,19 @@ export class Project implements IStats, Enumerable, Enumerables {
 export class Report implements Enumerables, Enumerable {
   projects: Project[];
   totalLines: number;
-  stats: Map<string, number>;
-  statsPercent: Map<string, number>;
+  stats: Record<Status, number> = initStatus();
+  statsPercent: Record<Status, number> = initStatus();
 
   constructor(data: IReport) {
     const projects: Map<string, Project> = new Map<string, Project>();
     for (const source of data.sources) {
-      const key = source.project;
-      const project = projects.get(key) || new Project(key);
+      const key: string = source.project;
+      const project: Project = projects.get(key) || new Project(key);
       project.addSource(new Source(source));
       projects.set(key, project);
     }
     for (const item of projects.entries()){
-      const project = item[1];
+      const project: Project = item[1];
       project.computeStats();
     }
     [this.totalLines, this.stats] = computeAggregatedStats(Array.from(projects.values()));
@@ -162,9 +166,9 @@ export class ReportService  {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const data: Observable<IReport> = this.loadJSONService.getJSON();
     this.report =   data.pipe(
-      map(ireport => new Report(ireport)));
+      map((ireport: IReport) => new Report(ireport)));
     this.total = this.report.pipe(
-      map(report =>
+      map((report: Report) =>
         new class implements Enumerables {
           enumerable: Enumerable;
           constructor(enumerable: Enumerable){

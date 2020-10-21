@@ -1,0 +1,25 @@
+<tr id=source-line class="{{getIndexClass()}} xcov-source-line xcov-source-line{{statusProperties[mapping.coverage].classSuffix}} {{classExpanded}}"
+(click)="toggle()">
+    <td class="xcov-source-row-line-no">
+        <div class="xcov-source-line-number">
+            <span *ngIf="mapping.message" class="xcov-source-line-mark" matTooltip="Click to expand">〉</span>
+            <pre>{{mapping.line.lineNumber}}</pre>
+        </div>
+    </td>
+    <td class="xcov-source-row-cov-symbol"
+        matTooltip="{{statusProperties[mapping.coverage].name}}">
+        <div class="xcov-source-line-coverage">
+            <pre>{{statusProperties[mapping.coverage].annotation}}</pre>
+        </div>
+    </td>
+    <td class="xcov-source-row-text">
+        <div class="xcov-source-line-text">
+            <div class="xcov-source-line-code">
+                {{mapping.line.src}}
+            </div>
+        </div>
+        <ng-container *ngIf="isExpanded && mapping.message">
+            <app-message [message]="mapping.message"></app-message>
+        </ng-container>
+    </td>
+</tr>

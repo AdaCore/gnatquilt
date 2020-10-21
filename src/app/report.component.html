@@ -28,8 +28,8 @@
     <table class="xcov-help-legend">
       <tbody>
       <tr>
-        <td *ngFor="let status of o.ctx.properties"
-            class="xcov-help{{status.classSuffix}}"> {{status.name}}
+        <td *ngFor="let status of o.ctx.properties "
+            class="xcov-help{{statusProperties[status].classSuffix}}"> {{statusProperties[status].name}}
         </td>
       </tr>
       </tbody>

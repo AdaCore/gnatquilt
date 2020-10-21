@@ -123,6 +123,18 @@ module.exports = {
                 }
             }
         ],
+        "@typescript-eslint/typedef": [
+            "error",
+            {
+                "arrowParameter": true,
+                "variableDeclaration": true,
+                "call-signature": true,
+                "parameter": true,
+                "property-declaration": true,
+                "variable-declaration": true,
+                "member-variable-declaration": true
+            }
+        ],
         "@typescript-eslint/member-ordering": "error",
         "@typescript-eslint/naming-convention": "error",
         "@typescript-eslint/no-array-constructor": "error",
@@ -134,12 +146,6 @@ module.exports = {
         "@typescript-eslint/no-floating-promises": "error",
         "@typescript-eslint/no-for-in-array": "error",
         "@typescript-eslint/no-implied-eval": "error",
-        "@typescript-eslint/no-inferrable-types": [
-            "error",
-            {
-                "ignoreParameters": true
-            }
-        ],
         "@typescript-eslint/no-misused-new": "error",
         "@typescript-eslint/no-misused-promises": "error",
         "@typescript-eslint/no-namespace": "error",

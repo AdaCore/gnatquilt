@@ -1,0 +1,159 @@
+{
+  "missingSource": false,
+  "filename": "pk1.adb",
+  "hunkFilename": "pk1.adb.hunk.js",
+  "coverageLevel": "stmt+mcdc",
+  "stats": {
+    "noCode": 3,
+    "covered": 0,
+    "partiallyCovered": 1,
+    "notCovered": 0,
+    "notCoverable": 0,
+    "exemptedNoViolation": 0,
+    "exemptedWithViolation": 0
+  },
+  "project": "prj1",
+  "mappings": [
+    {
+      "coverage": "noCode",
+      "line": {
+        "lineNumber": "1",
+        "exempted": "FALSE",
+        "src": "package body Pk1 is"
+      }
+    },
+    {
+      "coverage": "noCode",
+      "line": {
+        "lineNumber": "2",
+        "exempted": "FALSE",
+        "src": "   function Within (L, H, X : Integer) return Boolean is"
+      }
+    },
+    {
+      "coverage": "noCode",
+      "line": {
+        "lineNumber": "3",
+        "exempted": "FALSE",
+        "src": "   begin"
+      }
+    },
+    {
+      "coverage": "partiallyCovered",
+      "line": {
+        "lineNumber": "4",
+        "exempted": "FALSE",
+        "src": "      return X >= L and then X <= H;"
+      },
+      "message": {
+        "kind": "violation",
+        "sco": "SCO #29: CONDITION",
+        "message": "has no independent influence pair, MC/DC not achieved"
+      },
+      "statements": [
+        {
+          "id": "25",
+          "text": "return X ...",
+          "coverage": "+",
+          "range": [
+            [
+              4,
+              7
+            ],
+            [
+              4,
+              35
+            ]
+          ]
+        }
+      ],
+      "decisions": [
+        {
+          "id": "26",
+          "text": "X >= L an...",
+          "range": [
+            [
+              4,
+              14
+            ],
+            [
+              4,
+              35
+            ]
+          ],
+          "conditions": [
+            {
+              "id": "28",
+              "text": "X >= L",
+              "range": [
+                [
+                  4,
+                  14
+                ],
+                [
+                  4,
+                  19
+                ]
+              ]
+            },
+            {
+              "id": "29",
+              "text": "X <= H",
+              "range": [
+                [
+                  4,
+                  30
+                ],
+                [
+                  4,
+                  35
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "coverage": "noCode",
+
+      "line": {
+        "lineNumber": "5",
+        "exempted": "FALSE",
+        "src": "   end;"
+      }
+    },
+    {
+      "coverage": "noCode",
+      "line": {
+        "lineNumber": "6",
+        "exempted": "FALSE",
+        "src": "end;"
+      }
+    },
+    {
+      "coverage": "noCode",
+      "line": {
+        "lineNumber": "7",
+        "exempted": "FALSE",
+        "src": "  "
+      }
+    },
+    {
+      "coverage": "noCode",
+      "line": {
+        "lineNumber": "8",
+        "exempted": "FALSE",
+        "src": ""
+      }
+    },
+    {
+      "coverage": "noCode",
+      "line": {
+        "lineNumber": "9",
+        "exempted": "FALSE",
+        "src": "   "
+      }
+    }
+  ]
+}

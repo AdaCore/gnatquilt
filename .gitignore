@@ -6,3 +6,4 @@ node_modules
 /thirdparties/download
 /thirdparties/tooling
 /thirdparties/python
+dist

@@ -9,13 +9,15 @@ import {MatSliderModule} from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSortModule} from '@angular/material/sort';
 import {MatExpansionModule} from '@angular/material/expansion';
-import { SourceComponent } from './source/source/source.component';
+import { SourceFileComponent } from './source/source-file/source-file.component';
 import { RoutingModule } from './route/routing.module';
-import {CommonModule} from '@angular/common';
+import {APP_BASE_HREF, CommonModule, HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {AppComponent} from './app.component';
 import {RouteReuseStrategy} from '@angular/router';
 import {CustomRouteReuseStrategy} from './route/custom-route-reuse-strategy';
 import {HttpClientModule} from '@angular/common/http';
+import { SourceLineComponent } from './source/source-line/source-line.component';
+import { MessageComponent } from './source/source-line/message/message.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import {HttpClientModule} from '@angular/common/http';
     TableComponent,
     ReportComponent,
     SourceInfoComponent,
-    SourceComponent
+    SourceFileComponent,
+    SourceLineComponent,
+    MessageComponent
   ],
   imports: [
     BrowserModule,
@@ -36,10 +40,13 @@ import {HttpClientModule} from '@angular/common/http';
     MatExpansionModule,
     RoutingModule
   ],
-  providers: [{
-    provide: RouteReuseStrategy,
-    useClass: CustomRouteReuseStrategy
-  }],
+  providers: [
+    { provide: APP_BASE_HREF, useValue: './' },
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
+    {
+      provide: RouteReuseStrategy,
+      useClass: CustomRouteReuseStrategy
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

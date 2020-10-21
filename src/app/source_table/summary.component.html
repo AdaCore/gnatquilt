@@ -1,10 +1,10 @@
 <table class="xcov-summary">
   <tbody>
   <tr>
-    <td *ngFor="let status of ctx.properties"
-        class="xcov-summary{{status.classSuffix}}"
-        width="{{enumerable.statsPercent.get(status.status)}}%"
-        matTooltip="{{enumerable.statsPercent.get(status.status)}}% {{status.name}}"
+    <td *ngFor="let status of ctx.properties "
+        class="xcov-summary{{statusProperties[status].classSuffix}}"
+        width="{{enumerable.statsPercent[status]}}%"
+        matTooltip="{{enumerable.statsPercent[status]}}% {{statusProperties[status].name}}"
     ></td>
   </tr>
   </tbody>

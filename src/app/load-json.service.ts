@@ -7,11 +7,15 @@ import {Injectable} from '@angular/core';
 })
 export class LoadJsonService {
 
-  url = '../assets/report.json';
+  url = 'assets/report.json';
 
   constructor(private http: HttpClient) {}
 
   public getJSON(): Observable<any> {
     return this.http.get(this.url);
+  }
+
+  public setUrl(url: string): void{
+    this.url = url;
   }
 }

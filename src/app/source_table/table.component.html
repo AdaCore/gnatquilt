@@ -1,12 +1,16 @@
 <table class="xcov-table" matSort (matSortChange)="sortData($event)">
   <thead>
   <th mat-sort-header="name"><span style="float: left; display: none;"></span>{{project.getHeadName()}}</th>
-  <th mat-sort-header="totalLines" [style.width.%]=ctx.width class="xcov-count"><span style="float: left; display: none;"></span>Total lines</th>
-  <th *ngFor="let status of ctx.properties" mat-sort-header="{{status.status}}"><span style="float: left; display: none;"></span>{{status.name}}</th>
+  <th mat-sort-header="totalLines" [style.width.%]=ctx.width class="xcov-count" arrowPosition="before"><span style="float: left; display: none;"></span>Total lines</th>
+  <th *ngFor="let status of ctx.properties"
+      mat-sort-header="{{statusProperties[status].name}}" arrowPosition="before">
+    <span style="float: left; display: none;"></span>{{statusProperties[status].name}}
+  </th>
   <th><span style="float: left; display: none;"></span>Summary</th>
   </thead>
   <tbody>
-  <tr app-source-info class="xcov-table-row-even" *ngFor="let enumerable of sortedData" [source]="enumerable" [ctx]="ctx">
+  <tr app-source-info class="{{getIndexClass(i)}}" *ngFor="let enumerable of sortedData; let i = index"
+      [source]="enumerable" [ctx]="ctx">
   </tr>
   </tbody>
 </table>

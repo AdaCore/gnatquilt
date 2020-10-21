@@ -1,0 +1,15 @@
+<div class=""xcov-report-content>
+<ng-container *ngIf="(data$| async) as data">
+    <h2 class="xcov-section-title" id=":c">❯ {{data.source.filename}}</h2>
+    <app-table [ctx]=data.ctx [project]="data.source"></app-table>
+    <div class="xcov-source">
+    <table class="xcov-source-content">
+        <tbody>
+        <tr *ngFor="let mapping of data.source.mappings; let i = index"
+        app-source-line [mapping]="mapping" [index]="i">
+        </tr>
+        </tbody>
+    </table>
+    </div>
+</ng-container>
+</div>

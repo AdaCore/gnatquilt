@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import {ReportComponent} from '../report.component';
-import {SourceComponent} from '../source/source/source.component';
+import {SourceFileComponent} from '../source/source-file/source-file.component';
 const routes: Routes = [
   {path: '', pathMatch:'full', component: ReportComponent},
   {path: 'report', component: ReportComponent},
-  {path:'sources/:sourceName:ctx', component:SourceComponent}];
+  {path:'sources/:sourceName', component:SourceFileComponent}];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

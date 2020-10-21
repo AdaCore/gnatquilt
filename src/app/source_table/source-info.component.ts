@@ -1,6 +1,7 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {Enumerable} from '../../interface/report.model';
-import {Ctx, CtxService} from '../ctx.service';
+import {Ctx, CtxService, Properties, statusProperties} from '../ctx.service';
+import {Status} from '../../models/app-enum';
 
 @Component({
   selector: 'app-source-info, [app-source-info]',
@@ -15,6 +16,8 @@ export class SourceInfoComponent implements OnInit {
   @Input() source: Enumerable;
 
   @Input() ctx: Ctx;
+
+  statusProperties: Record<Status, Properties> = statusProperties;
 
   ngOnInit(): void{
   }
