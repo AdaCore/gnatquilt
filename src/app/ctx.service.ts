@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
-import {Enumerable, EnumerableService} from '../interface/report.model';
+import {Injectable} from '@angular/core';
+import {Enumerable} from '../interface/report.model';
 import {Status} from '../models/app-enum';
-import {Report, ReportService} from './report.service';
+import {ReportService} from './report.service';
 import {map} from 'rxjs/operators';
-import {Observable, of} from 'rxjs';
-import {IReport} from '../interface/data.model';
+import {Observable} from 'rxjs';
 
 export class Properties {
   name: string;
@@ -28,11 +27,23 @@ function allProperties(): Record<Status, Properties> {
     exemptedNoViolation: new Properties ('Exempted no Violation', '-exempted-no-violation', '*'),
     exemptedWithViolation: new Properties ('Exempted with Violation', '-exempted-with-violation', '/')
   };
-  // returning without temporary variable won't do, there seems to be some kind of class shadowing
+  // returning without temporary variable won't do
   return res;
 }
 
+function coverageSymbolToStatus(): Map<string, Status> {
+  return new Map([
+    ['.', Status.noCode],
+    ['+', Status.covered],
+    ['!', Status.partiallyCovered],
+    ['-', Status.notCovered],
+    ['0', Status.notCoverable],
+    ['*', Status.exemptedWithViolation],
+    ['#', Status.exemptedNoViolation]
+  ]);
+}
 export const statusProperties: Record<Status, Properties> = allProperties();
+export const symbolToStat: Map<string, Status> = coverageSymbolToStatus();
 
 export class Ctx {
   properties: Array<Status>;
@@ -51,11 +62,11 @@ export class Ctx {
    * @return [list of coverage status to report]
    */
   propertiesOfInterest(aggregatedStats: Enumerable): Array<Status> {
-    const properties =
+    const properties: Array<Status> =
       [Status.covered, Status.partiallyCovered, Status.notCovered,
         Status.notCoverable, Status.exemptedWithViolation, Status.exemptedNoViolation];
     return properties.filter(
-      (status) => aggregatedStats.stats[status] !== 0
+      (status: Status) => aggregatedStats.stats[status] !== 0
     );
   }
 

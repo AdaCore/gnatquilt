@@ -70,7 +70,7 @@ export interface Decision {
 }
 
 export interface Mapping {
-  coverage: Status;
+  coverage: string;
   line: Line;
   message: Message;
   statements: Statement[];

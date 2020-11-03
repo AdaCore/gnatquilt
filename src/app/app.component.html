@@ -1,6 +1,6 @@
 <h1 class="xcov-report-title">GNATcoverage report</h1>
-<ng-container *ngIf="dataJson | async as data">
-  <h2 class="xcov-report-coverage-level">Coverage level: {{data.coverageLevel}}</h2>
+<ng-container *ngIf="coverageLevel$ | async as coverageLevel">
+  <h2 class="xcov-report-coverage-level">Coverage level: {{coverageLevel}}</h2>
 </ng-container>
 
 <router-outlet></router-outlet>

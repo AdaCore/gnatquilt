@@ -17,8 +17,6 @@ export class SummaryComponent implements OnInit {
 
   statusProperties: Record<Status, Properties> = statusProperties;
 
-  ngOnInit(): void {
-    console.log(this.enumerable);
-  }
+  ngOnInit(): void {}
 }
 

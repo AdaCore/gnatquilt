@@ -1,4 +1,4 @@
-<tr id=source-line class="{{getIndexClass()}} xcov-source-line xcov-source-line{{statusProperties[mapping.coverage].classSuffix}} {{classExpanded}}"
+<tr id=source-line class="{{getIndexClass()}} xcov-source-line xcov-source-line{{statusProperties[coverageStatus].classSuffix}} {{classExpanded}}"
 (click)="toggle()">
     <td class="xcov-source-row-line-no">
         <div class="xcov-source-line-number">
@@ -7,9 +7,9 @@
         </div>
     </td>
     <td class="xcov-source-row-cov-symbol"
-        matTooltip="{{statusProperties[mapping.coverage].name}}">
+        matTooltip="{{statusProperties[coverageStatus].name}}">
         <div class="xcov-source-line-coverage">
-            <pre>{{statusProperties[mapping.coverage].annotation}}</pre>
+            <pre>{{statusProperties[coverageStatus].annotation}}</pre>
         </div>
     </td>
     <td class="xcov-source-row-text">

@@ -4,6 +4,7 @@ import {fromPromise} from 'rxjs/internal-compatibility';
 import {Status} from '../models/app-enum';
 import {ReportComponent} from './report.component';
 import {IReport} from '../interface/data.model';
+import {ReportService} from './report.service';
 
 
 @Component({
@@ -13,19 +14,12 @@ import {IReport} from '../interface/data.model';
 })
 export class AppComponent implements OnInit {
   title = 'gnatquilt';
-  dataJson: Observable<IReport>;
-  // TODO: generate JSON verification code
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  dynamicallyLoadJsonFile: Promise<IReport> = import(('../assets/report.json'));
-  report: ReportComponent;
+  coverageLevel$: Observable<string>;
 
-  ngOnInit(): void{
-    this.dataJson = fromPromise(this.dynamicallyLoadJsonFile);
+  constructor(private reportService: ReportService) {
+    this.coverageLevel$ = reportService.getCoverageLevel();
   }
 
-  createRow(): void{
-
-  }
-
-
+  ngOnInit(): void {}
 }
+

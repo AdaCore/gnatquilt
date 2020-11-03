@@ -32,7 +32,6 @@ export class MessageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.hasSco());
     if(this.hasSco()){
       this.sco$ = this.sourceFileService.getSCO(this.getScoId());
     }

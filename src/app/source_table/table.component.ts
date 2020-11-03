@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {Sort} from '@angular/material/sort';
 import {Status} from '../../models/app-enum';
 import {Enumerable, Enumerables} from '../../interface/report.model';
@@ -8,7 +8,8 @@ import {statusProperties} from '../ctx.service';
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss']
+  styleUrls: ['./table.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class TableComponent implements OnInit {
@@ -37,7 +38,7 @@ export class TableComponent implements OnInit {
       return;
     }
 
-    this.sortedData = data.sort((a, b) => {
+    this.sortedData = data.sort((a: Enumerable, b: Enumerable) => {
       const isAsc: boolean = sort.direction === 'asc';
       switch (sort.active) {
       case 'name':
@@ -46,8 +47,6 @@ export class TableComponent implements OnInit {
         return compare(a.totalLines, b.totalLines, isAsc);
       default:
         const status: string = sort.active;
-        console.log(status);
-        console.log(Status[status]);
         return Status[status] !== undefined ?
           compare(a.stats[status], b.stats[status], isAsc) :
           0;

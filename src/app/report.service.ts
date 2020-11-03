@@ -34,10 +34,7 @@ function computeAggregatedStats(aggregate: Array<Enumerable> ): [number, Record<
   const totalLines: number =
         aggregate
           .map((enumerable: Enumerable) => enumerable.totalLines)
-          .reduce((totalProject: number, totalForFile: number) =>
-            totalProject + totalForFile);
-
-
+          .reduce((totalProject: number, totalForFile: number) => totalProject + totalForFile);
   const stats: Record<Status, number> = initStatus();
   aggregate
     .map((enumerable: Enumerable) => enumerable.stats)
@@ -66,12 +63,9 @@ export class Source implements ISource, Enumerable {
   project: string;
   totalLines = 0;
 
-  constructor(source: ISource, debug = false) {
+  constructor(source: ISource) {
     Object.assign(this, source);
     this.totalLines = this.computeLines(this.stats);
-    if(debug){
-      console.log(this.totalLines);
-    }
     this.statsPercent = computePercentages(this.totalLines, this.stats);
   }
 
@@ -122,6 +116,7 @@ export class Project implements  Enumerable, Enumerables {
 
 export class Report implements Enumerables, Enumerable {
   projects: Project[];
+  coverageLevel: string;
   totalLines: number;
   stats: Record<Status, number> = initStatus();
   statsPercent: Record<Status, number> = initStatus();
@@ -141,6 +136,7 @@ export class Report implements Enumerables, Enumerable {
     [this.totalLines, this.stats] = computeAggregatedStats(Array.from(projects.values()));
     this.statsPercent = computePercentages(this.totalLines, this.stats);
     this.projects = Array.from(projects.values());
+    this.coverageLevel = data.coverageLevel;
   }
 
   getName: () => string = () => 'Total';
@@ -192,6 +188,12 @@ export class ReportService  {
 
   getTotal(): Observable<Enumerables> {
     return this.total;
+  }
+
+  getCoverageLevel(): Observable<string> {
+    return this.report.pipe(
+      map ((report: Report) => report.coverageLevel)
+    );
   }
 
 }

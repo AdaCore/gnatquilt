@@ -12,9 +12,8 @@ export class AnnotatedSource extends Source implements Enumerables {
   mappings: Mapping[];
 
   constructor(data: ISourceAnnotated){
-    super(data, true);
+    super(data);
     this.mappings = data.mappings;
-    console.log(this.mappings);
   }
 
   getHeadName(): string {
@@ -69,7 +68,7 @@ export class SourceFileService  {
       .pipe(
         switchMap(
           (paramMap: ParamMap) => {
-            loadJSONService.setUrl('assets/' + paramMap.get('sourceName') + '.json');
+            loadJSONService.setUrl('assets/generated/' + paramMap.get('sourceName') + '.hunk.js');
             return loadJSONService.getJSON();
           }
         ))
@@ -94,10 +93,6 @@ export class SourceFileService  {
   }
 
   getSCO(scoId: number): Observable<ScoProperties> {
-    return this.scos.pipe(map((scos: Map<number, ScoProperties>) => {
-      console.log(scos);
-      console.log(scoId);
-      return scos.get(scoId);
-    }));
+    return this.scos.pipe(map((scos: Map<number, ScoProperties>) => scos.get(scoId)));
   }
 }

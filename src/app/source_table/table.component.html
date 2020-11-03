@@ -3,7 +3,7 @@
   <th mat-sort-header="name"><span style="float: left; display: none;"></span>{{project.getHeadName()}}</th>
   <th mat-sort-header="totalLines" [style.width.%]=ctx.width class="xcov-count" arrowPosition="before"><span style="float: left; display: none;"></span>Total lines</th>
   <th *ngFor="let status of ctx.properties"
-      mat-sort-header="{{statusProperties[status].name}}" arrowPosition="before">
+      mat-sort-header="{{status}}" arrowPosition="before">
     <span style="float: left; display: none;"></span>{{statusProperties[status].name}}
   </th>
   <th><span style="float: left; display: none;"></span>Summary</th>

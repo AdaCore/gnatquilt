@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, HostListener, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {Mapping} from '../../../interface/data.model';
-import {statusProperties} from '../../ctx.service';
+import {statusProperties, symbolToStat} from '../../ctx.service';
+import {Status} from '../../../models/app-enum';
 
 @Component({
   selector: 'app-source-line, [app-source-line]',
@@ -15,12 +16,16 @@ export class SourceLineComponent implements OnInit {
   @Input() index: number;
 
   statusProperties = statusProperties;
+  coverageStatus: Status;
   isExpanded = false;
   classExpanded = '';
 
   constructor() { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log (this.mapping);
+    this.coverageStatus = symbolToStat.get(this.mapping.coverage);
+  }
 
   toggle(): void{
     if (this.mapping.message !== undefined) {
