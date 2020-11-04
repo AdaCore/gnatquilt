@@ -32,7 +32,6 @@ goog.require('xcov.ui.progress');
  **********************/
 
 
-
 /**
  * An annotated source file.
  *
@@ -442,7 +441,6 @@ xcov.ui.SourceFile.Line_.prototype.zippy_ = null;
  * xcov.ui.SourceFile.Line_.createDom *
  **************************************/
 
-
 /** @inheritDoc */
 xcov.ui.SourceFile.Line_.prototype.createDom = function() {
   /** @const */ var dom = this.getDomHelper();
@@ -733,7 +731,7 @@ xcov.ui.SourceFile.LineMessage_ = function(source, lineno, opt_domHelper) {
           range.start.line, ':', range.start.column, '</span> ');
     }
 
-    buf.append(message.getMessage());
+    buf.append(message.getMessage().replace(/\n/g, '<br/>'));
 
     /** @const */ var style =
         goog.getCssName(xcov.ui.SourceFile.Attached_.CSS_CLASS, 'message');
