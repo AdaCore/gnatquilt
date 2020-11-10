@@ -1,12 +1,9 @@
-import {JsonObject} from '@angular/compiler-cli/ngcc/src/packages/entry_point';
 import {Status} from '../models/app-enum';
-import {ChangeDetectorRef, AfterContentChecked, Component, Input, OnInit} from '@angular/core';
-import {map, reduce} from 'rxjs/operators';
-import {Enumerable, Enumerables} from '../interface/report.model';
-import {IReport, ISource} from '../interface/data.model';
+import {Component, OnInit} from '@angular/core';
+import {map} from 'rxjs/operators';
+import {Enumerables} from '../interface/report.model';
 import {Report, ReportService} from './report.service';
-import {forkJoin, Observable, zip} from 'rxjs';
-import {fromPromise} from 'rxjs/internal-compatibility';
+import {Observable, zip} from 'rxjs';
 import {Ctx, CtxService, Properties, statusProperties} from './ctx.service';
 
 @Component({
@@ -28,7 +25,7 @@ export class ReportComponent implements OnInit{
     this.ctx$ = ctxService.getCtx();
     this.report$ = reportService.getReport();
     this.total$ = reportService.getTotal();
-    this.data$ = zip(this.ctx$, this.report$, this.total$).pipe(map(([ctx, report, total]) =>
+    this.data$ = zip(this.ctx$, this.report$, this.total$).pipe(map(([ctx, report, total]: [Ctx, Report, Enumerables]) =>
       ({ctx, report, total})));
   }
 

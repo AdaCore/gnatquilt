@@ -1,12 +1,15 @@
+<div class="xcov-navigation">
+  <a routerLink="/traces">⇪ Show traces table</a>
+</div>
 <ng-container *ngIf="(data$ | async) as o">
   <h2 class="xcov-section-title" id="overview" tabindex="0" role="tab" aria-expanded="true">❯ Overview</h2>
-  <app-table [ctx]="o.ctx" [project]=o.total></app-table>
+  <app-enumerable-table [ctx]="o.ctx" [project]=o.total [isSource]="false"></app-enumerable-table>
 
-  <app-table [ctx]=o.ctx [project]="o.report"></app-table>
+  <app-enumerable-table [ctx]=o.ctx [project]="o.report" [isSource]="false"></app-enumerable-table>
   <div *ngFor="let project of o.report.projects ">
     <h2 class="xcov-section-title" id="project-{{project.projectName}}" tabindex="0" role="tab" aria-expanded="true">
       ❯ {{project.projectName}}</h2>
-    <app-table [ctx]="o.ctx" [project]="project"></app-table>
+    <app-enumerable-table [ctx]="o.ctx" [project]="project" [isSource]="true"></app-enumerable-table>
   </div>
 
   <div class="xcov-help"><p>The results (total and per file) contain:</p>

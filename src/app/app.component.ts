@@ -1,9 +1,5 @@
-import {Component, ContentChild, OnInit, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
-import {fromPromise} from 'rxjs/internal-compatibility';
-import {Status} from '../models/app-enum';
-import {ReportComponent} from './report.component';
-import {IReport} from '../interface/data.model';
 import {ReportService} from './report.service';
 
 
@@ -20,6 +16,7 @@ export class AppComponent implements OnInit {
     this.coverageLevel$ = reportService.getCoverageLevel();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 }
 

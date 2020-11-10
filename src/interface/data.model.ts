@@ -1,13 +1,5 @@
 import {Status} from '../models/app-enum';
 
-export interface ITrace{
-  filename: string;
-  kind: string;
-  program: string;
-  date: string;
-  tag: string;
-}
-
 export interface ISource {
   filename: string;
   /* an object with status properties ({covered: 1, not_covered: 1 ...})
@@ -39,6 +31,24 @@ export interface Line {
   lineNumber: string;
   exempted: string;
   src: string;
+}
+
+export interface Instruction {
+  address: string;
+  coverage: string;
+  assembly: string;
+}
+
+export interface InstructionBlock {
+  name: string;
+  offset: string;
+  coverage: string;
+  instructions: Instruction[];
+}
+
+export interface InstructionSet {
+  coverage: string;
+  instructionBlocks: InstructionBlock[];
 }
 
 export interface Message {
@@ -75,14 +85,23 @@ export interface Mapping {
   message: Message;
   statements: Statement[];
   decisions: Decision[];
+  instructionSet: InstructionSet;
 }
 
 export interface ISourceAnnotated extends ISource {
   mappings: Mapping[];
 }
 
+export interface ITrace{
+  filename: string;
+  kind: string;
+  program: string;
+  date: string;
+  tag: string;
+}
+
 export interface IReport {
   coverageLevel: string;
-  traces: any;
-  sources: Array<ISource>;
+  traces: ITrace[];
+  sources: ISource[];
 }

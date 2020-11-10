@@ -1,0 +1,132 @@
+@import "../../styles";
+@import "../app.component";
+
+.xcov-table {
+  margin-left: 5%;
+  width: 90%;
+
+  &-cell {
+    span {
+      &:first-child {
+      }
+
+      &:last-child {
+        display: inline-block;
+
+        width: 35px;
+        font-size: 0.8em;
+        font-style: italic;
+        color: $xcov-disabled-color;
+      }
+    }
+  }
+
+  &-count {
+    width: 10%;
+
+    &.xcov-no-exemption {
+      width: 15% !important;
+    }
+
+    text-align: right;
+
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  &-summary, &-filename {
+    width: 20%;
+  }
+
+  &-filename {
+    &-project {
+      margin-left: 15px;
+      color: $xcov-disabled-color;
+    }
+
+    a {
+      display: block;
+    }
+  }
+
+  a {
+    display: block;
+  }
+
+  //th { .xcov-disable-user-selection; }
+
+  tr, th, td, &-filename {
+    padding: 4px 3px;
+
+    font-size: $xcov-font-size;
+    font-weight: normal;
+  }
+
+  tr {
+    text-align: left;
+  }
+
+  thead {
+    color: white;
+    background: $xcov-table-header-bgcolor;
+
+    th {
+      border: $xcov-table-header-border;
+    }
+  }
+
+  tbody td {
+    border: 1px solid #bbb;
+  }
+}
+
+.xcov-summary {
+  width: 100%;
+  height: 18px;
+
+  margin: 0;
+
+  tbody tr {
+    border: $xcov-summary-table-border;
+  }
+
+  tbody td {
+    border: none;
+  }
+
+  tbody tr, tbody td {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  &-no-code { /* empty */
+  }
+
+  &-not-applicable {
+    background-color: $xcov-summary-not-applicable;
+  }
+
+  &-covered {
+    background-color: $xcov-summary-covered;
+  }
+
+  &-partially-covered {
+    background-color: $xcov-summary-partially-covered;
+  }
+
+  &-not-covered {
+    background-color: $xcov-summary-not-covered;
+  }
+
+  &-not-coverable {
+    background-color: $xcov-summary-not-coverable;
+  }
+
+  &-exempted-no-violation {
+    background-color: $xcov-summary-exempted-no-violation;
+  }
+
+  &-exempted-with-violation {
+    background-color: $xcov-summary-exempted-with-violation;
+  }
+}

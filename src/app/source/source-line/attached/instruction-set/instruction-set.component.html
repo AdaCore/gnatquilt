@@ -1,0 +1,76 @@
+<div class="xcov-source-line-message">
+<table class="xcov-source-line-attached">
+    <tbody></tbody>
+
+    <ng-container *ngFor="let instructionBlock of instructionSet.instructionBlocks">
+        <ng-container
+            [ngTemplateOutlet]="instructionBlockHeader"
+            [ngTemplateOutletContext]="{blockName: instructionBlock.name}">
+        </ng-container>
+<!--        first block instruction has the block offset indication-->
+        <ng-container
+                [ngTemplateOutlet]="instructionLine"
+                [ngTemplateOutletContext]="{
+                    instruction: instructionBlock.instructions[0],
+                    statusProperties: getProperties(getCoverageStatus(instructionBlock.instructions[0].coverage)),
+                    offset: toHex(instructionBlock.offset)
+                    }">
+        </ng-container>
+        <ng-container *ngFor="let instruction of instructionBlock.instructions.slice(1)">
+            <ng-container
+                    [ngTemplateOutlet]="instructionLine"
+                    [ngTemplateOutletContext]="{
+                    instruction: instruction,
+                    statusProperties: getProperties(getCoverageStatus(instruction.coverage)),
+                    offset:''
+                    }">
+            </ng-container>
+        </ng-container>
+    </ng-container>
+</table>
+</div>
+
+<ng-template #instructionBlockHeader let-blockName='blockName'>
+    <tr class="xcov-source-line-attached-row">
+        <td>
+            <div class="xcov-source-line-attached-insn-offset"></div>
+        </td>
+        <td>
+            <div class="xcov-source-line-attached-insn-padding">⋮</div>
+        </td>
+        <td></td>
+        <td>
+            <div class="xcov-source-line-attached-insn-asm xcov-source-line-attached-insn-symbol">
+                {{blockName}}
+            </div>
+        </td>
+    </tr>
+</ng-template>
+
+<ng-template #instructionLine
+             let-instruction='instruction'
+             let-statusProperties='statusProperties'
+             let-offset='offset'>
+    <tr class="xcov-source-line-attached-row">
+        <td>
+            <div class="xcov-source-line-attached-insn-offset xcov-source-line-attached-insn-symbol"
+                 >
+                {{offset}}
+            </div>
+        </td>
+        <td>
+            <div class="xcov-source-line-attached-insn-address" >
+                {{toHex(instruction.address)}}
+            </div>
+        </td>
+        <td>
+            <div class="xcov-source-line-attached-insn-coverage{{statusProperties.classSuffix}}"
+            matTooltip="{{statusProperties.name}}">
+                {{statusProperties.annotation}}
+            </div>
+        </td>
+        <td>
+            <div class="xcov-source-line-attached-insn-asm">{{instruction.assembly}}</div>
+        </td>
+    </tr>
+</ng-template>

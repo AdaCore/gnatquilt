@@ -9,8 +9,8 @@
   <th><span style="float: left; display: none;"></span>Summary</th>
   </thead>
   <tbody>
-  <tr app-source-info class="{{getIndexClass(i)}}" *ngFor="let enumerable of sortedData; let i = index"
-      [source]="enumerable" [ctx]="ctx">
+  <tr app-enumerable-info *ngFor="let enumerable of sortedData; let i = index" class="{{getIndexClass(i)}}"
+      [enumerable]="enumerable" [ctx]="ctx" [isSource]="isSource">
   </tr>
   </tbody>
 </table>

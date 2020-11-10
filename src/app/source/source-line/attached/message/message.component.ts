@@ -1,11 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Message, strLowOrUp} from '../../../../interface/data.model';
-import {ScoProperties, SourceFileService} from '../../source-file/source-file.service';
+import {Message, strLowOrUp} from '../../../../../interface/data.model';
+import {ScoProperties, SourceFileService} from '../../../source-file/source-file.service';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
 
 @Component({
-  selector: 'app-message',
+  selector: 'app-message, [app-message]',
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.scss']
 })
@@ -21,7 +20,7 @@ export class MessageComponent implements OnInit {
   constructor(private sourceFileService: SourceFileService) { }
 
   hasSco(): boolean{
-    return this.message.sco !==undefined;
+    return this.message.sco !== undefined;
   }
 
   getScoId(): number{

@@ -6,18 +6,19 @@ import {Ctx, CtxService, Properties} from '../ctx.service';
 import {statusProperties} from '../ctx.service';
 
 @Component({
-  selector: 'app-table',
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss'],
+  selector: 'app-enumerable-table',
+  templateUrl: './enumerable-table.component.html',
+  styleUrls: ['./style.scss'],
   encapsulation: ViewEncapsulation.None
 })
 
-export class TableComponent implements OnInit {
+export class EnumerableTableComponent implements OnInit {
 
   // loading is faster when inputting the context instead of using the CtxService in class constructor
   // i have no explanation to that, investigate
   @Input() ctx: Ctx;
   @Input() project: Enumerables;
+  @Input() isSource: boolean;
 
   public sortedData: Array<Enumerable>;
   public totalLines: number;

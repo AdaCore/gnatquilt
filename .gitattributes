@@ -5,3 +5,4 @@
 /karma.conf.js no-precommit-check
 /src/assets/** no-precommit-check
 /src/generated/** no-precommit-check
+/src/generatedBranch/** no-precommit-check

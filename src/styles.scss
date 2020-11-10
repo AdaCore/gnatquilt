@@ -1,3 +1,15 @@
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'),
+  local('MaterialIcons-Regular'),
+  url(https://fonts.gstatic.com/s/materialicons/v21/2fcrYFNaTjcS6g4U3t-Y5UEw0lE80llgEseQY3FEmqw.woff2) format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+}
 $xcov-font-size:   12px;
 $xcov-font-color:  #222;
 $xcov-font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial;
@@ -8,7 +20,7 @@ $xcov-font-family-monospace: Inconsolata, Monospace;
 $xcov-summary-not-applicable:          rgba(0,     0,   0, 0.1);
 $xcov-summary-covered: rgb(181, 214, 0);
 $xcov-summary-partially-covered:       rgba(255, 199,   7, 1.0);
-$xcov-summary-not-covered:             rgba(233,  75,  66, 0.9);
+$xcov-summary-not-covered: rgba(233, 75, 66, 0.9);
 $xcov-summary-not-coverable:           #e2e2e2;
 $xcov-summary-exempted-no-violation:   rgba(158, 198, 231, 1.0);
 $xcov-summary-exempted-with-violation: rgba(128, 60,  190, 0.5);
@@ -20,8 +32,15 @@ $xcov-line-not-coverable:           rgba(0, 0, 0, 0.1);
 $xcov-line-exempted-no-violation:   rgba(158, 198, 231, 0.5);
 $xcov-line-exempted-with-violation: rgba(128, 60,  190, 0.3);
 
-$xcov-line-number-bgcolor:        #efefef;
-$xcov-line-number-bgcolor-hover:  #e1e1e1;
+$xcov-line-covered-lowlight:                 rgba(172, 233, 124, 0.5);
+$xcov-line-partially-covered-lowlight:       rgba(255, 2255, 170, 0.5);
+$xcov-line-not-covered-lowlight:             rgba(255, 144, 144, 0.5);
+$xcov-line-not-coverable-lowlight:           rgba(0, 0, 0, 0.05);
+$xcov-line-exempted-no-violation-lowlight:   rgba(158, 198, 231, 0.25);
+$xcov-line-exempted-with-violation-lowlight: rgba(128, 60,  190, 0.15);
+
+$xcov-line-number-bgcolor: #efefef;
+$xcov-line-number-bgcolor-hover: #e1e1e1;
 
 $xcov-table-header-bgcolor: #6199df;
 $xcov-table-header-border:  1px solid #4d90fe;
@@ -45,6 +64,8 @@ body {
   color: $xcov-font-color;
   font:  $xcov-font-size $xcov-font-family;
   font-weight: normal;
+  line-height: 1.25 !important;
+  padding-top: 2px;
 
   position: absolute;
   top:    0;
@@ -72,6 +93,10 @@ a {
 &:hover, &:active { color: $xcov-link-color-hover}
 }
 
-pre { font: $xcov-font-size-monospace $xcov-font-family-monospace; }/* You can add global styles to this file, and also import other style files */
+pre {
+  font: $xcov-font-size-monospace $xcov-font-family-monospace;
+
+  // line-height: 1.21428571429 !important;
+}
 
 html, body { height: 100%; }

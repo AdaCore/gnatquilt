@@ -19,13 +19,17 @@ export class Properties {
 
 function allProperties(): Record<Status, Properties> {
   const res: Record<Status, Properties> =
-  { noCode: new Properties('No code', 'no-code', '.'),
+  { noCode: new Properties('No code', '-no-code', '.'),
     covered: new Properties ( 'Covered', '-covered', '+'),
     partiallyCovered: new Properties ('Partially Covered', '-partially-covered', '!'),
     notCovered: new Properties('Not Covered', '-not-covered', '-'),
     notCoverable: new Properties ('Not Coverable', '-not-coverable', '0'),
     exemptedNoViolation: new Properties ('Exempted no Violation', '-exempted-no-violation', '*'),
-    exemptedWithViolation: new Properties ('Exempted with Violation', '-exempted-with-violation', '/')
+    exemptedWithViolation: new Properties ('Exempted with Violation', '-exempted-with-violation', '/'),
+    // only for assembly coverage
+    unknown: new Properties ('Unknown', '-unknown', '?'),
+    fallthroughTaken: new Properties ('Fallthrough Taken', '-partially-covered', '↓'),
+    branchTaken: new Properties ('Branch Taken', '-partially-covered', '→')
   };
   // returning without temporary variable won't do
   return res;
@@ -39,7 +43,10 @@ function coverageSymbolToStatus(): Map<string, Status> {
     ['-', Status.notCovered],
     ['0', Status.notCoverable],
     ['*', Status.exemptedWithViolation],
-    ['#', Status.exemptedNoViolation]
+    ['#', Status.exemptedNoViolation],
+    ['?', Status.unknown],
+    ['>', Status.branchTaken],
+    ['v', Status.fallthroughTaken]
   ]);
 }
 export const statusProperties: Record<Status, Properties> = allProperties();
@@ -77,6 +84,8 @@ export class Ctx {
    * @return [width in the coverage summary table for each status]
    */
   computeWidth(pOfInterest: Array<Status> ): number{
+    // rule conflicting with no-inferrable-types
+    // eslint-disable-next-line @typescript-eslint/typedef
     const fullWidth = 60; // td `xcov-count` get 60% of the whole array.
     // totalLines is not included in propertiesOfInterest and should be included there
     return fullWidth / (Object.keys(pOfInterest).length + 1);

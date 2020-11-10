@@ -1,0 +1,32 @@
+@import "../app.component";
+
+.xcov-traces {
+  &-table {
+    margin-left: 5%;
+    width: 90%;
+
+    tr, th, td {
+      padding: 4px 3px;
+
+      font-size: $xcov-font-size;
+      font-weight: normal;
+    }
+
+    tr {
+      text-align: left;
+    }
+
+    thead {
+      color: white;
+      background: $xcov-table-header-bgcolor;
+
+      th {
+        border: $xcov-table-header-border;
+      }
+    }
+
+    tbody td {
+      border: $xcov-table-body-border;
+    }
+  }
+}

@@ -3,7 +3,12 @@ node_modules
 *.sw?
 *.pyc
 /build/
+/documentation
 /thirdparties/download
 /thirdparties/tooling
 /thirdparties/python
 dist
+.eslintcache
+generated
+generatedBranch
+assets

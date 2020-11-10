@@ -1,5 +1,5 @@
-@import "../../../styles";
-@import "../../app.component";
+@import "../../styles";
+@import "../app.component";
 // Full line background
 @mixin bgline($color) {
   &:hover {
@@ -43,9 +43,12 @@
 .xcov-source {
   width: 90%;
   margin: 15px 5%;
+  margin-bottom: 50px;
 
   &-content {
     width: 100%;
+    margin-bottom: 50px;
+    padding-bottom: 50px;
     border: $xcov-table-body-border;
   }
 
@@ -70,10 +73,14 @@
     }
 
     &-line-no {
+      background-color: $xcov-line-number-bgcolor;
       vertical-align: top;
-      min-width: 50px;
       width: 1%;
       outline: 0;
+
+      pre {
+        padding-left: 20px;
+      }
     }
 
     &-cov-symbol {
@@ -112,10 +119,6 @@
     &-number {
       text-align: right;
       padding: 0 10px;
-
-      background-color: $xcov-line-number-bgcolor;
-
-      width: 3%;
       min-width: 50px;
     }
 
@@ -133,13 +136,19 @@
 
     &-code {
       white-space: pre;
+      // height: 17px;
+      // To have the same height on all browsers, as chrome suffers from rounding issues.
+      // Here, font-height * line-height is with a relatively good precision an integer (~17) for a font-height of 14.
+      // We thus avoid different heights on different browsers, which would result in a dysfunctional
+      // virtual scroller.
+      line-height: 20px !important;
+
       font: $xcov-font-size-monospace $xcov-font-family-monospace;
     }
 
     &-mark {
       float: left;
       position: relative;
-      top: 2px;
     }
 
     &-message {
@@ -154,16 +163,16 @@
 
       margin-bottom: 0;
 
+      white-space: pre-line;
+
       tr {
         td {
           width: 1%;
 
-        * {
+          * {
             padding: 2px 10px;
           }
-          // universal selector is not taken into account in the source-line component for some HTML elements
-          // TODO: find the reason
-          padding: 2px 10px;
+
           border-right: $xcov-table-body-border;
           background-color: $xcov-line-number-bgcolor;
 
@@ -195,8 +204,10 @@
 
       &-sco {
         font-weight: bold;
+        //line-height: 25px !important;
         color: $xcov-link-color;
         font: $xcov-font-size $xcov-font-family-monospace;
+          display: inline-block;
       }
 
       &-insn {
@@ -277,6 +288,14 @@
       @include bgline($xcov-line-exempted-with-violation);
     }
   }
+}
+.hidden {
+  visibility: hidden;
+}
+
+tbody {
+  width: 100%;
+  border-collapse: collapse !important;
 }
 
 ;
