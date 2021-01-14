@@ -1,0 +1,301 @@
+@import "../../styles";
+@import "../app.component";
+// Full line background
+@mixin bgline($color) {
+  &:hover {
+    background-color: transparent;
+  }
+
+  &, &:hover {
+    .xcov-source-line-text {
+      background-color: $color;
+    }
+  }
+  .xcov-source-line-coverage {
+    background-color: $color;
+  }
+
+  &:hover .xcov-source-line-number {
+    background-color: $xcov-line-number-bgcolor-hover;
+  }
+}
+
+// Partial line background, full on hover
+@mixin bgline-hover($color) {
+  &:hover {
+    background-color: transparent;
+  }
+
+  &-expanded, &:hover {
+    .xcov-source-line-text {
+      background-color: $color;
+    }
+  }
+  .xcov-source-line-coverage {
+    background-color: $color;
+  }
+
+  &:hover .xcov-source-line-number {
+    background-color: $xcov-line-number-bgcolor-hover;
+  }
+}
+
+.xcov-source {
+  width: 90%;
+  margin: 15px 5%;
+  margin-bottom: 50px;
+
+  &-content {
+    width: 100%;
+    margin-bottom: 50px;
+    padding-bottom: 50px;
+    border: $xcov-table-body-border;
+  }
+
+  &-toolbar {
+    padding: 3px 0;
+    text-align: right;
+  }
+
+  button {
+    padding: 3px 5px;
+    margin-right: 5px;
+  }
+
+  &-autoroll {
+    margin-right: 5px;
+  }
+
+  &-row {
+    &-line-no, &-cov-symbol {
+      position: relative;
+      border-right: $xcov-table-body-border;
+    }
+
+    &-line-no {
+      background-color: $xcov-line-number-bgcolor;
+      vertical-align: top;
+      width: 1%;
+      outline: 0;
+
+      pre {
+        padding-left: 20px;
+      }
+    }
+
+    &-cov-symbol {
+      vertical-align: top;
+      min-width: 30px;
+      width: 1%;
+    }
+
+    &-text {
+      width: 98%;
+    }
+  }
+
+  &-line {
+    outline: 0;
+
+    &-expanded {
+      background-color: transparent;
+
+      .xcov-source {
+        &-row-line-no, &-line-number {
+          background-color: $xcov-line-number-bgcolor-hover;
+        }
+      }
+    }
+
+    &-number, &-coverage, &-message-info {
+      float: left;
+      z-index: 1;
+    }
+
+    &-message-info {
+      border-right: $xcov-table-body-border;
+    }
+
+    &-number {
+      text-align: right;
+      padding: 0 10px;
+      min-width: 50px;
+    }
+
+    &-coverage {
+      width: 20px;
+      padding: 0 5px;
+      font-size: 0.6em;
+      text-align: center;
+    }
+
+    &-text {
+      position: relative;
+      padding-left: 10px;
+    }
+
+    &-code {
+      white-space: pre;
+      // height: 17px;
+      // To have the same height on all browsers, as chrome suffers from rounding issues.
+      // Here, font-height * line-height is with a relatively good precision an integer (~17) for a font-height of 14.
+      // We thus avoid different heights on different browsers, which would result in a dysfunctional
+      // virtual scroller.
+      line-height: 20px !important;
+
+      font: $xcov-font-size-monospace $xcov-font-family-monospace;
+    }
+
+    &-mark {
+      float: left;
+      position: relative;
+    }
+
+    &-message {
+      padding: 10px;
+    }
+
+    &-attached {
+      border: $xcov-table-body-border;
+      background-color: white;
+
+      width: 100%;
+
+      margin-bottom: 0;
+
+      white-space: pre-line;
+
+      tr {
+        td {
+          width: 1%;
+
+          * {
+            padding: 2px 10px;
+          }
+
+          border-right: $xcov-table-body-border;
+          background-color: $xcov-line-number-bgcolor;
+
+          &:last-child {
+            width: 99%;
+
+            border-right: none;
+            background-color: transparent;
+          }
+        }
+
+        &:hover {
+          td {
+            background-color: $xcov-line-number-bgcolor-hover;
+
+            &:last-child {
+              background-color: transparent;
+            }
+          }
+        }
+      }
+
+      &-message {
+        &-label {
+          text-align: right;
+          text-transform: capitalize;
+        }
+      }
+
+      &-sco {
+        font-weight: bold;
+        //line-height: 25px !important;
+        color: $xcov-link-color;
+        font: $xcov-font-size $xcov-font-family-monospace;
+          display: inline-block;
+      }
+
+      &-insn {
+        &-symbol {
+          font-weight: bold !important;
+        }
+
+        &-offset, &-address, &-coverage, &-asm {
+          font: $xcov-font-size $xcov-font-family-monospace;
+        }
+
+        &-padding {
+          text-align: center;
+          color: $xcov-disabled-color;
+        }
+
+        &-tooltip {
+          font-size: 12px;
+        }
+
+        &-coverage {
+          &-covered {
+            background-color: $xcov-line-covered;
+          }
+
+          &-partially-covered {
+            background-color: $xcov-line-partially-covered;
+          }
+
+          &-not-covered {
+            background-color: $xcov-line-not-covered;
+          }
+
+          &-not-coverable {
+            background-color: $xcov-line-not-coverable;
+          }
+
+          &-exempted-no-violation {
+            background-color: $xcov-line-exempted-no-violation;
+          }
+
+          &-exempted-with-violation {
+            background-color: $xcov-line-exempted-with-violation;
+          }
+        }
+      }
+    }
+
+    &-no-code:hover {
+      background-color: $xcov-table-row-hover !important;
+
+      .xcov-source-line-number {
+        background-color: $xcov-line-number-bgcolor-hover;
+      }
+    }
+
+    &-covered {
+      @include bgline-hover($xcov-line-covered);
+    }
+
+    &-partially-covered {
+      @include bgline($xcov-line-partially-covered);
+    }
+
+    &-not-covered {
+      @include bgline($xcov-line-not-covered);
+    }
+
+    &-not-coverable {
+      @include bgline-hover($xcov-line-not-coverable);
+    }
+
+    &-exempted-no-violation {
+      @include bgline($xcov-line-exempted-no-violation);
+    }
+
+    &-exempted-with-violation {
+      @include bgline($xcov-line-exempted-with-violation);
+    }
+  }
+}
+.hidden {
+  visibility: hidden;
+}
+
+tbody {
+  width: 100%;
+  border-collapse: collapse !important;
+}
+
+;

@@ -1,0 +1,41 @@
+<div class="xcov-navigation">
+  <a routerLink="/traces">⇪ Show traces table</a>
+</div>
+<ng-container *ngIf="(data$ | async) as o">
+  <h2 class="xcov-section-title" id="overview" tabindex="0" role="tab" aria-expanded="true">❯ Overview</h2>
+  <app-enumerable-table [ctx]="o.ctx" [project]=o.total [isSource]="false"></app-enumerable-table>
+
+  <app-enumerable-table [ctx]=o.ctx [project]="o.report" [isSource]="false"></app-enumerable-table>
+  <div *ngFor="let project of o.report.projects ">
+    <h2 class="xcov-section-title" id="project-{{project.projectName}}" tabindex="0" role="tab" aria-expanded="true">
+      ❯ {{project.projectName}}</h2>
+    <app-enumerable-table [ctx]="o.ctx" [project]="project" [isSource]="true"></app-enumerable-table>
+  </div>
+
+  <div class="xcov-help"><p>The results (total and per file) contain:</p>
+    <ul>
+      <li>the total number of lines "of relevance" for the unit (definition below);</li>
+      <li>the number of such lines that are considered as fully, partially, or not covered for the chosen coverage
+        criteria;
+      </li>
+      <li>the number of such lines that are part of an exemption region, with or without actually exempted violations;
+      </li>
+      <li>the number of such lines that are not coverable because nomachine code is generated (if requested by
+        --non-coverable);
+      </li>
+      <li>a visual summary of this coverage data.</li>
+    </ul>
+    <p><b>"line of relevance"</b> are the source lines that have associated object code and which include all or part of a
+      source entity of interest if we are assessing a source level criterion. Source comment lines are never included in
+      the counts, typically. In the visual summaries, the colors have the following meaning:</p>
+    <table class="xcov-help-legend">
+      <tbody>
+      <tr>
+        <td *ngFor="let status of o.ctx.properties "
+            class="xcov-help{{statusProperties[status].classSuffix}}"> {{statusProperties[status].name}}
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-container>

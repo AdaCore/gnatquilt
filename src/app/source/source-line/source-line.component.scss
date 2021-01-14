@@ -1,0 +1,31 @@
+@import '../style';
+
+.xcov-source {
+
+  &-line {
+
+    &-covered-lowlight {
+      @include bgline-hover($xcov-line-covered-lowlight);
+    }
+
+    &-partially-covered {
+      @include bgline($xcov-line-partially-covered-lowlight);
+    }
+
+    &-not-covered {
+      @include bgline($xcov-line-not-covered-lowlight);
+    }
+
+    &-not-coverable {
+      @include bgline-hover($xcov-line-not-coverable-lowlight);
+    }
+
+    &-exempted-no-violation {
+      @include bgline($xcov-line-exempted-no-violation-lowlight);
+    }
+
+    &-exempted-with-violation {
+      @include bgline($xcov-line-exempted-with-violation-lowlight);
+    }
+  }
+}
