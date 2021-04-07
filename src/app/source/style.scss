@@ -200,14 +200,16 @@
           text-align: right;
           text-transform: capitalize;
         }
+        &-body {
+          font: $xcov-font-size $xcov-font-family-monospace;
+        }
       }
 
       &-sco {
         font-weight: bold;
-        //line-height: 25px !important;
         color: $xcov-link-color;
         font: $xcov-font-size $xcov-font-family-monospace;
-          display: inline-block;
+        display: inline-block;
       }
 
       &-insn {
