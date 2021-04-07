@@ -24,8 +24,10 @@
                     {{mapping.line.src}}
     </div>
     <ng-container *ngIf="hasAttached() && isExpanded">
-        <ng-container *ngIf="mapping.message">
-            <app-message [message]="mapping.message"></app-message>
+        <ng-container *ngFor="let message of mapping.messages">
+            <ng-container *ngIf="message">
+                <app-message [message]="message"></app-message>
+            </ng-container>
         </ng-container>
         <ng-container *ngIf="mapping.instructionSet">
             <app-instruction-set [hidden]="!isExpanded" [instructionSet]="mapping.instructionSet"></app-instruction-set>

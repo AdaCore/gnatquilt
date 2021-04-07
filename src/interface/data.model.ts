@@ -82,7 +82,7 @@ export interface Decision {
 export interface Mapping {
   coverage: string;
   line: Line;
-  message: Message;
+  messages: Message[];
   statements: Statement[];
   decisions: Decision[];
   instructionSet: InstructionSet;

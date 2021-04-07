@@ -152,7 +152,7 @@
     }
 
     &-message {
-      padding: 10px;
+      padding: 5px 10px;
     }
 
     &-attached {
@@ -202,10 +202,12 @@
         }
         &-body {
           font: $xcov-font-size $xcov-font-family-monospace;
+          line-height: 18px;
         }
       }
 
       &-sco {
+        padding: 0 !important;
         font-weight: bold;
         color: $xcov-link-color;
         font: $xcov-font-size $xcov-font-family-monospace;

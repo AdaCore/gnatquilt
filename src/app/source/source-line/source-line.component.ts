@@ -69,11 +69,11 @@ export class SourceLineComponent implements OnInit {
   }
 
   hasAttached(): boolean {
-    return this.mapping.message !== undefined || this.mapping.instructionSet !== undefined;
+    return this.mapping.messages.length !== 0 || this.mapping.instructionSet !== undefined;
   }
 
   hasMessage(): boolean {
-    return this.mapping.message !== undefined;
+    return this.mapping.messages.length !== 0;
   }
 
   getLineno(): string {

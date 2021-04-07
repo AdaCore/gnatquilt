@@ -38,8 +38,6 @@ export class SourceFileComponent implements OnInit {
     this.source$.subscribe((source: AnnotatedSource) => {
       this.items = source.mappings;
     });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    this.boundedItemSize = this.getItemSize.bind(this);
   }
 
 
@@ -48,7 +46,7 @@ export class SourceFileComponent implements OnInit {
   }
 
   hasAttached(mapping: Mapping): boolean {
-    return mapping.message !== undefined || mapping.instructionSet !== undefined;
+    return mapping.messages.length !== 0 || mapping.instructionSet !== undefined;
   }
 
   getClass(index: number, mapping: Mapping): string{
@@ -62,19 +60,7 @@ export class SourceFileComponent implements OnInit {
   }
 
   hasMessage(mapping: Mapping): boolean {
-    return mapping.message !== undefined;
-  }
-  getItemSize(index: number): number {
-    // eslint-disable-next-line @typescript-eslint/typedef
-    const messageHeight = 79;
-    // eslint-disable-next-line @typescript-eslint/typedef
-    const normalHeight = 20;
-    // eslint-disable-next-line @typescript-eslint/typedef
-    const mapping = this.items[index];
-    if (mapping.message !== undefined && this.expandCollapseService.isLineExpanded(mapping.line.lineNumber)) {
-      return messageHeight;
-    }
-    return normalHeight;
+    return mapping.messages.length !== 0;
   }
 
   ngOnInit(): void {}
