@@ -9,6 +9,10 @@ Run `npm install` to install node dependencies.
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
+Note that GNATquilt in development mode expects generated files to be in the directory `src/test`.
+If you want to test changes made to GNATquilt, the easiest way is to generate a dhtml report with `gnatcov coverage`,
+and copy the generated JS files to the `src/test` directory.
+
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.

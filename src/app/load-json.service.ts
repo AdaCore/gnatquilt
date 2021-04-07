@@ -13,7 +13,7 @@ declare let REPORT: any;
 })
 export class LoadJsonService {
 
-  prefix = isDevMode()?'generated/':'';
+  prefix = isDevMode()?'test/':'';
 
 
   constructor(private scriptService: ScriptService){
