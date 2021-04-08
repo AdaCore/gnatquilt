@@ -20,7 +20,7 @@ export class MessageComponent implements OnInit {
   constructor(private sourceFileService: SourceFileService) { }
 
   hasSco(): boolean{
-    return this.message.sco !== undefined;
+    return this.message.kind !== 'info' && this.message.sco !== undefined;
   }
 
   getScoId(): number{
