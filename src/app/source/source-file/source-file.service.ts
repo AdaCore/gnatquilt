@@ -58,8 +58,10 @@ function computeSco(mappings: Mapping[]): Map<number, ScoProperties>{
 
     for (const decision of decisions) {
       scos.set(Number(decision.id), new ScoProperties('decision', decision.text, decision.range));
-      for (const condition of decision.conditions) {
-        scos.set(Number(condition.id), new ScoProperties('condition', condition.text, condition.range));
+      if (decision.conditions) {
+        for (const condition of decision.conditions) {
+          scos.set(Number(condition.id), new ScoProperties('condition', condition.text, condition.range));
+        }
       }
     }
   }
