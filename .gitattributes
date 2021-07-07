@@ -6,3 +6,6 @@
 /src/assets/** no-precommit-check
 /src/generated/** no-precommit-check
 /src/generatedBranch/** no-precommit-check
+
+testsuite/**/*.adb no-precommit-check
+testsuite/**/*.ads no-precommit-check
