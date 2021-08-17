@@ -2,7 +2,16 @@
 <ng-container *ngIf="coverageLevel$ | async as coverageLevel">
   <h2 class="xcov-report-coverage-level">Coverage level: {{coverageLevel}}</h2>
 </ng-container>
-
+<div class="button-row">
+  <button [ngClass]="{'levelClicked': linesClicked}" mat-stroked-button (click)="onClickLines()">Lines</button>
+</div>
+<div class="button-row">
+  <button *ngFor="let level of allLevels"
+          [ngClass]="{'levelClicked': levelsClicked.has(level)}"
+          mat-stroked-button (click)="onClick(level)">
+    {{level}}
+  </button>
+</div>
 <div class="xcov-report-content">
 <router-outlet></router-outlet>
 </div>

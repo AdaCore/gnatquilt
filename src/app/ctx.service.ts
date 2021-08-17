@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Enumerable} from '../interface/report.model';
 import {Status} from '../models/app-enum';
-import {ReportService} from './report.service';
+import {Report, ReportService} from './report.service';
 import {map} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import {Observable, ReplaySubject} from 'rxjs';
 
 export class Properties {
   name: string;
@@ -55,6 +55,7 @@ export const symbolToStat: Map<string, Status> = coverageSymbolToStatus();
 export class Ctx {
   properties: Array<Status>;
   width: number;
+  levels: Set<string> = new Set();
 
   constructor(aggregatedStats: Enumerable) {
     this.properties = this.propertiesOfInterest(aggregatedStats);
@@ -73,7 +74,7 @@ export class Ctx {
       [Status.covered, Status.partiallyCovered, Status.notCovered,
         Status.notCoverable, Status.exemptedWithViolation, Status.exemptedNoViolation];
     return properties.filter(
-      (status: Status) => aggregatedStats.stats[status] !== 0
+      (status: Status) => aggregatedStats.getStats()[status] !== 0
     );
   }
 
@@ -97,13 +98,13 @@ export class Ctx {
 })
 export class CtxService {
 
-  ctx: Observable<Ctx>;
+  ctx$: ReplaySubject<Ctx> = new ReplaySubject<Ctx>(1);
+  ctx: Observable<Ctx> = this.ctx$.asObservable();
 
   constructor(private reportService: ReportService) {
     const data: Observable<Enumerable> = this.reportService.getReport();
-    this.ctx = data.pipe(
-      map((report: Enumerable) =>
-        new Ctx(report)));
+    data.subscribe((report: Enumerable) =>
+      this.ctx$.next(new Ctx(report)));
   }
 
   getCtx(): Observable<Ctx>{

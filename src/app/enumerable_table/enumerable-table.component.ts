@@ -1,9 +1,9 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {Sort} from '@angular/material/sort';
-import {Status} from '../../models/app-enum';
-import {Enumerable, Enumerables} from '../../interface/report.model';
-import {Ctx, CtxService, Properties} from '../ctx.service';
-import {statusProperties} from '../ctx.service';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Sort } from '@angular/material/sort';
+import { Status } from '../../models/app-enum';
+import { Enumerable, Enumerables } from '../../interface/report.model';
+import { Ctx, Properties, statusProperties } from '../ctx.service';
+import { Project, statKind, StatKindType } from '../report.service';
 
 @Component({
   selector: 'app-enumerable-table',
@@ -24,8 +24,15 @@ export class EnumerableTableComponent implements OnInit {
   public totalLines: number;
   statusProperties: Record<Status, Properties> = statusProperties;
 
+  // if isSource is True, then project is a Project object, which means we
+  // have a project name, which we want to pass on.
+  projectName: string;
+
   ngOnInit(): void {
     this.sortedData = this.project.getEnumerables();
+    if (this.isSource){
+      this.projectName = (this.project as Project).projectName;
+    }
   }
 
   getIndexClass(index: number): string {
@@ -48,11 +55,20 @@ export class EnumerableTableComponent implements OnInit {
         return compare(a.totalLines, b.totalLines, isAsc);
       default:
         const status: string = sort.active;
-        return Status[status] !== undefined ?
-          compare(a.stats[status], b.stats[status], isAsc) :
-          0;
+        return Status[status] !== undefined
+          ? compare(a.getStats()[status], b.getStats()[status], isAsc)
+          : 0;
       }
     });
+  }
+
+  getTotalLabel(): string {
+    switch (statKind){
+    case StatKindType.entities:
+      return 'Total obligations';
+    case StatKindType.lines:
+      return 'Total lines';
+    }
   }
 }
 

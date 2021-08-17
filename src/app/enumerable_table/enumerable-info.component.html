@@ -13,7 +13,7 @@
         </ng-container>
         <ng-template #sourceBlock>
             <!-- a link to an annotated source in the index-->
-            <a routerLink="/sources/{{getHunkFilename(enumerable)}}">
+            <a routerLink="/sources/{{projectName}}/{{getHunkFilename(enumerable)}}">
                 {{enumerable.getName()}}
             </a>
         </ng-template>
@@ -27,10 +27,10 @@
 <td *ngFor="let status of ctx.properties " class="xcov-table-count">
     <div class="xcov-table-cell">
     <span>
-    {{enumerable.stats[status]}}
+    {{getStat(enumerable, status)}}
     </span>
         <span class="unselectable">
-        {{enumerable.statsPercent[status]}}%
+        {{enumerable.getStatsPercent()[status]}}%
     </span></div>
 </td>
 <td class="xcov-table-summary">

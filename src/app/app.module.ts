@@ -3,6 +3,8 @@ import {NgModule} from '@angular/core';
 import {ReportComponent} from './report.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatButtonModule} from '@angular/material/button';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSortModule} from '@angular/material/sort';
 import {MatExpansionModule} from '@angular/material/expansion';
@@ -17,6 +19,7 @@ import {SourceFileModule} from './source/source-file.module';
 import {EnumerableTableModule} from './enumerable_table/enumerable-table.module';
 import {TraceMenuComponent} from './trace-menu/trace-menu.component';
 import {ScriptLoaderModule} from 'ngx-script-loader';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -28,6 +31,8 @@ import {ScriptLoaderModule} from 'ngx-script-loader';
     BrowserModule,
     CommonModule,
     HttpClientModule,
+    MatButtonModule,
+    MatButtonToggleModule,
     MatTooltipModule,
     BrowserAnimationsModule,
     MatSortModule,
@@ -37,7 +42,8 @@ import {ScriptLoaderModule} from 'ngx-script-loader';
     FormsModule,
     ScriptLoaderModule,
     SourceFileModule,
-    EnumerableTableModule
+    EnumerableTableModule,
+    MatIconModule
   ],
   providers: [
     {provide: APP_BASE_HREF, useValue: './'},

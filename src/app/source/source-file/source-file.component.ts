@@ -6,6 +6,8 @@ import {Observable, zip} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {SourceLineComponent} from '../source-line/source-line.component';
 import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
+import {ReportService, Source} from '../../report.service';
+import {Enumerables} from '../../../interface/report.model';
 
 export interface ISourceFile extends ISource {
   mappings: any;
@@ -21,25 +23,27 @@ export interface ISourceFile extends ISource {
 
 export class SourceFileComponent implements OnInit {
   source$: Observable<AnnotatedSource>;
+  sourceStats$: Observable<Enumerables>;
   ctx$: Observable<Ctx>;
-  data$: Observable<{ctx: Ctx; source: AnnotatedSource}>;
+  data$: Observable<{ctx: Ctx; source: AnnotatedSource; sourceStats: Enumerables}>;
   items: Array<Mapping> = new Array<Mapping>();
   boundedItemSize: any;
 
   constructor(private ctxService: CtxService,
+              private reportService: ReportService,
               private sourceService: SourceFileService,
               private expandCollapseService: ExpandCollapseService){
     this.source$ = sourceService.getSource();
+    this.sourceStats$ = sourceService.sourceStats;
     this.ctx$ = ctxService.getCtx();
-    this.data$ = zip(this.ctx$, this.source$)
+    this.data$ = zip(this.ctx$, this.source$, this.sourceStats$)
       .pipe(
-        map(([ctx, source]: [Ctx, AnnotatedSource]) =>
-          ({ctx, source})));
+        map(([ctx, source, sourceStats]: [Ctx, AnnotatedSource, Enumerables]) =>
+          ({ctx, source, sourceStats})));
     this.source$.subscribe((source: AnnotatedSource) => {
       this.items = source.mappings;
     });
   }
-
 
   parseInt(str: string): number{
     return parseInt(str, 10);

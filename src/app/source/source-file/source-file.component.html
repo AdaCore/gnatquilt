@@ -4,7 +4,7 @@
 <div class="xcov-report-content">
     <ng-container *ngIf="(data$| async) as data">
         <h2 class="xcov-section-title" id=":c">❯ {{data.source.filename}}</h2>
-        <app-enumerable-table [ctx]=data.ctx [project]="data.source" [isSource]="false"></app-enumerable-table>
+        <app-enumerable-table [ctx]=(ctx$|async) [project]="data.sourceStats" [isSource]="false"></app-enumerable-table>
         <table class="xcov-source">
             <div class="xcov-source-toolbar">
                 <button class="xcov-source-toggle-expanded" (click)="expandCollapseService.expandAll(scroll)">

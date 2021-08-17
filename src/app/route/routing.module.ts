@@ -8,7 +8,7 @@ export const routes: Routes = [
   {path: '', redirectTo: '/report', pathMatch: 'full'},
   {path: 'report', pathMatch: 'full', component: ReportComponent},
   {path: 'traces', component: TraceMenuComponent},
-  {path: 'sources/:sourceName', component: SourceFileComponent}];
+  {path: 'sources/:projectName/:sourceName', component: SourceFileComponent}];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],

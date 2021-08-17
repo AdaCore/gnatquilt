@@ -20,6 +20,8 @@ export class EnumerableInfoComponent implements OnInit {
 
   @Input() isSource: boolean;
 
+  @Input() projectName: string;
+
   statusProperties: Record<Status, Properties> = statusProperties;
 
   getHunkFilename(enumerable: Enumerable): string {
@@ -28,6 +30,10 @@ export class EnumerableInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  getStat(e: Enumerable, status: string): number{
+    return e.getStats()[status] as number;
   }
 }
 

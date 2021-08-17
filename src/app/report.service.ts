@@ -1,10 +1,10 @@
 import {Enumerable, Enumerables} from '../interface/report.model';
-import {IReport, ISource, ITrace} from '../interface/data.model';
+import {EntityStats, IReport, ISource, ITrace} from '../interface/data.model';
 import {initStatus, Status} from '../models/app-enum';
 import {Injectable} from '@angular/core';
 import {LoadJsonService} from './load-json.service';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Observable, ReplaySubject, Subject} from 'rxjs';
+import {map, take, tap} from 'rxjs/operators';
 
 /**
  * computes the percentage statistics from statistics and total number of lines
@@ -26,7 +26,7 @@ function computePercentages(totalLines: number, stats: Record<Status, number>): 
 /**
  * aggregates stats from a list of object with stats (enumerable)
  *
- * @param aggregate list of enumerable, i.e. object that have totalLines and stats properties
+ * @param aggregate: list of enumerable, i.e. object that have totalLines and stats properties
  * @return [aggregated total number of lines, aggregated statistics]
  */
 function computeAggregatedStats(aggregate: Array<Enumerable>): [number, Record<Status, number>] {
@@ -36,7 +36,7 @@ function computeAggregatedStats(aggregate: Array<Enumerable>): [number, Record<S
       .reduce((totalProject: number, totalForFile: number) => totalProject + totalForFile);
   const stats: Record<Status, number> = initStatus();
   aggregate
-    .map((enumerable: Enumerable) => enumerable.stats)
+    .map((enumerable: Enumerable) => enumerable.getStats())
     .forEach((sourceStats: Record<Status, number>) => {
       for (const [status, stat] of Object.entries(sourceStats)) {
         // have to add a type assertion because status is a string
@@ -52,20 +52,72 @@ function computeAggregatedStats(aggregate: Array<Enumerable>): [number, Record<S
     });
   return [totalLines, stats];
 }
+/**
+ * aggregates stats from a list of object with stats (enumerable)
+ *
+ * @param enAllStats: entities stats, i.e. coverage obligations stats for each coverage level
+ * @param levels: list of level strings for which we want to compute stats aggregation
+ * @return [aggregated total number of coverage obligations, aggregated statistics]
+ */
+function aggregateEntitiesStats(
+  enAllStats: Array<EntityStats>,
+  levels: Set<string>
+): [number, Record<Status, number>] {
+  const enStats: Record<Status, number> = initStatus();
+  // eslint-disable-next-line @typescript-eslint/typedef
+  let totalLines = 0;
+  enAllStats.forEach((entity: EntityStats) => {
+    if (levels.has(entity.level)) {
+      for (const [status, _stat] of Object.entries(entity.stats)) {
+        enStats[status] += entity.stats[status];
+        totalLines += entity.stats[status];
+      }
+    }
+  });
+  return [totalLines, enStats];
+}
 
-export class Source implements ISource, Enumerable {
-  filename: string;
-  stats: Record<Status, number> = initStatus();
+export enum StatKindType {entities, lines}
+export let statKind: StatKindType = StatKindType.lines;
+export function setStatKind(setKind: StatKindType): void {
+  statKind = setKind;
+}
+
+abstract class Stats implements Enumerable {
+  liStats: Record<Status, number> = initStatus();
+  enStats: Record<Status, number> = initStatus();
   statsPercent: Record<Status, number> = initStatus();
+  totalLines = 0;
+
+  getStats(): Record<Status, number> {
+    switch (statKind){
+    case StatKindType.entities:
+      return this.enStats;
+    case StatKindType.lines:
+      return this.liStats;
+    }
+  }
+
+  getStatsPercent(): Record<Status, number> {
+    return this.statsPercent;
+  }
+
+  abstract getName(): string;
+}
+
+export class Source extends Stats implements ISource, Enumerable {
+  filename: string;
   hunkFilename: string;
   missingSource: boolean;
   project: string;
   totalLines = 0;
+  enAllStats: Array<EntityStats>;
 
   constructor(source: ISource) {
+    super();
     Object.assign(this, source);
-    this.totalLines = this.computeLines(this.stats);
-    this.statsPercent = computePercentages(this.totalLines, this.stats);
+    this.totalLines = this.computeLines(this.liStats);
+    this.statsPercent = computePercentages(this.totalLines, this.liStats);
     this.missingSource = source.missingSource;
   }
 
@@ -82,15 +134,32 @@ export class Source implements ISource, Enumerable {
   getHunkFilename(): string {
     return this.hunkFilename;
   }
+
+  computeStats(levels: Set<string>): void {
+    switch (statKind){
+    case StatKindType.lines:
+      this.totalLines = Object.values(this.liStats).reduce(
+        (sum: number, current: number) => sum + current
+      );
+      this.totalLines -= this.liStats.noCode;
+      break;
+    case StatKindType.entities:
+      [this.totalLines, this.enStats] = aggregateEntitiesStats(
+        this.enAllStats,
+        levels
+      );
+      break;
+    }
+    this.statsPercent = computePercentages(this.totalLines, this.getStats());
+  }
 }
 
-export class Project implements Enumerable, Enumerables {
+export class Project extends Stats implements Enumerable, Enumerables {
   totalLines: number;
-  stats: Record<Status, number> = initStatus();
-  statsPercent: Record<Status, number> = initStatus();
   projectFiles: Source[] = [];
 
   constructor(public projectName: string) {
+    super();
     this.projectName = projectName;
   }
 
@@ -98,11 +167,19 @@ export class Project implements Enumerable, Enumerables {
     this.projectFiles.push(source);
   }
 
-  computeStats(): void {
-
-    [this.totalLines, this.stats] = computeAggregatedStats(this.projectFiles);
-
-    this.statsPercent = computePercentages(this.totalLines, this.stats);
+  computeStats(levels: Set<string>): void {
+    this.projectFiles.forEach((s: Source) => {
+      s.computeStats(levels);
+    });
+    switch (statKind) {
+    case StatKindType.entities:
+      [this.totalLines, this.enStats] = computeAggregatedStats(this.projectFiles);
+      break;
+    case StatKindType.lines:
+      [this.totalLines, this.liStats] = computeAggregatedStats(this.projectFiles);
+      break;
+    }
+    this.statsPercent = computePercentages(this.totalLines, this.getStats());
   }
 
   getName(): string {
@@ -130,15 +207,14 @@ export class Trace {
   }
 }
 
-export class Report implements Enumerables, Enumerable {
+export class Report extends Stats implements Enumerables, Enumerable {
   projects: Project[];
   coverageLevel: string;
   totalLines: number;
-  stats: Record<Status, number> = initStatus();
-  statsPercent: Record<Status, number> = initStatus();
   traces: Array<[string, Trace[]]>;
 
   constructor(data: IReport) {
+    super();
     const projects: Map<string, Project> = new Map<string, Project>();
     for (const source of data.sources) {
       const key: string = source.project;
@@ -148,10 +224,12 @@ export class Report implements Enumerables, Enumerable {
     }
     for (const item of projects.entries()) {
       const project: Project = item[1];
-      project.computeStats();
+      project.computeStats(new Set());
     }
-    [this.totalLines, this.stats] = computeAggregatedStats(Array.from(projects.values()));
-    this.statsPercent = computePercentages(this.totalLines, this.stats);
+    [this.totalLines, this.liStats] = computeAggregatedStats(
+      Array.from(projects.values())
+    );
+    this.statsPercent = computePercentages(this.totalLines, this.liStats);
     this.projects = Array.from(projects.values());
 
     // if it is not a multi-project project, set a default project name because there will be none in the output data
@@ -181,6 +259,19 @@ export class Report implements Enumerables, Enumerable {
   getHeadName(): string {
     return 'Projects';
   }
+
+  computeStats(levels: Set<string>): void {
+    this.projects.forEach((project: Project) => project.computeStats(levels));
+    switch (statKind){
+    case StatKindType.entities:
+      [this.totalLines, this.enStats] = computeAggregatedStats(this.projects);
+      break;
+    case StatKindType.lines:
+      [this.totalLines, this.liStats] = computeAggregatedStats(this.projects);
+      break;
+    }
+    this.statsPercent = computePercentages(this.totalLines, this.getStats());
+  }
 }
 
 @Injectable({
@@ -188,14 +279,14 @@ export class Report implements Enumerables, Enumerable {
 })
 
 export class ReportService {
-  report: Observable<Report>;
+  report$: Subject<Report> = new ReplaySubject<Report>();
+  report: Observable<Report> = this.report$.asObservable();
   total: Observable<Enumerables>;
 
   constructor(private loadJSONService: LoadJsonService) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const data: Observable<IReport> = this.loadJSONService.getJSON('report.js');
-    this.report = data.pipe(
-      map((ireport: IReport) => new Report(ireport)));
+    data.subscribe((report) => this.report$.next(new Report(report)));
     this.total = this.report.pipe(
       map((report: Report) =>
         new class implements Enumerables {
@@ -218,9 +309,7 @@ export class ReportService {
   }
 
   getReport(): Observable<Report> {
-    const data: Observable<IReport> = this.loadJSONService.getJSON('report.js');
-    return data.pipe(
-      map((ireport: IReport) => new Report(ireport)));
+    return this.report;
   }
 
   getTotal(): Observable<Enumerables> {
@@ -237,6 +326,26 @@ export class ReportService {
     return this.report.pipe(
       map((report: Report) => report.traces)
     );
+  }
+
+  computeForLevels(levels: Set<string>): void{
+    this.report.pipe(
+      take(1)
+    ).subscribe(
+      (report: Report) => {
+        report.computeStats(levels);
+        this.report$.next(report);
+      }
+    );
+  }
+
+  getStatsForSource(projectName: string, sourceName: string): Observable<Source>{
+    return this.report.pipe(
+      map(
+        (report: Report) => report.projects.find
+        ((p: Project) => p.projectName === projectName)
+          .projectFiles.find
+          ((s: Source) => s.hunkFilename === sourceName)));
   }
 
 }

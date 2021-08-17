@@ -1,10 +1,16 @@
 import {Status} from '../models/app-enum';
 
+export interface EntityStats{
+  level: string;
+  stats: Record<Status, number>;
+}
+
 export interface ISource {
   filename: string;
-  /* an object with status properties ({covered: 1, not_covered: 1 ...})
-     */
-  stats: Record<Status, number>;
+  // computed metrics for the file, either line, or coverage entity (stmt,
+  // decision, ...) oriented.
+  liStats: Record<Status, number>;
+  enAllStats: Array<EntityStats>;
   hunkFilename: string;
   missingSource: boolean;
   project: string;

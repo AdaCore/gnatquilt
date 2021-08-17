@@ -12,7 +12,7 @@ import {Ctx, CtxService, Properties, statusProperties} from './ctx.service';
   styleUrls: ['./app.component.scss']
 })
 
-export class ReportComponent implements OnInit{
+export class ReportComponent implements OnInit {
 
   total: Enumerables;
   ctx$: Observable<Ctx>;
@@ -31,4 +31,5 @@ export class ReportComponent implements OnInit{
 
   ngOnInit(): void {
   }
+
 }

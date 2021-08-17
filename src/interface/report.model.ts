@@ -3,9 +3,9 @@ import {Status} from '../models/app-enum';
 
 export interface Enumerable{
   totalLines: number;
-  stats: Record<Status, number>;
-  statsPercent: Record<Status, number>;
   getName(): string;
+  getStats(): Record<Status, number>;
+  getStatsPercent(): Record<Status, number>;
 }
 
 export interface EnumerableService{

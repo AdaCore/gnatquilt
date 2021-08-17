@@ -277,12 +277,8 @@ module.exports = {
             "error",
             "rxjs/Rx"
         ],
-        "no-shadow": [
-            "error",
-            {
-                "hoist": "all"
-            }
-        ],
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": "error",
         "no-throw-literal": "error",
         "no-trailing-spaces": "error",
         "no-undef-init": "error",
@@ -323,5 +319,4 @@ module.exports = {
         "use-isnan": "error",
         "valid-typeof": "off"
     }
-
 };

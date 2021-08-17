@@ -1,7 +1,7 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, ReplaySubject} from 'rxjs';
 import {LoadJsonService} from '../../load-json.service';
-import {Report, Source} from '../../report.service';
+import {Report, ReportService, Source} from '../../report.service';
 import {Decision, ISourceAnnotated, Mapping, Range, Statement} from '../../../interface/data.model';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {map, switchMap, take} from 'rxjs/operators';
@@ -9,6 +9,7 @@ import {Ctx} from '../../ctx.service';
 import {Enumerable, Enumerables} from '../../../interface/report.model';
 import {SourceLineComponent} from '../source-line/source-line.component';
 import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
+import {Status} from '../../../models/app-enum';
 
 export class AnnotatedSource extends Source implements Enumerables {
   mappings: Mapping[];
@@ -70,10 +71,13 @@ function computeSco(mappings: Mapping[]): Map<number, ScoProperties>{
 
 @Injectable()
 export class SourceFileService  {
+  sourceStats: Observable<Enumerables>;
   source: Observable<AnnotatedSource>;
   scos: Observable<Map<number, ScoProperties>>;
+  projectName: ReplaySubject<string> = new ReplaySubject<string>();
 
-  constructor(private route: ActivatedRoute, private loadJSONService: LoadJsonService) {
+  constructor(private route: ActivatedRoute, private loadJSONService: LoadJsonService,
+              private reportService: ReportService) {
     this.source = route.paramMap
       .pipe(take(1))
       .pipe(
@@ -85,7 +89,29 @@ export class SourceFileService  {
           new AnnotatedSource(data)
         )
       );
+    this.sourceStats = route.paramMap
+      .pipe(
+        switchMap((paramMap: ParamMap) =>
+          this.reportService.getStatsForSource
+          (paramMap.get('projectName'), paramMap.get('sourceName'))))
+      .pipe(
+        map((source: Source) =>
+          new class implements Enumerables {
+            enumerable: Enumerable;
 
+            constructor(enumerable: Enumerable) {
+              this.enumerable = enumerable;
+            }
+
+            getEnumerables(): Array<Enumerable> {
+              return [this.enumerable];
+            }
+
+            getHeadName(): string {
+              return '';
+            }
+          }(source)
+        ));
     this.scos = this.source.pipe(
       map((source: AnnotatedSource) =>
         computeSco(source.mappings)
@@ -95,6 +121,11 @@ export class SourceFileService  {
   getSource(): Observable<AnnotatedSource>{
     return this.source;
   }
+
+  getSourceStats(): Observable<Enumerables>{
+    return this.sourceStats;
+  }
+
 
   getSCOS(): Observable<Map<number, ScoProperties>>{
     return this.scos;

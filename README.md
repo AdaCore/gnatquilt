@@ -9,9 +9,14 @@ Run `npm install` to install node dependencies.
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-Note that GNATquilt in development mode expects generated files to be in the directory `src/test`.
-If you want to test changes made to GNATquilt, the easiest way is to generate a dhtml report with `gnatcov coverage`,
-and copy the generated JS files to the `src/test` directory.
+Note that GNATquilt in development mode expects generated files to be in the directory `src/test/dhtml`.
+
+If you want to test changes made to GNATquilt, the easiest way is to generate a dhtml report, using the Makefile
+under `src/test`, with the appropriate coverage level (that can be set directly in the Makefile), and then using target
+`run` or `instrument` (depending on the coverage level).
+
+Note that the `run` target does not use the two traces produced by the execution, to be compatible with the `insn`
+level. It is thus expected to have different coverage result than with target `instrument`.
 
 ## Code scaffolding
 
