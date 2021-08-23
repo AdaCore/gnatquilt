@@ -3,6 +3,7 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.5.
 
 ## Install dependencies
+
 Run `npm install` to install node dependencies.
 
 ## Development server

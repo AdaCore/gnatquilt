@@ -1,5 +1,5 @@
-@import "../../styles";
-@import "../app.component";
+@import '../../styles';
+@import '../app.component';
 
 .xcov-table {
   margin-left: 5%;
@@ -34,7 +34,8 @@
     padding-right: 8px !important;
   }
 
-  &-summary, &-filename {
+  &-summary,
+  &-filename {
     width: 20%;
   }
 
@@ -55,7 +56,10 @@
 
   //th { .xcov-disable-user-selection; }
 
-  tr, th, td, &-filename {
+  tr,
+  th,
+  td,
+  &-filename {
     padding: 4px 3px;
 
     font-size: $xcov-font-size;
@@ -94,12 +98,14 @@
     border: none;
   }
 
-  tbody tr, tbody td {
+  tbody tr,
+  tbody td {
     padding: 0 !important;
     margin: 0 !important;
   }
 
-  &-no-code { /* empty */
+  &-no-code {
+    /* empty */
   }
 
   &-not-applicable {

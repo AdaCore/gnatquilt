@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {Enumerable} from '../interface/report.model';
-import {Status} from '../models/app-enum';
-import {ReportService} from './report.service';
-import {Observable, ReplaySubject} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Enumerable } from '../interface/report.model';
+import { Status } from '../models/app-enum';
+import { ReportService } from './report.service';
+import { Observable, ReplaySubject } from 'rxjs';
 
 export class Properties {
   name: string;
@@ -17,18 +17,34 @@ export class Properties {
 }
 
 function allProperties(): Record<Status, Properties> {
-  const res: Record<Status, Properties> =
-  { noCode: new Properties('No code', '-no-code', '.'),
-    covered: new Properties ( 'Covered', '-covered', '+'),
-    partiallyCovered: new Properties ('Partially Covered', '-partially-covered', '!'),
+  const res: Record<Status, Properties> = {
+    noCode: new Properties('No code', '-no-code', '.'),
+    covered: new Properties('Covered', '-covered', '+'),
+    partiallyCovered: new Properties(
+      'Partially Covered',
+      '-partially-covered',
+      '!'
+    ),
     notCovered: new Properties('Not Covered', '-not-covered', '-'),
-    notCoverable: new Properties ('Not Coverable', '-not-coverable', '0'),
-    exemptedNoViolation: new Properties ('Exempted no Violation', '-exempted-no-violation', '*'),
-    exemptedWithViolation: new Properties ('Exempted with Violation', '-exempted-with-violation', '/'),
+    notCoverable: new Properties('Not Coverable', '-not-coverable', '0'),
+    exemptedNoViolation: new Properties(
+      'Exempted no Violation',
+      '-exempted-no-violation',
+      '*'
+    ),
+    exemptedWithViolation: new Properties(
+      'Exempted with Violation',
+      '-exempted-with-violation',
+      '/'
+    ),
     // only for assembly coverage
-    unknown: new Properties ('Unknown', '-unknown', '?'),
-    fallthroughTaken: new Properties ('Fallthrough Taken', '-partially-covered', '↓'),
-    branchTaken: new Properties ('Branch Taken', '-partially-covered', '→')
+    unknown: new Properties('Unknown', '-unknown', '?'),
+    fallthroughTaken: new Properties(
+      'Fallthrough Taken',
+      '-partially-covered',
+      '↓'
+    ),
+    branchTaken: new Properties('Branch Taken', '-partially-covered', '→'),
   };
   // returning without temporary variable won't do
   return res;
@@ -45,7 +61,7 @@ function coverageSymbolToStatus(): Map<string, Status> {
     ['#', Status.exemptedNoViolation],
     ['?', Status.unknown],
     ['>', Status.branchTaken],
-    ['v', Status.fallthroughTaken]
+    ['v', Status.fallthroughTaken],
   ]);
 }
 export const statusProperties: Record<Status, Properties> = allProperties();
@@ -69,9 +85,14 @@ export class Ctx {
    * @return [list of coverage status to report]
    */
   propertiesOfInterest(aggregatedStats: Enumerable): Array<Status> {
-    const properties: Array<Status> =
-      [Status.covered, Status.partiallyCovered, Status.notCovered,
-        Status.notCoverable, Status.exemptedWithViolation, Status.exemptedNoViolation];
+    const properties: Array<Status> = [
+      Status.covered,
+      Status.partiallyCovered,
+      Status.notCovered,
+      Status.notCoverable,
+      Status.exemptedWithViolation,
+      Status.exemptedNoViolation,
+    ];
     return properties.filter(
       (status: Status) => aggregatedStats.getStats()[status] !== 0
     );
@@ -83,7 +104,7 @@ export class Ctx {
    * @param pOfInterest [list of status]
    * @return [width in the coverage summary table for each status]
    */
-  computeWidth(pOfInterest: Array<Status> ): number{
+  computeWidth(pOfInterest: Array<Status>): number {
     // rule conflicting with no-inferrable-types
     // eslint-disable-next-line @typescript-eslint/typedef
     const fullWidth = 60; // td `xcov-count` get 60% of the whole array.
@@ -93,20 +114,18 @@ export class Ctx {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CtxService {
-
   ctx$: ReplaySubject<Ctx> = new ReplaySubject<Ctx>(1);
   ctx: Observable<Ctx> = this.ctx$.asObservable();
 
   constructor(private reportService: ReportService) {
     const data: Observable<Enumerable> = this.reportService.getReport();
-    data.subscribe((report: Enumerable) =>
-      this.ctx$.next(new Ctx(report)));
+    data.subscribe((report: Enumerable) => this.ctx$.next(new Ctx(report)));
   }
 
-  getCtx(): Observable<Ctx>{
+  getCtx(): Observable<Ctx> {
     return this.ctx;
   }
 }

@@ -1,36 +1,47 @@
 <td (click)="onClick()" class="xcov-source-row-line-no">
-    <div class="xcov-source-line-code xcov-source-line-number">
-        <mat-icon *ngIf="hasAttached() && !isExpanded"
-                  class="xcov-source-line-mark"
-                  inline=true
-                  matTooltip="Click to expand">expand_more
-        </mat-icon>
-        <mat-icon *ngIf="hasAttached() && isExpanded"
-                  class="xcov-source-line-mark"
-                  inline=true
-                  matTooltip="Click to collapse">expand_less
-        </mat-icon>
-        <pre class="xcov-source-line-code">{{mapping.line.lineNumber}}</pre>
-    </div>
+  <div class="xcov-source-line-code xcov-source-line-number">
+    <mat-icon
+      *ngIf="hasAttached() && !isExpanded"
+      class="xcov-source-line-mark"
+      inline="true"
+      matTooltip="Click to expand"
+      >expand_more
+    </mat-icon>
+    <mat-icon
+      *ngIf="hasAttached() && isExpanded"
+      class="xcov-source-line-mark"
+      inline="true"
+      matTooltip="Click to collapse"
+      >expand_less
+    </mat-icon>
+    <pre class="xcov-source-line-code">{{ mapping.line.lineNumber }}</pre>
+  </div>
 </td>
 <td class="xcov-source-row-cov-symbol">
-    <div class="xcov-source-line-code xcov-source-line-coverage" matTooltip="{{statusProperties[coverageStatus].name}}">
-        <pre class="xcov-source-line-code">{{statusProperties[coverageStatus].annotation}}</pre>
-    </div>
+  <div
+    class="xcov-source-line-code xcov-source-line-coverage"
+    matTooltip="{{ statusProperties[coverageStatus].name }}"
+  >
+    <pre class="xcov-source-line-code">{{
+      statusProperties[coverageStatus].annotation
+    }}</pre>
+  </div>
 </td>
 <td class="xcov-source-row-text">
-    <div class="xcov-source-line-text xcov-source-line-code">
-
-                    {{mapping.line.src}}
-    </div>
-    <ng-container *ngIf="hasAttached() && isExpanded">
-        <ng-container *ngFor="let message of mapping.messages">
-            <ng-container *ngIf="message">
-                <app-message [message]="message"></app-message>
-            </ng-container>
-        </ng-container>
-        <ng-container *ngIf="mapping.instructionSet">
-            <app-instruction-set [hidden]="!isExpanded" [instructionSet]="mapping.instructionSet"></app-instruction-set>
-        </ng-container>
+  <div class="xcov-source-line-text xcov-source-line-code">
+    {{ mapping.line.src }}
+  </div>
+  <ng-container *ngIf="hasAttached() && isExpanded">
+    <ng-container *ngFor="let message of mapping.messages">
+      <ng-container *ngIf="message">
+        <app-message [message]="message"></app-message>
+      </ng-container>
     </ng-container>
+    <ng-container *ngIf="mapping.instructionSet">
+      <app-instruction-set
+        [hidden]="!isExpanded"
+        [instructionSet]="mapping.instructionSet"
+      ></app-instruction-set>
+    </ng-container>
+  </ng-container>
 </td>

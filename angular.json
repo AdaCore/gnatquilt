@@ -19,10 +19,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "src/favicon.ico",
-              "src/test/dhtml"
-            ],
+            "assets": ["src/favicon.ico", "src/test/dhtml"],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
@@ -83,10 +80,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/test/dhtml"
-            ],
+            "assets": ["src/favicon.ico", "src/test/dhtml"],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
@@ -95,8 +89,8 @@
           }
         },
         "lint": {
-          "builder": "@angular-eslint/builder:lint", "options":
-          {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
             "eslintConfig": ".eslintrc.js",
             "fix": true,
             "cache": true,

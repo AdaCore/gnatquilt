@@ -1,37 +1,38 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Message, strLowOrUp} from '../../../../../interface/data.model';
-import {ScoProperties, SourceFileService} from '../../../source-file/source-file.service';
-import {Observable} from 'rxjs';
+import { Component, Input, OnInit } from '@angular/core';
+import { Message, strLowOrUp } from '../../../../../interface/data.model';
+import {
+  ScoProperties,
+  SourceFileService,
+} from '../../../source-file/source-file.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-message, [app-message]',
   templateUrl: './message.component.html',
-  styleUrls: ['./message.component.scss']
+  styleUrls: ['./message.component.scss'],
 })
-
 export class MessageComponent implements OnInit {
-
   @Input() message: Message;
 
   sco$: Observable<ScoProperties>;
   strLowOrUp = strLowOrUp;
   private strMsg: string;
 
-  constructor(private sourceFileService: SourceFileService) { }
+  constructor(private sourceFileService: SourceFileService) {}
 
-  hasSco(): boolean{
+  hasSco(): boolean {
     return this.message.kind !== 'info' && this.message.sco !== undefined;
   }
 
-  getScoId(): number{
+  getScoId(): number {
     let regex: RegExp;
     // eslint-disable-next-line prefer-const
     regex = new RegExp(/\d+/);
-    return Number(regex.exec(this.message.sco) [0]);
+    return Number(regex.exec(this.message.sco)[0]);
   }
 
   ngOnInit(): void {
-    if(this.hasSco()){
+    if (this.hasSco()) {
       this.sco$ = this.sourceFileService.getSCO(this.getScoId());
     }
     this.strMsg = this.message.message;

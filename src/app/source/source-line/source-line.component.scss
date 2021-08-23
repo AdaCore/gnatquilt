@@ -1,9 +1,7 @@
 @import '../style';
 
 .xcov-source {
-
   &-line {
-
     &-covered-lowlight {
       @include bgline-hover($xcov-line-covered-lowlight);
     }

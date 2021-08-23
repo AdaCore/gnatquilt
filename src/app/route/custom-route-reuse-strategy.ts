@@ -1,7 +1,10 @@
-import {RouteReuseStrategy,DetachedRouteHandle,ActivatedRouteSnapshot} from '@angular/router';
+import {
+  RouteReuseStrategy,
+  DetachedRouteHandle,
+  ActivatedRouteSnapshot,
+} from '@angular/router';
 
 export class CustomReuseStrategy implements RouteReuseStrategy {
-
   private storedRoutes = new Map<string, DetachedRouteHandle>();
 
   shouldDetach(route: ActivatedRouteSnapshot): boolean {
@@ -13,14 +16,19 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
   }
 
   shouldAttach(route: ActivatedRouteSnapshot): boolean {
-    return !!route.routeConfig && !!this.storedRoutes.get(route.routeConfig.path);
+    return (
+      !!route.routeConfig && !!this.storedRoutes.get(route.routeConfig.path)
+    );
   }
 
   retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle {
     return this.storedRoutes.get(route.routeConfig.path);
   }
 
-  shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
+  shouldReuseRoute(
+    future: ActivatedRouteSnapshot,
+    curr: ActivatedRouteSnapshot
+  ): boolean {
     return future.routeConfig === curr.routeConfig;
   }
 }

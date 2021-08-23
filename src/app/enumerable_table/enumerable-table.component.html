@@ -1,19 +1,37 @@
 <table class="xcov-table" matSort (matSortChange)="sortData($event)">
   <thead>
-  <th mat-sort-header="name"><span style="float: left; display: none;"></span>{{project.getHeadName()}}</th>
-  <th mat-sort-header="totalLines" [style.width.%]=ctx.width class="xcov-count" arrowPosition="before">
-    <span style="float: left; display: none;"></span>
-    {{getTotalLabel()}}
-  </th>
-  <th *ngFor="let status of ctx.properties"
-      mat-sort-header="{{status}}" arrowPosition="before">
-    <span style="float: left; display: none;"></span>{{statusProperties[status].name}}
-  </th>
-  <th><span style="float: left; display: none;"></span>Summary</th>
+    <th mat-sort-header="name">
+      <span style="float: left; display: none"></span
+      >{{ project.getHeadName() }}
+    </th>
+    <th
+      mat-sort-header="totalLines"
+      [style.width.%]="ctx.width"
+      class="xcov-count"
+      arrowPosition="before"
+    >
+      <span style="float: left; display: none"></span>
+      {{ getTotalLabel() }}
+    </th>
+    <th
+      *ngFor="let status of ctx.properties"
+      mat-sort-header="{{ status }}"
+      arrowPosition="before"
+    >
+      <span style="float: left; display: none"></span
+      >{{ statusProperties[status].name }}
+    </th>
+    <th><span style="float: left; display: none"></span>Summary</th>
   </thead>
   <tbody>
-  <tr app-enumerable-info *ngFor="let enumerable of sortedData; let i = index" class="{{getIndexClass(i)}}"
-      [enumerable]="enumerable" [ctx]="ctx" [isSource]="isSource" [projectName]="projectName">
-  </tr>
+    <tr
+      app-enumerable-info
+      *ngFor="let enumerable of sortedData; let i = index"
+      class="{{ getIndexClass(i) }}"
+      [enumerable]="enumerable"
+      [ctx]="ctx"
+      [isSource]="isSource"
+      [projectName]="projectName"
+    ></tr>
   </tbody>
 </table>

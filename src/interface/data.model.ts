@@ -1,6 +1,6 @@
-import {Status} from '../models/app-enum';
+import { Status } from '../models/app-enum';
 
-export interface EntityStats{
+export interface EntityStats {
   level: string;
   stats: Record<Status, number>;
 }
@@ -27,11 +27,11 @@ export type Range = [LowerRange, UpperRange];
  * @param lowerOrUpper 0: print lower range, 1: print upper range
  * @return string representation of the range
  */
-export function strLowOrUp(range: Range, lowerOrUpper: 0 | 1): string{
-  return range[lowerOrUpper][0].toString() + ':' + range[lowerOrUpper][1].toString();
+export function strLowOrUp(range: Range, lowerOrUpper: 0 | 1): string {
+  return (
+    range[lowerOrUpper][0].toString() + ':' + range[lowerOrUpper][1].toString()
+  );
 }
-
-
 
 export interface Line {
   lineNumber: string;
@@ -98,7 +98,7 @@ export interface ISourceAnnotated extends ISource {
   mappings: Mapping[];
 }
 
-export interface ITrace{
+export interface ITrace {
   filename: string;
   kind: string;
   program: string;

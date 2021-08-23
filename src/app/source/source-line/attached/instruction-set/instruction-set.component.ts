@@ -1,16 +1,19 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {InstructionSet} from '../../../../../interface/data.model';
-import {Properties, statusProperties, symbolToStat} from '../../../../ctx.service';
-import {Status} from '../../../../../models/app-enum';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { InstructionSet } from '../../../../../interface/data.model';
+import {
+  Properties,
+  statusProperties,
+  symbolToStat,
+} from '../../../../ctx.service';
+import { Status } from '../../../../../models/app-enum';
 
 @Component({
   selector: 'app-instruction-set',
   templateUrl: './instruction-set.component.html',
   styleUrls: ['../../../style.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class InstructionSetComponent implements OnInit {
-
   @Input() instructionSet: InstructionSet;
 
   constructor() {}
@@ -28,7 +31,5 @@ export class InstructionSetComponent implements OnInit {
     return '0x' + parseInt(decimal, 16);
   }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

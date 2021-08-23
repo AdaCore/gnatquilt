@@ -1,41 +1,63 @@
 <div class="xcov-navigation">
-    <a [routerLink]="['/report']">⇪ Back to sources list</a>
+  <a [routerLink]="['/report']">⇪ Back to sources list</a>
 </div>
 <div class="xcov-report-content">
-    <ng-container *ngIf="(data$| async) as data">
-        <h2 class="xcov-section-title" id=":c">❯ {{data.source.filename}}</h2>
-        <app-enumerable-table [ctx]=(ctx$|async) [project]="data.sourceStats" [isSource]="false"></app-enumerable-table>
-        <table class="xcov-source">
-            <div class="xcov-source-toolbar">
-                <button class="xcov-source-toggle-expanded" (click)="expandCollapseService.expandAll(scroll)">
-                    Expand all
-                </button>
-                <button class="xcov-source-toggle-collapse" (click)="expandCollapseService.collapseAll(scroll)">
-                    Collapse all
-                </button>
-                <mat-checkbox class="example-margin"
-                              [(ngModel)]="expandCollapseService.autoCollapse"
-                              (change)="expandCollapseService.setAutoCollapse(scroll)">
-                    Auto Collapse
-                </mat-checkbox>
-            </div>
-            <virtual-scroller id="scroll" #scroll [items]="items"
-                              [parentScroll]="scroll.window"
-                              [childHeight]="20"
-                              [bufferAmount]="20"
-                              [enableUnequalChildrenSizes]="true">
-                <tbody #container class="xcov-source-content">
-                <ng-container *ngFor="let mapping of scroll.viewPortItems; let i = index">
-                <tr class="{{getClass(i,mapping)}} xcov-source-line"
-                    app-source-line
-                    [isExpanded]="expandCollapseService.isLineExpanded(mapping.line.lineNumber)"
-                     (expand)="expandCollapseService.expandedLine($event, scroll)"
-                     (collapse)="expandCollapseService.collapsedLine($event, scroll)"
-                        [mapping]="mapping" [index]="i">
-                </tr>
-                </ng-container>
-            </tbody>
-            </virtual-scroller>
-        </table>
-    </ng-container>
+  <ng-container *ngIf="data$ | async as data">
+    <h2 class="xcov-section-title" id=":c">❯ {{ data.source.filename }}</h2>
+    <app-enumerable-table
+      [ctx]="ctx$ | async"
+      [project]="data.sourceStats"
+      [isSource]="false"
+    ></app-enumerable-table>
+    <table class="xcov-source">
+      <div class="xcov-source-toolbar">
+        <button
+          class="xcov-source-toggle-expanded"
+          (click)="expandCollapseService.expandAll(scroll)"
+        >
+          Expand all
+        </button>
+        <button
+          class="xcov-source-toggle-collapse"
+          (click)="expandCollapseService.collapseAll(scroll)"
+        >
+          Collapse all
+        </button>
+        <mat-checkbox
+          class="example-margin"
+          [(ngModel)]="expandCollapseService.autoCollapse"
+          (change)="expandCollapseService.setAutoCollapse(scroll)"
+        >
+          Auto Collapse
+        </mat-checkbox>
+      </div>
+      <virtual-scroller
+        id="scroll"
+        #scroll
+        [items]="items"
+        [parentScroll]="scroll.window"
+        [childHeight]="20"
+        [bufferAmount]="20"
+        [enableUnequalChildrenSizes]="true"
+      >
+        <tbody #container class="xcov-source-content">
+          <ng-container
+            *ngFor="let mapping of scroll.viewPortItems; let i = index"
+          >
+            <tr
+              class="{{ getClass(i, mapping) }} xcov-source-line"
+              app-source-line
+              [isExpanded]="
+                expandCollapseService.isLineExpanded(mapping.line.lineNumber)
+              "
+              (expand)="expandCollapseService.expandedLine($event, scroll)"
+              (collapse)="expandCollapseService.collapsedLine($event, scroll)"
+              [mapping]="mapping"
+              [index]="i"
+            ></tr>
+          </ng-container>
+        </tbody>
+      </virtual-scroller>
+    </table>
+  </ng-container>
 </div>

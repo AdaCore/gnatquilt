@@ -5,7 +5,7 @@ import { ReportService, setStatKind, StatKindType } from './report.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title = 'gnatquilt';
@@ -17,21 +17,20 @@ export class AppComponent implements OnInit {
   constructor(private reportService: ReportService) {
     this.coverageLevel$ = reportService.getCoverageLevel();
     this.coverageLevel$.subscribe((coverageLevel: string) => {
-
       // It is important that all the level strings in allLevels actually
       // correspond to the level strings emitted in the JS file produced
       // by gnatcov.
 
-      if (coverageLevel.includes('stmt')){
+      if (coverageLevel.includes('stmt')) {
         this.allLevels.add('Stmt');
-        if (coverageLevel.includes('decision')){
+        if (coverageLevel.includes('decision')) {
           this.allLevels.add('Decision');
         }
-        if (coverageLevel.includes('mcdc')){
+        if (coverageLevel.includes('mcdc')) {
           this.allLevels.add('Decision');
           this.allLevels.add('MCDC');
         }
-        if (coverageLevel.includes('uc_mcdc')){
+        if (coverageLevel.includes('uc_mcdc')) {
           this.allLevels.add('Decision');
           this.allLevels.add('UC_MCDC');
         }
@@ -39,10 +38,9 @@ export class AppComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  onClick(level: string): void{
+  onClick(level: string): void {
     this.linesClicked = false;
     if (this.levelsClicked.has(level)) {
       this.levelsClicked.delete(level);
@@ -65,4 +63,3 @@ export class AppComponent implements OnInit {
     this.linesClicked = true;
   }
 }
-

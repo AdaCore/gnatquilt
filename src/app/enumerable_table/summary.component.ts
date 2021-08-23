@@ -1,15 +1,14 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {Enumerable} from '../../interface/report.model';
-import {Ctx, Properties, statusProperties} from '../ctx.service';
-import {Status} from '../../models/app-enum';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Enumerable } from '../../interface/report.model';
+import { Ctx, Properties, statusProperties } from '../ctx.service';
+import { Status } from '../../models/app-enum';
 
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
   styleUrls: ['./style.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
-
 export class SummaryComponent implements OnInit {
   @Input() ctx: Ctx;
 
@@ -17,7 +16,5 @@ export class SummaryComponent implements OnInit {
 
   statusProperties: Record<Status, Properties> = statusProperties;
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 }
-

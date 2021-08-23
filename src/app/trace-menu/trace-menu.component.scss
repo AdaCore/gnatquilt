@@ -1,11 +1,13 @@
-@import "../app.component";
+@import '../app.component';
 
 .xcov-traces {
   &-table {
     margin-left: 5%;
     width: 90%;
 
-    tr, th, td {
+    tr,
+    th,
+    td {
       padding: 4px 3px;
 
       font-size: $xcov-font-size;

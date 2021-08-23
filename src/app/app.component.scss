@@ -1,6 +1,6 @@
 /* Tables */
 
-@import "../styles";
+@import '../styles';
 
 .xcov-table-row-even {
   background-color: $xcov-table-row-even;
@@ -50,7 +50,7 @@ span.xcov-table-missing-source-note {
 
 .xcov-path {
   color: grey;
-  margin-right: .5ch;
+  margin-right: 0.5ch;
 }
 
 .xcov-report {
@@ -153,7 +153,6 @@ section {
   margin: 8px 8px 8px 0;
 }
 
-.levelClicked{
+.levelClicked {
   background: #aca6a6;
 }
-

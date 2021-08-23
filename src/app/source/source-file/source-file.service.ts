@@ -1,18 +1,24 @@
-import {EventEmitter, Injectable} from '@angular/core';
-import {Observable, ReplaySubject} from 'rxjs';
-import {LoadJsonService} from '../../load-json.service';
-import {ReportService, Source} from '../../report.service';
-import {Decision, ISourceAnnotated, Mapping, Range, Statement} from '../../../interface/data.model';
-import {ActivatedRoute, ParamMap} from '@angular/router';
-import {map, switchMap, take} from 'rxjs/operators';
-import {Enumerable, Enumerables} from '../../../interface/report.model';
-import {SourceLineComponent} from '../source-line/source-line.component';
-import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
+import { EventEmitter, Injectable } from '@angular/core';
+import { Observable, ReplaySubject } from 'rxjs';
+import { LoadJsonService } from '../../load-json.service';
+import { ReportService, Source } from '../../report.service';
+import {
+  Decision,
+  ISourceAnnotated,
+  Mapping,
+  Range,
+  Statement,
+} from '../../../interface/data.model';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { map, switchMap, take } from 'rxjs/operators';
+import { Enumerable, Enumerables } from '../../../interface/report.model';
+import { SourceLineComponent } from '../source-line/source-line.component';
+import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
 
 export class AnnotatedSource extends Source implements Enumerables {
   mappings: Mapping[];
 
-  constructor(data: ISourceAnnotated){
+  constructor(data: ISourceAnnotated) {
     super(data);
     this.mappings = data.mappings;
   }
@@ -44,22 +50,31 @@ export class ScoProperties {
  * @param mappings [all lines information]
  * @return [mapping of sco id to source coverage obligation properties]
  */
-function computeSco(mappings: Mapping[]): Map<number, ScoProperties>{
+function computeSco(mappings: Mapping[]): Map<number, ScoProperties> {
   const scos: Map<number, ScoProperties> = new Map<number, ScoProperties>();
 
   for (const mapping of mappings) {
     const statements: Statement[] = mapping.statements || [];
     for (const statement of statements) {
-      scos.set(Number(statement.id), new ScoProperties('statement', statement.text, statement.range));
+      scos.set(
+        Number(statement.id),
+        new ScoProperties('statement', statement.text, statement.range)
+      );
     }
 
     const decisions: Decision[] = mapping.decisions || [];
 
     for (const decision of decisions) {
-      scos.set(Number(decision.id), new ScoProperties('decision', decision.text, decision.range));
+      scos.set(
+        Number(decision.id),
+        new ScoProperties('decision', decision.text, decision.range)
+      );
       if (decision.conditions) {
         for (const condition of decision.conditions) {
-          scos.set(Number(condition.id), new ScoProperties('condition', condition.text, condition.range));
+          scos.set(
+            Number(condition.id),
+            new ScoProperties('condition', condition.text, condition.range)
+          );
         }
       }
     }
@@ -68,69 +83,75 @@ function computeSco(mappings: Mapping[]): Map<number, ScoProperties>{
 }
 
 @Injectable()
-export class SourceFileService  {
+export class SourceFileService {
   sourceStats: Observable<Enumerables>;
   source: Observable<AnnotatedSource>;
   scos: Observable<Map<number, ScoProperties>>;
   projectName: ReplaySubject<string> = new ReplaySubject<string>();
 
-  constructor(private route: ActivatedRoute, private loadJSONService: LoadJsonService,
-              private reportService: ReportService) {
+  constructor(
+    private route: ActivatedRoute,
+    private loadJSONService: LoadJsonService,
+    private reportService: ReportService
+  ) {
     this.source = route.paramMap
       .pipe(take(1))
       .pipe(
-        switchMap(
-          (paramMap: ParamMap) => loadJSONService.getJSON(paramMap.get('sourceName'))
-        ))
-      .pipe(
-        map((data: ISourceAnnotated) =>
-          new AnnotatedSource(data)
+        switchMap((paramMap: ParamMap) =>
+          loadJSONService.getJSON(paramMap.get('sourceName'))
         )
-      );
+      )
+      .pipe(map((data: ISourceAnnotated) => new AnnotatedSource(data)));
     this.sourceStats = route.paramMap
       .pipe(
         switchMap((paramMap: ParamMap) =>
-          this.reportService.getStatsForSource
-          (paramMap.get('projectName'), paramMap.get('sourceName'))))
+          this.reportService.getStatsForSource(
+            paramMap.get('projectName'),
+            paramMap.get('sourceName')
+          )
+        )
+      )
       .pipe(
-        map((source: Source) =>
-          new class implements Enumerables {
-            enumerable: Enumerable;
+        map(
+          (source: Source) =>
+            new (class implements Enumerables {
+              enumerable: Enumerable;
 
-            constructor(enumerable: Enumerable) {
-              this.enumerable = enumerable;
-            }
+              constructor(enumerable: Enumerable) {
+                this.enumerable = enumerable;
+              }
 
-            getEnumerables(): Array<Enumerable> {
-              return [this.enumerable];
-            }
+              getEnumerables(): Array<Enumerable> {
+                return [this.enumerable];
+              }
 
-            getHeadName(): string {
-              return '';
-            }
-          }(source)
-        ));
+              getHeadName(): string {
+                return '';
+              }
+            })(source)
+        )
+      );
     this.scos = this.source.pipe(
-      map((source: AnnotatedSource) =>
-        computeSco(source.mappings)
-      ));
+      map((source: AnnotatedSource) => computeSco(source.mappings))
+    );
   }
 
-  getSource(): Observable<AnnotatedSource>{
+  getSource(): Observable<AnnotatedSource> {
     return this.source;
   }
 
-  getSourceStats(): Observable<Enumerables>{
+  getSourceStats(): Observable<Enumerables> {
     return this.sourceStats;
   }
 
-
-  getSCOS(): Observable<Map<number, ScoProperties>>{
+  getSCOS(): Observable<Map<number, ScoProperties>> {
     return this.scos;
   }
 
   getSCO(scoId: number): Observable<ScoProperties> {
-    return this.scos.pipe(map((scos: Map<number, ScoProperties>) => scos.get(scoId)));
+    return this.scos.pipe(
+      map((scos: Map<number, ScoProperties>) => scos.get(scoId))
+    );
   }
 }
 
@@ -139,7 +160,6 @@ export class SourceFileService  {
 // The report renders only visible parts of the code.
 @Injectable()
 export class ExpandCollapseService {
-
   // event emitted when expand all button is pressed
   // listened by lines that have attached content
   expandAllEvent: EventEmitter<any> = new EventEmitter<any>();
@@ -153,14 +173,15 @@ export class ExpandCollapseService {
   autoCollapse = true;
   expandedAll: boolean;
 
-  constructor(){
-    this.expandAllEvent.subscribe((_next: any) =>
-      this.expandedAll = true);
-    this.collapseAllEvent.subscribe((_next: any) =>
-      this.expandedAll = false);
+  constructor() {
+    this.expandAllEvent.subscribe((_next: any) => (this.expandedAll = true));
+    this.collapseAllEvent.subscribe((_next: any) => (this.expandedAll = false));
   }
 
-  expandedLine(expandedLine: SourceLineComponent, scroller: VirtualScrollerComponent): void {
+  expandedLine(
+    expandedLine: SourceLineComponent,
+    scroller: VirtualScrollerComponent
+  ): void {
     // user triggered expansion with click
     if (this.autoCollapse) {
       // when auto collapsing, every expanded line other than the one clicked should collapse
@@ -173,7 +194,10 @@ export class ExpandCollapseService {
     scroller.invalidateCachedMeasurementAtIndex(Number(lineno) - 1);
   }
 
-  collapsedLine(collapsedLine: SourceLineComponent, scroller: VirtualScrollerComponent): void {
+  collapsedLine(
+    collapsedLine: SourceLineComponent,
+    scroller: VirtualScrollerComponent
+  ): void {
     const lineno: string = collapsedLine.getLineno();
     this.expandedLines.delete(lineno);
     this.collapsedLines.add(lineno);
@@ -204,9 +228,9 @@ export class ExpandCollapseService {
   }
 
   isLineExpanded(lineno: string): boolean {
-    return (this.expandedLines.has(lineno)
-      || this.expandedAll)
-      && !this.collapsedLines.has(lineno);
+    return (
+      (this.expandedLines.has(lineno) || this.expandedAll) &&
+      !this.collapsedLines.has(lineno)
+    );
   }
-
 }

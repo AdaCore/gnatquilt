@@ -1,38 +1,45 @@
 <td class="xcov-table-filename">
-    <ng-container *ngIf="isSource;else elseBlock">
-        <!-- a source file in the index
+  <ng-container *ngIf="isSource; else elseBlock">
+    <!-- a source file in the index
              at this point, enumerable is a source, see if source is missing or not -->
-        <ng-container *ngIf="enumerable['missingSource']; else sourceBlock">
-            <!-- source has no code, most of the time because it is a runtime file when activating branch level-->
-            <span class="xcov-table-missing-source">
-            {{enumerable.getName()}}
-                <span class="xcov-table-missing-source-note">
-                (missing source, not executed?)
-            </span>
+    <ng-container *ngIf="enumerable['missingSource']; else sourceBlock">
+      <!-- source has no code, most of the time because it is a runtime file when activating branch level-->
+      <span class="xcov-table-missing-source">
+        {{ enumerable.getName() }}
+        <span class="xcov-table-missing-source-note">
+          (missing source, not executed?)
         </span>
-        </ng-container>
-        <ng-template #sourceBlock>
-            <!-- a link to an annotated source in the index-->
-            <a routerLink="/sources/{{projectName}}/{{getHunkFilename(enumerable)}}">
-                {{enumerable.getName()}}
-            </a>
-        </ng-template>
+      </span>
     </ng-container>
-
-    <ng-template #elseBlock>
-        <div>{{enumerable.getName()}}</div>
+    <ng-template #sourceBlock>
+      <!-- a link to an annotated source in the index-->
+      <a
+        routerLink="/sources/{{ projectName }}/{{
+          getHunkFilename(enumerable)
+        }}"
+      >
+        {{ enumerable.getName() }}
+      </a>
     </ng-template>
+  </ng-container>
+
+  <ng-template #elseBlock>
+    <div>{{ enumerable.getName() }}</div>
+  </ng-template>
 </td>
-<td [style.width.%]=ctx.width class="xcov-table-count">{{enumerable.totalLines}}</td>
-<td *ngFor="let status of ctx.properties " class="xcov-table-count">
-    <div class="xcov-table-cell">
+<td [style.width.%]="ctx.width" class="xcov-table-count">
+  {{ enumerable.totalLines }}
+</td>
+<td *ngFor="let status of ctx.properties" class="xcov-table-count">
+  <div class="xcov-table-cell">
     <span>
-    {{getStat(enumerable, status)}}
+      {{ getStat(enumerable, status) }}
     </span>
-        <span class="unselectable">
-        {{enumerable.getStatsPercent()[status]}}%
-    </span></div>
+    <span class="unselectable">
+      {{ enumerable.getStatsPercent()[status] }}%
+    </span>
+  </div>
 </td>
 <td class="xcov-table-summary">
-    <app-summary [ctx]="ctx" [enumerable]="enumerable"></app-summary>
+  <app-summary [ctx]="ctx" [enumerable]="enumerable"></app-summary>
 </td>
