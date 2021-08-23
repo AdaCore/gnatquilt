@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Mapping} from '../../../interface/data.model';
 import {statusProperties, symbolToStat} from '../../ctx.service';
 import {Status} from '../../../models/app-enum';
@@ -26,8 +26,7 @@ export class SourceLineComponent implements OnInit {
   classExpanded = '';
   onClick: () => void;
 
-  constructor(private expandCollapseService: ExpandCollapseService,
-              private cdr: ChangeDetectorRef) {
+  constructor(private expandCollapseService: ExpandCollapseService) {
   }
 
 
@@ -43,8 +42,8 @@ export class SourceLineComponent implements OnInit {
         this.isExpanded = true;
         this.classExpanded = 'xcov-source-line-expanded';
       }
-      this.expandCollapseService.collapseAllEvent.subscribe((collapse: any) => this.collapseAttached());
-      this.expandCollapseService.expandAllEvent.subscribe((expand: any) => this.expandAttached());
+      this.expandCollapseService.collapseAllEvent.subscribe((_collapse: any) => this.collapseAttached());
+      this.expandCollapseService.expandAllEvent.subscribe((_expand: any) => this.expandAttached());
     }
   }
 
@@ -83,9 +82,4 @@ export class SourceLineComponent implements OnInit {
   getIndexClass(): string {
     return (this.index % 2) === 0 ? 'xcov-table-row-even' : 'xcov-table-row-odd';
   }
-
-  highlightSCO(scoID: number): void {
-    document.getElementById('source-code');
-  }
-
 }

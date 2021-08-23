@@ -1,0 +1,7 @@
+dist
+testsuite
+thirdparties
+node_modules
+src/test
+out
+e2e

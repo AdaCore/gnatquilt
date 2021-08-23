@@ -1,12 +1,10 @@
-import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ISource, Mapping} from '../../../interface/data.model';
 import {Ctx, CtxService, statusProperties, symbolToStat} from '../../ctx.service';
 import {AnnotatedSource, ExpandCollapseService, SourceFileService} from './source-file.service';
 import {Observable, zip} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {SourceLineComponent} from '../source-line/source-line.component';
-import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
-import {ReportService, Source} from '../../report.service';
+import {ReportService} from '../../report.service';
 import {Enumerables} from '../../../interface/report.model';
 
 export interface ISourceFile extends ISource {
@@ -56,7 +54,6 @@ export class SourceFileComponent implements OnInit {
   getClass(index: number, mapping: Mapping): string{
     const indexClass: string = (index % 2) === 0 ? 'xcov-table-row-even' : 'xcov-table-row-odd';
     const coverageClass: string = 'xcov-source-line' + statusProperties[symbolToStat.get(mapping.coverage)].classSuffix;
-    const hiddenClass: string = index < 20 ? 'hidden':'';
     const classExpanded: string =
       index < 20 && this.hasAttached(mapping) && this.expandCollapseService.isLineExpanded(mapping.line.lineNumber) ?
         'xcov-source-line-expanded':'';

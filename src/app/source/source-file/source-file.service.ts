@@ -1,15 +1,13 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Observable, ReplaySubject} from 'rxjs';
 import {LoadJsonService} from '../../load-json.service';
-import {Report, ReportService, Source} from '../../report.service';
+import {ReportService, Source} from '../../report.service';
 import {Decision, ISourceAnnotated, Mapping, Range, Statement} from '../../../interface/data.model';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {map, switchMap, take} from 'rxjs/operators';
-import {Ctx} from '../../ctx.service';
 import {Enumerable, Enumerables} from '../../../interface/report.model';
 import {SourceLineComponent} from '../source-line/source-line.component';
 import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
-import {Status} from '../../../models/app-enum';
 
 export class AnnotatedSource extends Source implements Enumerables {
   mappings: Mapping[];
@@ -156,9 +154,9 @@ export class ExpandCollapseService {
   expandedAll: boolean;
 
   constructor(){
-    this.expandAllEvent.subscribe((next: any) =>
+    this.expandAllEvent.subscribe((_next: any) =>
       this.expandedAll = true);
-    this.collapseAllEvent.subscribe((next: any) =>
+    this.collapseAllEvent.subscribe((_next: any) =>
       this.expandedAll = false);
   }
 

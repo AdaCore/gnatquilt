@@ -1,4 +1,4 @@
-import {Observable, of, Subscriber} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {map} from 'rxjs/operators';
 import { isDevMode } from '@angular/core';
@@ -29,7 +29,6 @@ export class LoadJsonService {
       map ((_anything: any) =>
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-return
         REPORT[key]
-
       )
     );
   }

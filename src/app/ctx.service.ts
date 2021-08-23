@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Enumerable} from '../interface/report.model';
 import {Status} from '../models/app-enum';
-import {Report, ReportService} from './report.service';
-import {map} from 'rxjs/operators';
+import {ReportService} from './report.service';
 import {Observable, ReplaySubject} from 'rxjs';
 
 export class Properties {

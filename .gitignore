@@ -12,3 +12,10 @@ dist
 generated
 generatedBranch
 assets
+testsuite/out
+testsuite/tests/projects/out
+obj
+obj-*
+*.srctrace
+*.trace
+dhtml

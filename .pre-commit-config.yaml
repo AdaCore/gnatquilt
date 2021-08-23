@@ -2,18 +2,26 @@ repos:
   - repo: https://github.com/pycqa/flake8
     rev: 3.9.1
     hooks:
-    - id: flake8
-      types: [file]
-      files: \.(py)$
-      additional_dependencies:
-        - flake8-bugbear
-        - flake8-builtins
-        - flake8-comprehensions
-        - flake8-docstrings
-        - flake8-rst-docstrings
+      - id: flake8
+        types: [file]
+        files: \.(py)$
+        additional_dependencies:
+          - flake8-bugbear
+          - flake8-builtins
+          - flake8-comprehensions
+          - flake8-docstrings
+          - flake8-rst-docstrings
   - repo: https://github.com/ambv/black
     rev: 21.5b1
     hooks:
-    - id: black
-      types_or: [file]
-      files: \.(py)$
+      - id: black
+        types_or: [file]
+        files: \.(py)$
+  - repo: local
+    hooks:
+      - id: lint-staged-pre-commit
+        name: lint-staged
+        language: system
+        entry: npx lint-staged && ng lint
+        pass_filenames: false
+        always_run: true

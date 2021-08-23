@@ -4,7 +4,7 @@ import {initStatus, Status} from '../models/app-enum';
 import {Injectable} from '@angular/core';
 import {LoadJsonService} from './load-json.service';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
-import {map, take, tap} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 
 /**
  * computes the percentage statistics from statistics and total number of lines
@@ -286,7 +286,7 @@ export class ReportService {
   constructor(private loadJSONService: LoadJsonService) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const data: Observable<IReport> = this.loadJSONService.getJSON('report.js');
-    data.subscribe((report) => this.report$.next(new Report(report)));
+    data.subscribe((report: IReport) => this.report$.next(new Report(report)));
     this.total = this.report.pipe(
       map((report: Report) =>
         new class implements Enumerables {
