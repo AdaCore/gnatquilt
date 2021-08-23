@@ -1,0 +1,6 @@
+with "prj1.gpr", "prj2.gpr";
+
+project P is
+  for Object_Dir use "obj";
+  for Main use ("t1.adb", "t2.adb");
+end P;

@@ -9,3 +9,5 @@
 
 testsuite/**/*.adb no-precommit-check
 testsuite/**/*.ads no-precommit-check
+src/test/**/*.ads no-precommit-check
+src/test/**/*.adb no-precommit-check
