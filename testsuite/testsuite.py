@@ -8,6 +8,7 @@ from e3.os.process import Run
 import e3.testsuite
 from e3.testsuite.driver.diff import ClassicTestDriver
 from e3.testsuite.testcase_finder import ParsedTest, TestFinder
+from e3.testsuite.utils import CleanupMode
 
 
 class TestBashDriver(ClassicTestDriver):
@@ -72,7 +73,7 @@ class TestSuite(e3.testsuite.Testsuite):
 
     def tear_down(self):
         super().tear_down()
-        if self.main.args.enable_cleanup:
+        if self.env.cleanup_mode == CleanupMode.ALL:
             top_dir = os.getcwd()
             for root, _dirs, _files in os.walk(
                 os.path.join("tests", "projects"), topdown=True
