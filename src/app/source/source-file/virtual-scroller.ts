@@ -716,6 +716,9 @@ export class VirtualScrollerComponent implements OnInit, OnChanges, OnDestroy {
     let marginRight = parseInt(styles['margin-right'], 10) || 0;
 
     return {
+      x: result.top + marginTop,
+      y: result.left + marginLeft,
+      toJSON: result.toJSON,
       top: result.top + marginTop,
       bottom: result.bottom + marginBottom,
       left: result.left + marginLeft,

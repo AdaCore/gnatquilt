@@ -5,3 +5,6 @@ node_modules
 src/test
 out
 e2e
+*.py
+.gitignore
+.prettierignore
