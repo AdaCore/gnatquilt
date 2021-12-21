@@ -246,11 +246,6 @@ export class Report extends Stats implements Enumerables, Enumerable {
     );
     this.statsPercent = computePercentages(this.totalLines, this.liStats);
     this.projects = Array.from(projects.values());
-
-    // if it is not a multi-project project, set a default project name because there will be none in the output data
-    if (this.projects.length === 1) {
-      this.projects[0].projectName = 'Other Sources';
-    }
     this.coverageLevel = data.coverageLevel;
 
     const tracesMap: Map<string, Trace[]> = new Map<string, Trace[]>();
