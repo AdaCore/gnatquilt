@@ -9,7 +9,6 @@ import {
 import { Mapping } from '../../../interface/data.model';
 import { statusProperties, symbolToStat } from '../../ctx.service';
 import { Status } from '../../../models/app-enum';
-import { ExpandCollapseService } from '../source-file/source-file.service';
 
 @Component({
   selector: 'app-source-line, [app-source-line]',
@@ -31,8 +30,6 @@ export class SourceLineComponent implements OnInit {
   classExpanded = '';
   onClick: () => void;
 
-  constructor(private expandCollapseService: ExpandCollapseService) {}
-
   ngOnInit(): void {
     this.coverageStatus = symbolToStat.get(this.mapping.coverage);
     this.coverageClass =
@@ -45,12 +42,6 @@ export class SourceLineComponent implements OnInit {
         this.isExpanded = true;
         this.classExpanded = 'xcov-source-line-expanded';
       }
-      this.expandCollapseService.collapseAllEvent.subscribe((_collapse: any) =>
-        this.collapseAttached()
-      );
-      this.expandCollapseService.expandAllEvent.subscribe((_expand: any) =>
-        this.expandAttached()
-      );
     }
   }
 

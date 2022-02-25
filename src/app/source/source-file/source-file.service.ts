@@ -155,28 +155,13 @@ export class SourceFileService {
   }
 }
 
-// this is a very weak strategy, and it is because of virtual scroll that we have
-// to also keep track whether the file is in `expandedAll` mode or not
-// The report renders only visible parts of the code.
 @Injectable()
 export class ExpandCollapseService {
-  // event emitted when expand all button is pressed
-  // listened by lines that have attached content
-  expandAllEvent: EventEmitter<any> = new EventEmitter<any>();
-
-  // same as above, for collapse all button
-  collapseAllEvent: EventEmitter<any> = new EventEmitter<any>();
-
   expandedLines: Set<string> = new Set<string>();
   collapsedLines: Set<string> = new Set<string>();
 
   autoCollapse = true;
-  expandedAll: boolean;
-
-  constructor() {
-    this.expandAllEvent.subscribe((_next: any) => (this.expandedAll = true));
-    this.collapseAllEvent.subscribe((_next: any) => (this.expandedAll = false));
-  }
+  constructor() {}
 
   expandedLine(
     expandedLine: SourceLineComponent,
@@ -185,7 +170,6 @@ export class ExpandCollapseService {
     // user triggered expansion with click
     if (this.autoCollapse) {
       // when auto collapsing, every expanded line other than the one clicked should collapse
-      this.expandedAll = false;
       this.expandedLines.clear();
     }
     const lineno: string = expandedLine.getLineno();
@@ -204,33 +188,7 @@ export class ExpandCollapseService {
     scroller.invalidateCachedMeasurementAtIndex(Number(lineno) - 1);
   }
 
-  expandAll(scroller: VirtualScrollerComponent): void {
-    // don't forget to deactivate auto-collapsing
-    this.autoCollapse = false;
-    this.expandAllEvent.emit(null);
-    this.collapsedLines.clear();
-    scroller.invalidateAllCachedMeasurements();
-  }
-
-  collapseAll(scroller: VirtualScrollerComponent): void {
-    // reactivate auto-collapsing
-    this.expandedLines.clear();
-    this.autoCollapse = true;
-    this.collapseAllEvent.emit(null);
-    this.collapsedLines.clear();
-    scroller.invalidateAllCachedMeasurements();
-  }
-
-  setAutoCollapse(scroller: VirtualScrollerComponent): void {
-    if (this.autoCollapse) {
-      this.collapseAll(scroller);
-    }
-  }
-
   isLineExpanded(lineno: string): boolean {
-    return (
-      (this.expandedLines.has(lineno) || this.expandedAll) &&
-      !this.collapsedLines.has(lineno)
-    );
+    return this.expandedLines.has(lineno) && !this.collapsedLines.has(lineno);
   }
 }
