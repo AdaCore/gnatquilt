@@ -19,7 +19,6 @@ import { ExpandCollapseService } from '../source-file/source-file.service';
 })
 export class SourceLineComponent implements OnInit {
   @Input() mapping: Mapping;
-  @Input() index: number;
   @Input() isExpanded: boolean;
 
   @Output() expand = new EventEmitter<this>();
@@ -88,9 +87,5 @@ export class SourceLineComponent implements OnInit {
 
   getLineno(): string {
     return this.mapping.line.lineNumber;
-  }
-
-  getIndexClass(): string {
-    return this.index % 2 === 0 ? 'xcov-table-row-even' : 'xcov-table-row-odd';
   }
 }

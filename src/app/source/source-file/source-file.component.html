@@ -41,11 +41,9 @@
         [enableUnequalChildrenSizes]="true"
       >
         <tbody #container class="xcov-source-content">
-          <ng-container
-            *ngFor="let mapping of scroll.viewPortItems; let i = index"
-          >
+          <ng-container *ngFor="let mapping of scroll.viewPortItems">
             <tr
-              class="{{ getClass(i, mapping) }} xcov-source-line"
+              class="{{ getClass(mapping) }} xcov-source-line"
               app-source-line
               [isExpanded]="
                 expandCollapseService.isLineExpanded(mapping.line.lineNumber)
@@ -53,7 +51,6 @@
               (expand)="expandCollapseService.expandedLine($event, scroll)"
               (collapse)="expandCollapseService.collapsedLine($event, scroll)"
               [mapping]="mapping"
-              [index]="i"
             ></tr>
           </ng-container>
         </tbody>

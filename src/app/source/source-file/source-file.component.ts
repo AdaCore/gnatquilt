@@ -72,19 +72,16 @@ export class SourceFileComponent implements OnInit {
     );
   }
 
-  getClass(index: number, mapping: Mapping): string {
-    const indexClass: string =
-      index % 2 === 0 ? 'xcov-table-row-even' : 'xcov-table-row-odd';
+  getClass(mapping: Mapping): string {
     const coverageClass: string =
       'xcov-source-line' +
       statusProperties[symbolToStat.get(mapping.coverage)].classSuffix;
     const classExpanded: string =
-      index < 20 &&
       this.hasAttached(mapping) &&
       this.expandCollapseService.isLineExpanded(mapping.line.lineNumber)
         ? 'xcov-source-line-expanded'
         : '';
-    return indexClass + ' ' + coverageClass + ' ' + classExpanded;
+    return coverageClass + ' ' + classExpanded;
   }
 
   hasMessage(mapping: Mapping): boolean {
