@@ -15,6 +15,7 @@ import { EnumerableTableModule } from '../enumerable_table/enumerable-table.modu
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { VirtualScrollerModule } from './source-file/virtual-scroller';
+import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 
 @NgModule({
   declarations: [
@@ -36,8 +37,20 @@ import { VirtualScrollerModule } from './source-file/virtual-scroller';
     EnumerableTableModule,
     MatIconModule,
     RouterModule,
+    HighlightModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: {
+        coreLibraryLoader: () => import('highlight.js/lib/core'),
+        languages: {
+          ada: () => import('highlight.js/lib/languages/ada'),
+          c: () => import('highlight.js/lib/languages/c'),
+        },
+      },
+    },
+  ],
   exports: [SourceFileComponent],
 })
 export class SourceFileModule {}

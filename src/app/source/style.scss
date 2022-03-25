@@ -1,32 +1,8 @@
 @import '../../styles';
 @import '../app.component';
-// Full line background
-@mixin bgline($color) {
-  &:hover {
-    background-color: transparent;
-  }
-
-  &,
-  &:hover {
-    .xcov-source-line-text {
-      background-color: $color;
-    }
-  }
-  .xcov-source-line-coverage {
-    background-color: $color;
-  }
-
-  &:hover .xcov-source-line-number {
-    background-color: $xcov-line-number-bgcolor-hover;
-  }
-}
 
 // Partial line background, full on hover
 @mixin bgline-hover($color) {
-  &:hover {
-    background-color: transparent;
-  }
-
   &-expanded,
   &:hover {
     .xcov-source-line-text {
@@ -269,11 +245,18 @@
       }
     }
 
-    &-no-code:hover {
-      background-color: $xcov-table-row-hover !important;
+    &-no-code {
+      @include bgline-hover($xcov-table-row-hover);
 
-      .xcov-source-line-number {
-        background-color: $xcov-line-number-bgcolor-hover;
+      // Override the settings for xcov-source-line-coverage , as we don't want it to be colorized in case of
+      // no code.
+      .xcov-source-line-coverage {
+        background-color: transparent;
+      }
+      &:hover {
+        .xcov-source-line-coverage {
+          background-color: $xcov-table-row-hover;
+        }
       }
     }
 
@@ -282,11 +265,11 @@
     }
 
     &-partially-covered {
-      @include bgline($xcov-line-partially-covered);
+      @include bgline-hover($xcov-line-partially-covered);
     }
 
     &-not-covered {
-      @include bgline($xcov-line-not-covered);
+      @include bgline-hover($xcov-line-not-covered);
     }
 
     &-not-coverable {
@@ -294,11 +277,11 @@
     }
 
     &-exempted-no-violation {
-      @include bgline($xcov-line-exempted-no-violation);
+      @include bgline-hover($xcov-line-exempted-no-violation);
     }
 
     &-exempted-with-violation {
-      @include bgline($xcov-line-exempted-with-violation);
+      @include bgline-hover($xcov-line-exempted-with-violation);
     }
   }
 }
