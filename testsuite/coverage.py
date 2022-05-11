@@ -14,6 +14,7 @@ class CoverageStatus(Enum):
     EXEMPTED_WITH_VIOLATION = 4
     EXEMPTED_NO_VIOLATION = 5
     NOT_COVERABLE = 6
+    NOT_INSTRUMENTED = 7
 
     def __str__(self):
 
@@ -24,6 +25,7 @@ class CoverageStatus(Enum):
             4: "Exempted with Violation",
             5: "Exempted no Violation",
             6: "Not Coverable",
+            7: "Not Instrumented"
         }
         return string_repr[self.value]
 

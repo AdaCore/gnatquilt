@@ -12,6 +12,7 @@ $xcov-summary-covered: rgb(181, 214, 0);
 $xcov-summary-partially-covered: rgba(255, 199, 7, 1);
 $xcov-summary-not-covered: rgba(233, 75, 66, 0.9);
 $xcov-summary-not-coverable: #e2e2e2;
+$xcov-summary-not-instrumented: #808080;
 $xcov-summary-exempted-no-violation: rgba(158, 198, 231, 1);
 $xcov-summary-exempted-with-violation: rgba(128, 60, 190, 0.5);
 
@@ -19,6 +20,7 @@ $xcov-line-covered: rgba(172, 233, 124, 1);
 $xcov-line-partially-covered: rgba(255, 2255, 170, 1);
 $xcov-line-not-covered: rgba(255, 144, 144, 1);
 $xcov-line-not-coverable: rgba(0, 0, 0, 0.1);
+$xcov-line-not-instrumented: #808080;
 $xcov-line-exempted-no-violation: rgba(158, 198, 231, 0.5);
 $xcov-line-exempted-with-violation: rgba(128, 60, 190, 0.3);
 
@@ -26,6 +28,7 @@ $xcov-line-covered-lowlight: rgba(172, 233, 124, 0.5);
 $xcov-line-partially-covered-lowlight: rgba(255, 2255, 170, 0.5);
 $xcov-line-not-covered-lowlight: rgba(255, 144, 144, 0.5);
 $xcov-line-not-coverable-lowlight: rgba(0, 0, 0, 0.05);
+$xcvo-line-not-instrumented-lowlight: #8080807f;
 $xcov-line-exempted-no-violation-lowlight: rgba(158, 198, 231, 0.25);
 $xcov-line-exempted-with-violation-lowlight: rgba(128, 60, 190, 0.15);
 

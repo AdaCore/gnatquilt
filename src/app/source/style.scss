@@ -234,6 +234,10 @@
             background-color: $xcov-line-not-coverable;
           }
 
+          &-not-instrumented {
+            background-color: $xcov-line-not-instrumented;
+          }
+
           &-exempted-no-violation {
             background-color: $xcov-line-exempted-no-violation;
           }
@@ -274,6 +278,10 @@
 
     &-not-coverable {
       @include bgline-hover($xcov-line-not-coverable);
+    }
+
+    &-not-instrumented {
+      @include bgline-hover($xcov-line-not-instrumented);
     }
 
     &-exempted-no-violation {

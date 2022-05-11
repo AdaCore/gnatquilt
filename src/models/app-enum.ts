@@ -4,6 +4,7 @@ export enum Status {
   partiallyCovered = 'partiallyCovered',
   notCovered = 'notCovered',
   notCoverable = 'notCoverable',
+  notInstrumented= 'notInstrumented',
   exemptedNoViolation = 'exemptedNoViolation',
   exemptedWithViolation = 'exemptedWithViolation',
   // only for assembly coverage
@@ -19,6 +20,7 @@ export function initStatus(): Record<Status, number> {
     partiallyCovered: 0,
     notCovered: 0,
     notCoverable: 0,
+    notInstrumented: 0,
     exemptedNoViolation: 0,
     exemptedWithViolation: 0,
     unknown: 0,

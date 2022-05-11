@@ -123,6 +123,10 @@ span.xcov-table-missing-source-note {
     background-color: $xcov-summary-not-coverable;
   }
 
+  &-not-instrumented {
+    background-color: $xcov-summary-not-instrumented;
+  }
+
   &-exempted-no-violation {
     background-color: $xcov-summary-exempted-no-violation;
   }

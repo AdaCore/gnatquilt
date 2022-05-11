@@ -27,6 +27,7 @@ function allProperties(): Record<Status, Properties> {
     ),
     notCovered: new Properties('Not Covered', '-not-covered', '-'),
     notCoverable: new Properties('Not Coverable', '-not-coverable', '0'),
+    notInstrumented: new Properties('Not Instrumented', '-not-instrumented', '?'),
     exemptedNoViolation: new Properties(
       'Exempted no Violation',
       '-exempted-no-violation',
@@ -57,9 +58,10 @@ function coverageSymbolToStatus(): Map<string, Status> {
     ['!', Status.partiallyCovered],
     ['-', Status.notCovered],
     ['0', Status.notCoverable],
+    ['?', Status.notInstrumented],
     ['*', Status.exemptedWithViolation],
     ['#', Status.exemptedNoViolation],
-    ['?', Status.unknown],
+    ['~', Status.unknown],
     ['>', Status.branchTaken],
     ['v', Status.fallthroughTaken],
   ]);
@@ -90,6 +92,7 @@ export class Ctx {
       Status.partiallyCovered,
       Status.notCovered,
       Status.notCoverable,
+      Status.notInstrumented,
       Status.exemptedWithViolation,
       Status.exemptedNoViolation,
     ];
