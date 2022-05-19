@@ -245,6 +245,10 @@
           &-exempted-with-violation {
             background-color: $xcov-line-exempted-with-violation;
           }
+
+          &-exempted-with-non-instr {
+            background-color: $xcov-line-exempted-with-non-instr;
+          }
         }
       }
     }
@@ -290,6 +294,10 @@
 
     &-exempted-with-violation {
       @include bgline-hover($xcov-line-exempted-with-violation);
+    }
+
+    &-exempted-with-non-instr {
+      @include bgline-hover($xcov-line-exempted-with-non-instr);
     }
   }
 }

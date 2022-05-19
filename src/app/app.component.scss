@@ -134,6 +134,10 @@ span.xcov-table-missing-source-note {
   &-exempted-with-violation {
     background-color: $xcov-summary-exempted-with-violation;
   }
+
+  &-exempted-with-non-instr {
+    background-color: $xcov-summary-exempted-with-non-instr;
+  }
 }
 
 .mat-expansion-panel {

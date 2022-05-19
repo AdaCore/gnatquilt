@@ -139,6 +139,10 @@
   &-exempted-with-violation {
     background-color: $xcov-summary-exempted-with-violation;
   }
+
+  &-exempted-with-non-instr {
+    background-color: $xcov-summary-exempted-with-non-instr;
+  }
 }
 // https://stackoverflow.com/questions/2310734/how-to-make-html-text-unselectable
 .unselectable {
