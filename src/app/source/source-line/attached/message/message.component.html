@@ -14,6 +14,11 @@
           </ng-container>
           {{ message.message }}
         </div>
+        <ng-container *ngIf="hasSco() && (sco$ | async) as sco">
+          <ng-container *ngFor="let annotation of sco.annotations">
+            <div>note: {{ annotation }}</div>
+          </ng-container>
+        </ng-container>
       </td>
     </tr>
   </table>

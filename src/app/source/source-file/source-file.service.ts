@@ -3,6 +3,7 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { LoadJsonService } from '../../load-json.service';
 import { ReportService, Source } from '../../report.service';
 import {
+  AnnotatedSCO,
   Decision,
   ISourceAnnotated,
   Mapping,
@@ -36,11 +37,13 @@ export class ScoProperties {
   kind: string;
   text: string;
   range: Range;
+  annotations: string[];
 
-  constructor(kind: string, text: string, range: Range) {
+  constructor(kind: string, text: string, range: Range, annotations: string[]) {
     this.kind = kind;
     this.text = text;
     this.range = range;
+    this.annotations = annotations;
   }
 }
 
@@ -58,22 +61,36 @@ function computeSco(mappings: Mapping[]): Map<number, ScoProperties> {
     for (const statement of statements) {
       scos.set(
         Number(statement.id),
-        new ScoProperties('statement', statement.text, statement.range)
+        new ScoProperties(
+          'statement',
+          statement.text,
+          statement.range,
+          statement.annotations
+        )
       );
     }
 
     const decisions: Decision[] = mapping.decisions || [];
-
     for (const decision of decisions) {
       scos.set(
         Number(decision.id),
-        new ScoProperties('decision', decision.text, decision.range)
+        new ScoProperties(
+          'decision',
+          decision.text,
+          decision.range,
+          decision.annotations
+        )
       );
       if (decision.conditions) {
         for (const condition of decision.conditions) {
           scos.set(
             Number(condition.id),
-            new ScoProperties('condition', condition.text, condition.range)
+            new ScoProperties(
+              'condition',
+              condition.text,
+              condition.range,
+              condition.annotations
+            )
           );
         }
       }
