@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Enumerables } from '../interface/report.model';
 import { Report, ReportService } from './report.service';
-import { Observable, zip } from 'rxjs';
+import { Observable, Subscription, zip } from 'rxjs';
 import { Ctx, CtxService, Properties, statusProperties } from './ctx.service';
 
 @Component({
@@ -19,6 +19,8 @@ export class ReportComponent implements OnInit {
   data$: Observable<{ ctx: Ctx; report: Report; total: Enumerables }>;
   statusProperties: Record<Status, Properties> = statusProperties;
 
+  private updateLevelSubscription: Subscription;
+
   constructor(
     public reportService: ReportService,
     public ctxService: CtxService
@@ -32,6 +34,10 @@ export class ReportComponent implements OnInit {
         report,
         total,
       }))
+    );
+    reportService.computeLevelStats(reportService.getLevelStats());
+    this.updateLevelSubscription = reportService.levelStatsUpdated.subscribe(
+      (levels: Set<string>) => reportService.computeLevelStats(levels)
     );
   }
 

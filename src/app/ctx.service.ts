@@ -122,7 +122,7 @@ export class Ctx {
     // rule conflicting with no-inferrable-types
     // eslint-disable-next-line @typescript-eslint/typedef
     const fullWidth = 60; // td `xcov-count` get 60% of the whole array.
-    // totalLines is not included in propertiesOfInterest and should be included there
+    // total is not included in propertiesOfInterest and should be included there
     return fullWidth / (Object.keys(pOfInterest).length + 1);
   }
 }

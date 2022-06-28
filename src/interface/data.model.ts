@@ -87,7 +87,16 @@ export interface Mapping {
   instructionSet: InstructionSet;
 }
 
+export interface IScopeMetrics {
+  scopeName: string;
+  scopeLine: number;
+  children: Array<IScopeMetrics>;
+  stats: Record<Status, number>;
+  enAllStats: Array<EntityStats>;
+}
+
 export interface ISourceAnnotated extends ISource {
+  scopeMetrics: IScopeMetrics;
   mappings: Mapping[];
 }
 

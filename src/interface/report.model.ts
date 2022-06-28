@@ -2,10 +2,12 @@ import { Observable } from 'rxjs';
 import { Status } from '../models/app-enum';
 
 export interface Enumerable {
-  totalLines: number;
+  total: number;
   getName(): string;
   getStats(): Record<Status, number>;
   getStatsPercent(): Record<Status, number>;
+  getChildren(): Array<Enumerable>;
+  setChildren(v: Array<Enumerable>): void;
 }
 
 export interface EnumerableService {

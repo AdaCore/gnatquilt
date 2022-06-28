@@ -24,11 +24,31 @@
   </ng-container>
 
   <ng-template #elseBlock>
-    <div>{{ enumerable.getName() }}</div>
+    <div style="margin-left: {{ margin }}px">
+      <mat-icon
+        *ngIf="!isLeaf && !isExpanded"
+        inline="true"
+        style="float: left; position: relative"
+        matTooltip="Click to expand"
+        (click)="expand()"
+      >
+        expand_more
+      </mat-icon>
+      <mat-icon
+        *ngIf="!isLeaf && isExpanded"
+        inline="true"
+        style="float: left; position: relative"
+        matTooltip="Click to collapse"
+        (click)="collapse()"
+      >
+        expand_less
+      </mat-icon>
+      <span (click)="clickOnEnumerable()">{{ enumerable.getName() }}</span>
+    </div>
   </ng-template>
 </td>
 <td [style.width.%]="ctx.width" class="xcov-table-count">
-  {{ enumerable.totalLines }}
+  {{ enumerable.total }}
 </td>
 <td *ngFor="let status of ctx.properties" class="xcov-table-count">
   <div class="xcov-table-cell">

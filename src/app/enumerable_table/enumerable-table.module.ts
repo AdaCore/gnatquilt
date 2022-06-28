@@ -11,6 +11,7 @@ import { RoutingModule } from '../route/routing.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     RoutingModule,
     MatCheckboxModule,
     FormsModule,
+    MatIconModule,
   ],
   providers: [],
   exports: [EnumerableTableComponent],

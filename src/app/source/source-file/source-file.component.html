@@ -2,12 +2,13 @@
   <a [routerLink]="['/report']">⇪ Back to sources list</a>
 </div>
 <div class="xcov-report-content">
-  <ng-container *ngIf="data$ | async as data">
-    <h2 class="xcov-section-title" id=":c">❯ {{ data.source.filename }}</h2>
+  <ng-container *ngIf="source$ | async as source">
+    <h2 class="xcov-section-title" id=":c">❯ {{ source.filename }}</h2>
     <app-enumerable-table
       [ctx]="ctx$ | async"
-      [project]="data.sourceStats"
+      [project]="source.getScopeMetrics()"
       [isSource]="false"
+      (clickedOnEnumerable)="clickedOnEnumerable($event, scroll)"
     ></app-enumerable-table>
     <table class="xcov-source">
       <div class="xcov-source-toolbar">
@@ -21,7 +22,7 @@
       <virtual-scroller
         id="scroll"
         #scroll
-        [items]="items"
+        [items]="source.mappings"
         [parentScroll]="scroll.window"
         [childHeight]="20"
         [bufferAmount]="20"

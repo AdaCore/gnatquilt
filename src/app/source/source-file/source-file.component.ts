@@ -1,5 +1,12 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ISource, Mapping } from '../../../interface/data.model';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import { Mapping } from '../../../interface/data.model';
 import {
   Ctx,
   CtxService,
@@ -10,15 +17,13 @@ import {
   AnnotatedSource,
   ExpandCollapseService,
   SourceFileService,
+  ScopeMetrics,
 } from './source-file.service';
-import { Observable, zip } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject, Subscription, zip } from 'rxjs';
 import { ReportService } from '../../report.service';
-import { Enumerables } from '../../../interface/report.model';
-
-export interface ISourceFile extends ISource {
-  mappings: any;
-}
+import { Enumerable, Enumerables } from '../../../interface/report.model';
+import { VirtualScrollerComponent } from './virtual-scroller';
+import { EnumerableTableComponent } from '../../enumerable_table/enumerable-table.component';
 
 @Component({
   selector: 'app-source',
@@ -27,39 +32,30 @@ export interface ISourceFile extends ISource {
   providers: [SourceFileService, ExpandCollapseService],
   encapsulation: ViewEncapsulation.None,
 })
-export class SourceFileComponent implements OnInit {
+export class SourceFileComponent implements OnInit, OnDestroy {
+  @ViewChild(EnumerableTableComponent) enumerable!: EnumerableTableComponent;
+
   source$: Observable<AnnotatedSource>;
-  sourceStats$: Observable<Enumerables>;
   ctx$: Observable<Ctx>;
-  data$: Observable<{
-    ctx: Ctx;
-    source: AnnotatedSource;
-    sourceStats: Enumerables;
-  }>;
-  items: Array<Mapping> = new Array<Mapping>();
-  boundedItemSize: any;
+
+  private updateLevelSubscription: Subscription;
 
   constructor(
     private ctxService: CtxService,
     private reportService: ReportService,
     private sourceService: SourceFileService,
-    private expandCollapseService: ExpandCollapseService
+    private expandCollapseService: ExpandCollapseService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.source$ = sourceService.getSource();
-    this.sourceStats$ = sourceService.sourceStats;
     this.ctx$ = ctxService.getCtx();
-    this.data$ = zip(this.ctx$, this.source$, this.sourceStats$).pipe(
-      map(
-        ([ctx, source, sourceStats]: [Ctx, AnnotatedSource, Enumerables]) => ({
-          ctx,
-          source,
-          sourceStats,
-        })
-      )
+    sourceService.computeLevelStats(reportService.getLevelStats());
+    this.updateLevelSubscription = reportService.levelStatsUpdated.subscribe(
+      (levels: Set<string>) => {
+        this.enumerable.checkChanges();
+        sourceService.computeLevelStats(levels);
+      }
     );
-    this.source$.subscribe((source: AnnotatedSource) => {
-      this.items = source.mappings;
-    });
   }
 
   parseInt(str: string): number {
@@ -70,6 +66,10 @@ export class SourceFileComponent implements OnInit {
     return (
       mapping.messages.length !== 0 || mapping.instructionSet !== undefined
     );
+  }
+
+  public checkChanges(): void {
+    this.changeDetectorRef.markForCheck();
   }
 
   getClass(mapping: Mapping): string {
@@ -89,4 +89,17 @@ export class SourceFileComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  ngOnDestroy(): void {
+    this.updateLevelSubscription.unsubscribe();
+  }
+
+  clickedOnEnumerable(
+    enumerable: Enumerable,
+    scroller: VirtualScrollerComponent
+  ): void {
+    if (enumerable instanceof ScopeMetrics) {
+      scroller.scrollToIndex(enumerable.scopeLine, true, 0, 0, undefined);
+    }
+  }
 }

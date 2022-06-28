@@ -53,13 +53,13 @@ export class AppComponent implements OnInit {
       this.linesClicked = true;
       setStatKind(StatKindType.lines);
     }
-    this.reportService.computeForLevels(this.levelsClicked);
+    this.reportService.updateLevelStats(this.levelsClicked);
   }
 
   onClickLines(): void {
     this.levelsClicked.clear();
     setStatKind(StatKindType.lines);
-    this.reportService.computeForLevels(this.levelsClicked);
+    this.reportService.updateLevelStats(this.levelsClicked);
     this.linesClicked = true;
   }
 }

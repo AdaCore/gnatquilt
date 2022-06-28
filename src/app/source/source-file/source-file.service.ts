@@ -1,11 +1,19 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { LoadJsonService } from '../../load-json.service';
-import { ReportService, Source } from '../../report.service';
+import {
+  computePercentages,
+  ReportService,
+  Source,
+  StatsWithEnStats,
+} from '../../report.service';
 import {
   AnnotatedSCO,
   Decision,
+  EntityStats,
+  ISource,
   ISourceAnnotated,
+  IScopeMetrics,
   Mapping,
   Range,
   Statement,
@@ -16,12 +24,43 @@ import { Enumerable, Enumerables } from '../../../interface/report.model';
 import { SourceLineComponent } from '../source-line/source-line.component';
 import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
 
-export class AnnotatedSource extends Source implements Enumerables {
-  mappings: Mapping[];
+export class ScopeMetrics
+  extends StatsWithEnStats
+  implements Enumerable, Enumerables
+{
+  scopeLine: number;
+  scopeName: string;
+  children: Array<ScopeMetrics> = new Array<ScopeMetrics>();
 
-  constructor(data: ISourceAnnotated) {
-    super(data);
-    this.mappings = data.mappings;
+  constructor(scopeMetrics: IScopeMetrics) {
+    super(scopeMetrics.enAllStats);
+    this.scopeLine = scopeMetrics.scopeLine;
+    this.scopeName = scopeMetrics.scopeName;
+    this.liStats = scopeMetrics.stats;
+    for (const bodyMetric of scopeMetrics.children) {
+      this.children.push(new ScopeMetrics(bodyMetric));
+    }
+    this.total = this.computeLines(this.liStats);
+    this.statsPercent = computePercentages(this.total, this.liStats);
+  }
+
+  getName(): string {
+    return this.scopeName;
+  }
+
+  getChildren(): Array<ScopeMetrics> {
+    return this.children;
+  }
+
+  setChildren(v: Array<ScopeMetrics>): void {
+    this.children = v;
+  }
+
+  computeStats(levels: Set<string>): void {
+    super.computeStats(levels);
+    for (const bodyMetric of this.children) {
+      bodyMetric.computeStats(levels);
+    }
   }
 
   getHeadName(): string {
@@ -30,6 +69,37 @@ export class AnnotatedSource extends Source implements Enumerables {
 
   getEnumerables(): Array<Enumerable> {
     return [this];
+  }
+}
+
+export class AnnotatedSource extends Source implements Enumerables {
+  scopeMetrics: ScopeMetrics;
+  mappings: Mapping[];
+
+  constructor(data: ISourceAnnotated) {
+    super(data);
+    this.scopeMetrics = new ScopeMetrics(data.scopeMetrics);
+    this.mappings = data.mappings;
+  }
+
+  computeStats(levels: Set<string>): void {
+    super.computeStats(levels);
+    this.scopeMetrics.computeStats(levels);
+  }
+
+  getHeadName(): string {
+    return 'Source';
+  }
+
+  getEnumerables(): Array<Enumerable> {
+    return [this];
+  }
+
+  getScopeMetrics(): Enumerables {
+    if (this.scopeMetrics) {
+      return this.scopeMetrics;
+    }
+    return this;
   }
 }
 
@@ -102,7 +172,8 @@ function computeSco(mappings: Mapping[]): Map<number, ScoProperties> {
 @Injectable()
 export class SourceFileService {
   sourceStats: Observable<Enumerables>;
-  source: Observable<AnnotatedSource>;
+  source$: Subject<AnnotatedSource> = new ReplaySubject<AnnotatedSource>();
+  source: Observable<AnnotatedSource> = this.source$.asObservable();
   scos: Observable<Map<number, ScoProperties>>;
   projectName: ReplaySubject<string> = new ReplaySubject<string>();
 
@@ -111,43 +182,15 @@ export class SourceFileService {
     private loadJSONService: LoadJsonService,
     private reportService: ReportService
   ) {
-    this.source = route.paramMap
+    route.paramMap
       .pipe(take(1))
       .pipe(
         switchMap((paramMap: ParamMap) =>
           loadJSONService.getJSON(paramMap.get('sourceName'))
         )
       )
-      .pipe(map((data: ISourceAnnotated) => new AnnotatedSource(data)));
-    this.sourceStats = route.paramMap
-      .pipe(
-        switchMap((paramMap: ParamMap) =>
-          this.reportService.getStatsForSource(
-            paramMap.get('projectName'),
-            paramMap.get('sourceName')
-          )
-        )
-      )
-      .pipe(
-        map(
-          (source: Source) =>
-            new (class implements Enumerables {
-              enumerable: Enumerable;
-
-              constructor(enumerable: Enumerable) {
-                this.enumerable = enumerable;
-              }
-
-              getEnumerables(): Array<Enumerable> {
-                return [this.enumerable];
-              }
-
-              getHeadName(): string {
-                return '';
-              }
-            })(source)
-        )
-      );
+      .pipe(map((data: ISourceAnnotated) => new AnnotatedSource(data)))
+      .subscribe((source: AnnotatedSource) => this.source$.next(source));
     this.scos = this.source.pipe(
       map((source: AnnotatedSource) => computeSco(source.mappings))
     );
@@ -155,10 +198,6 @@ export class SourceFileService {
 
   getSource(): Observable<AnnotatedSource> {
     return this.source;
-  }
-
-  getSourceStats(): Observable<Enumerables> {
-    return this.sourceStats;
   }
 
   getSCOS(): Observable<Map<number, ScoProperties>> {
@@ -169,6 +208,13 @@ export class SourceFileService {
     return this.scos.pipe(
       map((scos: Map<number, ScoProperties>) => scos.get(scoId))
     );
+  }
+
+  computeLevelStats(levels: Set<string>): void {
+    this.source.pipe(take(1)).subscribe((source: AnnotatedSource) => {
+      source.computeStats(levels);
+      this.source$.next(source);
+    });
   }
 }
 

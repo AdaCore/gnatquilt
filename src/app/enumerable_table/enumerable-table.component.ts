@@ -1,4 +1,12 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { Status } from '../../models/app-enum';
 import { Enumerable, Enumerables } from '../../interface/report.model';
@@ -17,24 +25,30 @@ export class EnumerableTableComponent implements OnInit {
   @Input() ctx: Ctx;
   @Input() project: Enumerables;
   @Input() isSource: boolean;
+  @Output() clickedOnEnumerable = new EventEmitter<Enumerable>();
 
   public sortedData: Array<Enumerable>;
-  public totalLines: number;
+  public total: number;
   statusProperties: Record<Status, Properties> = statusProperties;
 
   // if isSource is True, then project is a Project object, which means we
   // have a project name, which we want to pass on.
   projectName: string;
 
+  // Track the expanded sub-metrics
+  expandedSubMetrics: Set<Enumerable> = new Set<Enumerable>();
+
+  public constructor(private cd: ChangeDetectorRef) {}
+
+  checkChanges(): void {
+    this.cd.markForCheck();
+  }
+
   ngOnInit(): void {
     this.sortedData = this.project.getEnumerables();
     if (this.isSource) {
       this.projectName = (this.project as Project).projectName;
     }
-  }
-
-  getIndexClass(index: number): string {
-    return index % 2 === 0 ? 'xcov-table-row-even' : 'xcov-table-row-odd';
   }
 
   sortData(sort: Sort): void {
@@ -44,20 +58,29 @@ export class EnumerableTableComponent implements OnInit {
       return;
     }
 
-    this.sortedData = data.sort((a: Enumerable, b: Enumerable) => {
-      const isAsc: boolean = sort.direction === 'asc';
-      switch (sort.active) {
-        case 'name':
-          return compare(a.getName(), b.getName(), isAsc);
-        case 'totalLines':
-          return compare(a.totalLines, b.totalLines, isAsc);
-        default:
-          const status: string = sort.active;
-          return Status[status] !== undefined
-            ? compare(a.getStats()[status], b.getStats()[status], isAsc)
-            : 0;
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    function sortEnum(data: Enumerable[]): Enumerable[] {
+      for (const e of data) {
+        if (e.getChildren().length > 0) {
+          e.setChildren(sortEnum(e.getChildren()));
+        }
       }
-    });
+      return data.sort((a: Enumerable, b: Enumerable) => {
+        const isAsc: boolean = sort.direction === 'asc';
+        switch (sort.active) {
+          case 'name':
+            return compare(a.getName(), b.getName(), isAsc);
+          case 'total':
+            return compare(a.total, b.total, isAsc);
+          default:
+            const status: string = sort.active;
+            return Status[status] !== undefined
+              ? compare(a.getStats()[status], b.getStats()[status], isAsc)
+              : 0;
+        }
+      });
+    }
+    this.sortedData = sortEnum(data);
   }
 
   getTotalLabel(): string {
@@ -67,6 +90,22 @@ export class EnumerableTableComponent implements OnInit {
       case StatKindType.lines:
         return 'Total lines';
     }
+  }
+
+  clickOnEnumerable(enumerable: Enumerable): void {
+    this.clickedOnEnumerable.emit(enumerable);
+  }
+
+  expand(e: Enumerable): void {
+    this.expandedSubMetrics.add(e);
+  }
+
+  collapse(e: Enumerable): void {
+    this.expandedSubMetrics.delete(e);
+  }
+
+  isExpanded(e: Enumerable): boolean {
+    return this.expandedSubMetrics.has(e);
   }
 }
 
