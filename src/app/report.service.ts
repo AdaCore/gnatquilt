@@ -19,7 +19,21 @@ export function computePercentages(
 ): Record<Status, number> {
   const percentages: Record<Status, number> = initStatus();
   for (const [status, covStat] of Object.entries(stats)) {
-    percentages[status] = total !== 0 ? Math.round((100 * covStat) / total) : 0;
+    // Avoid rounding around the extremes, and output 100% coverage only
+    // when all the lines / obligations are covered, and output 0% when
+    // none of them are.
+
+    if (total !== 0) {
+      percentages[status] = Math.round((100 * covStat) / total);
+      if (percentages[status] === 100 && covStat !== total) {
+        percentages[status] = 99;
+      }
+      if (percentages[status] === 0 && covStat !== 0) {
+        percentages[status] = 1;
+      }
+    } else {
+      percentages[status] = 0;
+    }
   }
   return percentages;
 }
