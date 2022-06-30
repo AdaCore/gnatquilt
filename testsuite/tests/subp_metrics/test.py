@@ -1,0 +1,43 @@
+"""
+Test the reporting on entities features.
+"""
+
+import os
+
+from selenium.webdriver.common.by import By
+
+from coverage import CoverageStatus, Entities, make_dhtml_report
+from webdriver import FirefoxDriver
+
+with FirefoxDriver() as driver:
+    make_dhtml_report(
+        "multiple_projects", "p.gpr", os.path.join(os.getcwd(), "dhtml")
+    )
+
+    driver.get("file://" + os.getcwd() + "/dhtml/index.html")
+    driver.find_element(By.LINK_TEXT, "pk1.adb").click()
+
+    # Check subprogram metrics values
+
+    driver.check_subp_stat("Alias_Gt", CoverageStatus.NOT_COVERED, 1)
+    driver.check_subp_stat("Within", CoverageStatus.PARTIALLY_COVERED, 1)
+
+    driver.report_on_entities([Entities.Stmt])
+    driver.check_subp_stat("Within", CoverageStatus.COVERED, 1)
+    driver.check_subp_stat("Alias_Gt", CoverageStatus.NOT_COVERED, 1)
+
+    # Check that navigation links work (navigate to a subprogram correctly
+    # scrolls down to it).
+    subp_clicked = "Not_Within"
+    driver.navigate_to_subp(subp_clicked)
+    found = False
+    for source_line_td in driver.find_elements(
+        By.CLASS_NAME, "xcov-source-row-text"
+    ):
+        if source_line_td.find_elements(
+            By.XPATH, f".//span[contains(., '{subp_clicked}')]"
+        ):
+            found = True
+            break
+
+    assert found
