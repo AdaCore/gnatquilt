@@ -20,3 +20,4 @@ obj-*
 *.trace
 dhtml
 .angular
+*.~undo-tree~
