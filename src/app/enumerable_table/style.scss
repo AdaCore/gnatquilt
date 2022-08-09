@@ -128,8 +128,8 @@
     background-color: $xcov-summary-not-coverable;
   }
 
-  &-not-instrumented {
-    background-color: $xcov-summary-not-instrumented;
+  &-undetermined-coverage {
+    background-color: $xcov-summary-undetermined-coverage;
   }
 
   &-exempted-no-violation {
@@ -140,8 +140,8 @@
     background-color: $xcov-summary-exempted-with-violation;
   }
 
-  &-exempted-with-non-instr {
-    background-color: $xcov-summary-exempted-with-non-instr;
+  &-exempted-with-undet-cov {
+    background-color: $xcov-summary-exempted-with-undet-cov;
   }
 }
 // https://stackoverflow.com/questions/2310734/how-to-make-html-text-unselectable

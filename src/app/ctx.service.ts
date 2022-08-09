@@ -27,9 +27,9 @@ function allProperties(): Record<Status, Properties> {
     ),
     notCovered: new Properties('Not Covered', '-not-covered', '-'),
     notCoverable: new Properties('Not Coverable', '-not-coverable', '0'),
-    notInstrumented: new Properties(
-      'Not Instrumented',
-      '-not-instrumented',
+    undeterminedCoverage: new Properties(
+      'Undetermined Coverage',
+      '-undetermined-coverage',
       '?'
     ),
     exemptedNoViolation: new Properties(
@@ -42,9 +42,9 @@ function allProperties(): Record<Status, Properties> {
       '-exempted-with-violation',
       '#'
     ),
-    exemptedWithNonInstr: new Properties(
-      'Exempted with Non Instrumented items',
-      '-exempted-with-non-instr',
+    exemptedWithUndetCov: new Properties(
+      'Exempted with Undetermined Coverage items',
+      '-exempted-with-undet-cov',
       '@'
     ),
     // only for assembly coverage
@@ -67,9 +67,9 @@ function coverageSymbolToStatus(): Map<string, Status> {
     ['!', Status.partiallyCovered],
     ['-', Status.notCovered],
     ['0', Status.notCoverable],
-    ['?', Status.notInstrumented],
+    ['?', Status.undeterminedCoverage],
     ['*', Status.exemptedWithViolation],
-    ['@', Status.exemptedWithNonInstr],
+    ['@', Status.exemptedWithUndetCov],
     ['#', Status.exemptedNoViolation],
     ['~', Status.unknown],
     ['>', Status.branchTaken],
@@ -102,9 +102,9 @@ export class Ctx {
       Status.partiallyCovered,
       Status.notCovered,
       Status.notCoverable,
-      Status.notInstrumented,
+      Status.undeterminedCoverage,
       Status.exemptedWithViolation,
-      Status.exemptedWithNonInstr,
+      Status.exemptedWithUndetCov,
       Status.exemptedNoViolation,
     ];
     return properties.filter(

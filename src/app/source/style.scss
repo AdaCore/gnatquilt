@@ -234,8 +234,8 @@
             background-color: $xcov-line-not-coverable;
           }
 
-          &-not-instrumented {
-            background-color: $xcov-line-not-instrumented;
+          &-undetermined-coverage {
+            background-color: $xcov-line-undetermined-coverage;
           }
 
           &-exempted-no-violation {
@@ -246,8 +246,8 @@
             background-color: $xcov-line-exempted-with-violation;
           }
 
-          &-exempted-with-non-instr {
-            background-color: $xcov-line-exempted-with-non-instr;
+          &-exempted-with-undet-cov {
+            background-color: $xcov-line-exempted-with-undet-cov;
           }
         }
       }
@@ -284,8 +284,8 @@
       @include bgline-hover($xcov-line-not-coverable);
     }
 
-    &-not-instrumented {
-      @include bgline-hover($xcov-line-not-instrumented);
+    &-undetermined-cov {
+      @include bgline-hover($xcov-line-undetermined-coverage);
     }
 
     &-exempted-no-violation {
@@ -296,8 +296,8 @@
       @include bgline-hover($xcov-line-exempted-with-violation);
     }
 
-    &-exempted-with-non-instr {
-      @include bgline-hover($xcov-line-exempted-with-non-instr);
+    &-exempted-with-undet-cov {
+      @include bgline-hover($xcov-line-exempted-with-undet-cov);
     }
   }
 }

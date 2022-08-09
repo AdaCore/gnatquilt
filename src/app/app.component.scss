@@ -123,8 +123,8 @@ span.xcov-table-missing-source-note {
     background-color: $xcov-summary-not-coverable;
   }
 
-  &-not-instrumented {
-    background-color: $xcov-summary-not-instrumented;
+  &-undetermined-coverage {
+    background-color: $xcov-summary-undetermined-coverage;
   }
 
   &-exempted-no-violation {
@@ -135,8 +135,8 @@ span.xcov-table-missing-source-note {
     background-color: $xcov-summary-exempted-with-violation;
   }
 
-  &-exempted-with-non-instr {
-    background-color: $xcov-summary-exempted-with-non-instr;
+  &-exempted-with-undet-cov {
+    background-color: $xcov-summary-exempted-with-undet-cov;
   }
 }
 

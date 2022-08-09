@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pycqa/flake8
-    rev: 3.9.1
+    rev: 5.0.4
     hooks:
       - id: flake8
         types: [file]
@@ -12,7 +12,7 @@ repos:
           - flake8-docstrings
           - flake8-rst-docstrings
   - repo: https://github.com/ambv/black
-    rev: 21.5b1
+    rev: 22.6.0
     hooks:
       - id: black
         types_or: [file]
