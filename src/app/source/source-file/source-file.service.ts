@@ -78,13 +78,17 @@ export class AnnotatedSource extends Source implements Enumerables {
 
   constructor(data: ISourceAnnotated) {
     super(data);
-    this.scopeMetrics = new ScopeMetrics(data.scopeMetrics);
+    if (data.scopeMetrics) {
+      this.scopeMetrics = new ScopeMetrics(data.scopeMetrics);
+    }
     this.mappings = data.mappings;
   }
 
   computeStats(levels: Set<string>): void {
     super.computeStats(levels);
-    this.scopeMetrics.computeStats(levels);
+    if (this.scopeMetrics) {
+      this.scopeMetrics.computeStats(levels);
+    }
   }
 
   getHeadName(): string {
