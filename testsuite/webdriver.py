@@ -116,10 +116,12 @@ class FirefoxDriver(webdriver.Firefox):
         )
         assert int(total_stats[status_index].text.split()[0]) == statistic
 
-    def find_subp_tr(self, subp_name):
+    def find_subp_tr(self, subp_name, n=1):
         """
         :param string subp_name: name of the subprogram for which we want to
         find the corresponding row in the source header.
+        :param integer n: of more than one subprogram is named subp_name,
+        choose the nth occurence, starting at 1.
         :return WebElement: corresponding row HTML element.
 
         Note that this function assumes no duplicates for subprogram names
@@ -145,11 +147,11 @@ class FirefoxDriver(webdriver.Firefox):
                     expand[0].click()
                     expanded = True
 
-        # Check that we have found one (and only one) match.
-        assert subp_tr and len(subp_tr) == 1
-        return subp_tr[0]
+        # Check that we have found a sufficient number of matches.
+        assert subp_tr and len(subp_tr) >= n
+        return subp_tr[n - 1]
 
-    def check_subp_stat(self, subp_name, status, statistic):
+    def check_subp_stat(self, subp_name, status, statistic, n=1):
         """
         Same as check_stats_for_file, but checks subprogram statistics. Only
         works if the user navigated to the file in which the procedure body is
@@ -158,20 +160,25 @@ class FirefoxDriver(webdriver.Firefox):
         Expand nested metrics as long as it did not find a match. Note that
         this function assumes no duplicates (good enough for our testing
         purposes).
+
+        In the case of duplicate names, select the nth occurence of the name
+        starting at 1.
         """
-        subp_tr = self.find_subp_tr(subp_name)
+        subp_tr = self.find_subp_tr(subp_name, n)
         subp_tds = subp_tr.find_elements(By.XPATH, ".//td")
 
         status_index = self.__column_number_for_status(str(status))
         assert int(subp_tds[status_index].text.split()[0]) == statistic
 
-    def navigate_to_subp(self, subp_name):
+    def navigate_to_subp(self, subp_name, n=1):
         """
         :param string subp_name: name of the subprogram.
+        :param integer n: in the case of multiple subprograms with the same
+        name, choose the nth occurence starting at 1.
 
         Navigate to the given subprogram by clicking on it in the header.
         """
-        subp_tr = self.find_subp_tr(subp_name)
+        subp_tr = self.find_subp_tr(subp_name, n)
         (
             subp_tr.find_element(By.CLASS_NAME, "xcov-table-filename")
             .find_element(By.XPATH, ".//span")
