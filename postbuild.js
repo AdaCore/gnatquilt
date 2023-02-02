@@ -27,10 +27,10 @@ fs.readFile(indexFilePath, 'utf8', function (err, data) {
     '<script src=node_modules_highlight_js_es_core_js.js></script>'
   );
   $('html').append(
-    '<script src=node_modules_highlight_js_es_languages_c_js.js></script>'
+    '<script src=node_modules_highlight_js_es_languages_ada_js.js></script>'
   );
   $('html').append(
-    '<script src=node_modules_highlight_js_es_languages_ada_js.js></script>'
+    '<script src=node_modules_highlight_js_es_languages_cpp_js.js></script>'
   );
 
   fs.writeFile(indexFilePath, $.html(), function (err) {
