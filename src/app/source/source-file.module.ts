@@ -46,7 +46,7 @@ import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
         coreLibraryLoader: () => import('highlight.js/lib/core'),
         languages: {
           ada: () => import('highlight.js/lib/languages/ada'),
-          c: () => import('highlight.js/lib/languages/c'),
+          cpp: () => import('highlight.js/lib/languages/cpp'),
         },
       },
     },
