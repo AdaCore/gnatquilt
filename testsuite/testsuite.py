@@ -11,22 +11,24 @@ from e3.testsuite.testcase_finder import ParsedTest, TestFinder
 from e3.testsuite.utils import CleanupMode
 
 
-class TestBashDriver(ClassicTestDriver):
-    def run(self):
-        self.shell(["bash", "test.sh"])
-
-
 class TestPyDriver(ClassicTestDriver):
     def run(self):
         # Add current directory in PYTHONPATH, allowing Python testcase scripts
         # to find the coverage and webdriver modules.
         self.env.add_search_path("PYTHONPATH", self.env.root_dir)
-        self.shell([sys.executable, self.test_dir("test.py")])
+        self.shell(
+            [
+                sys.executable,
+                self.test_dir("test.py"),
+                "--log-file=test.py.log",
+            ],
+            cwd=self.working_dir(),
+        )
 
 
 class GNATquiltTestFinder(TestFinder):
     def probe(self, testsuite, dirpath, dirnames, filenames):
-        # If directory contains a "test.sh" file, this is a regular testcase
+        # If directory contains a "test.py" file, this is a regular testcase
         if "test.py" in filenames:
             driver_cls = TestPyDriver
         else:

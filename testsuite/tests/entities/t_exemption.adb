@@ -1,4 +1,4 @@
-procedure Main is
+procedure T_Exemption is
    procedure Eassert (T : Boolean) is
    begin
       pragma Annotate (Xcov, Exempt_On, "assert condition is never False");
@@ -9,4 +9,4 @@ procedure Main is
    end Eassert;
 begin
    Eassert (True);
-end Main;
+end T_Exemption;

@@ -1,21 +1,19 @@
 """
-Test the reporting on entities features.
+Test the reporting on the subprogram metrics.
 """
 
 import os
 
 from selenium.webdriver.common.by import By
 
-from coverage import CoverageStatus, Entities, make_dhtml_report
+from coverage import build_run_and_coverage, CoverageStatus, Entities
 from webdriver import FirefoxDriver
 
 with FirefoxDriver() as driver:
-    make_dhtml_report(
-        "multiple_projects", "p.gpr", os.path.join(os.getcwd(), "dhtml")
-    )
+    build_run_and_coverage("src-traces", "p.gpr", "stmt+mcdc", ["obj/main"])
 
-    driver.get("file://" + os.getcwd() + "/dhtml/index.html")
-    driver.find_element(By.LINK_TEXT, "pk1.adb").click()
+    driver.get("file://" + os.getcwd() + "/obj/index.html")
+    driver.find_element(By.LINK_TEXT, "main.adb").click()
 
     # Check subprogram metrics values
 
