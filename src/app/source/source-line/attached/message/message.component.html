@@ -9,7 +9,7 @@
         <div class="xcov-source-line-attached-message-body">
           <ng-container *ngIf="hasSco() && (sco$ | async) as sco">
             <span class="xcov-source-line-attached-sco"
-              >{{ sco.kind }} "{{ sco.text }}" at {{ strLowOrUp(sco.range, 0) }}
+              >{{ sco.kind }} {{ sco.text }} at {{ strLowOrUp(sco.range, 0) }}
             </span>
           </ng-container>
           {{ message.message }}

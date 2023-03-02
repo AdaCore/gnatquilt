@@ -33,5 +33,5 @@ with FirefoxDriver() as driver:
     # from the report.
     driver.find_element(
         By.XPATH,
-        """.//span[contains(string(),'decision ""i < 0;"" at 2:19')]""",
+        """.//span[contains(string(),'decision "i < 0;" at 2:19')]""",
     )
