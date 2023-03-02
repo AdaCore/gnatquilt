@@ -6,15 +6,16 @@ import os
 
 from selenium.webdriver.common.by import By
 
-from coverage import CoverageStatus, Entities, make_dhtml_report
+from coverage import build_run_and_coverage, CoverageStatus, Entities
 from webdriver import FirefoxDriver
 
 with FirefoxDriver() as driver:
-    make_dhtml_report(
-        "cpp_scopes",
+    build_run_and_coverage(
+        "src-traces",
         "test.gpr",
-        os.path.join(os.getcwd(), "dhtml"),
-        level="stmt"
+        "stmt",
+        ["obj/main"],
+        extra_instr_args=["--restricted-to-languages=C++"],
     )
 
     # Check subprogram metrics values
@@ -22,7 +23,7 @@ with FirefoxDriver() as driver:
 
     # main.cpp
 
-    driver.get("file://" + os.getcwd() + "/dhtml/index.html")
+    driver.get("file://" + os.getcwd() + "/obj/index.html")
     driver.find_element(By.LINK_TEXT, "main.cpp").click()
 
     driver.check_subp_stat("main.cpp", CoverageStatus.COVERED, 20)
@@ -51,23 +52,24 @@ with FirefoxDriver() as driver:
 
     driver.check_subp_stat("named_namespace_again", CoverageStatus.COVERED, 1)
     driver.check_subp_stat("another_one", CoverageStatus.COVERED, 1)
-    driver.check_subp_stat("function_in_anonymous_namespace",
-                           CoverageStatus.COVERED, 1)
+    driver.check_subp_stat(
+        "function_in_anonymous_namespace", CoverageStatus.COVERED, 1
+    )
 
-    driver.check_subp_stat("Anonymous namespace",
-                           CoverageStatus.NOT_COVERED,
-                           1,
-                           n=2)
+    driver.check_subp_stat(
+        "Anonymous namespace", CoverageStatus.NOT_COVERED, 1, n=2
+    )
 
-    driver.check_subp_stat("in_second_anonymous_namespace",
-                           CoverageStatus.NOT_COVERED, 1)
+    driver.check_subp_stat(
+        "in_second_anonymous_namespace", CoverageStatus.NOT_COVERED, 1
+    )
 
     driver.check_subp_stat("main", CoverageStatus.COVERED, 14)
 
     # Check the other files
 
     def check_metrics(file, func, covered, not_covered, stmt=False):
-        driver.get("file://" + os.getcwd() + "/dhtml/index.html")
+        driver.get("file://" + os.getcwd() + "/obj/index.html")
         driver.find_element(By.LINK_TEXT, file).click()
 
         if stmt:
@@ -79,8 +81,8 @@ with FirefoxDriver() as driver:
 
     def check_files(stmt=False):
         check_metrics("bar.hh", "function_in_header", 4, 1)  # bar.hh
-        check_metrics("foo.cpp", "use_pkg", 1, 0)            # foo.cpp
-        check_metrics("pkg.cpp", "decl_in_header", 2, 0)     # pkg.cpp
+        check_metrics("foo.cpp", "use_pkg", 1, 0)  # foo.cpp
+        check_metrics("pkg.cpp", "decl_in_header", 2, 0)  # pkg.cpp
 
     check_files()
 
@@ -88,7 +90,7 @@ with FirefoxDriver() as driver:
 
     # main.cpp
 
-    driver.get("file://" + os.getcwd() + "/dhtml/index.html")
+    driver.get("file://" + os.getcwd() + "/obj/index.html")
     driver.find_element(By.LINK_TEXT, "main.cpp").click()
 
     driver.report_on_entities([Entities.Stmt])
@@ -119,15 +121,16 @@ with FirefoxDriver() as driver:
 
     driver.check_subp_stat("named_namespace_again", CoverageStatus.COVERED, 1)
     driver.check_subp_stat("another_one", CoverageStatus.COVERED, 1)
-    driver.check_subp_stat("function_in_anonymous_namespace",
-                           CoverageStatus.COVERED, 1)
+    driver.check_subp_stat(
+        "function_in_anonymous_namespace", CoverageStatus.COVERED, 1
+    )
 
-    driver.check_subp_stat("Anonymous namespace",
-                           CoverageStatus.NOT_COVERED,
-                           1,
-                           n=2)
-    driver.check_subp_stat("in_second_anonymous_namespace",
-                           CoverageStatus.NOT_COVERED, 1)
+    driver.check_subp_stat(
+        "Anonymous namespace", CoverageStatus.NOT_COVERED, 1, n=2
+    )
+    driver.check_subp_stat(
+        "in_second_anonymous_namespace", CoverageStatus.NOT_COVERED, 1
+    )
 
     driver.check_subp_stat("main", CoverageStatus.COVERED, 15)
 

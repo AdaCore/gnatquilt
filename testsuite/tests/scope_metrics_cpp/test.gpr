@@ -1,4 +1,5 @@
 project Test is
+  for Object_Dir use "obj";
   for Main use ("main.cpp");
   for Languages use ("C++");
 end Test;

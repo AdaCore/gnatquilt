@@ -6,15 +6,16 @@ report for the main file.
 
 import os
 
-from coverage import make_dhtml_report
+from coverage import build_run_and_coverage
 from webdriver import FirefoxDriver
 
 from selenium.webdriver.common.by import By
 
 with FirefoxDriver() as driver:
-    make_dhtml_report("bin_traces", "p.gpr", os.path.join(os.getcwd(), "dhtml"))
 
-    driver.get("file://" + os.getcwd() + "/dhtml/index.html")
+    build_run_and_coverage("bin-traces", "p.gpr", "stmt+mcdc", ["obj/main"])
+
+    driver.get("file://" + os.getcwd() + "/obj/index.html")
 
     # Navigate to a source file
     driver.find_element(By.LINK_TEXT, "main.adb").click()
