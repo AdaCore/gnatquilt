@@ -1,0 +1,5 @@
+project P is
+  for Object_Dir use "obj";
+  for Main use ("main.c");
+  for Languages use ("C");
+end P;
