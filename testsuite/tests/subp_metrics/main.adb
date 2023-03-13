@@ -171,6 +171,16 @@ procedure Main is
       return Alias_Lt (X, L) or else X > H;
    end Not_Within;
 
+   generic
+      type T is (<>);
+   function Id (A : T) return T;
+
+   function Id (A : T) return T is (A);
+
+   function Id_Int is new Id (T => Integer);
+
+   function Id_Int_Renamed (A : Integer) return Integer renames Id_Int;
+
 begin
 
    --  T T -> T
