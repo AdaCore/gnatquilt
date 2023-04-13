@@ -24,6 +24,10 @@ with FirefoxDriver() as driver:
     driver.check_subp_stat("Within", CoverageStatus.COVERED, 1)
     driver.check_subp_stat("Alias_Gt", CoverageStatus.NOT_COVERED, 1)
 
+    driver.report_on_entities([Entities.Stmt])
+    driver.check_subp_stat("Id_Int", CoverageStatus.COVERED, 1)
+    driver.check_subp_stat("Id_Int_Renamed", CoverageStatus.COVERED, 1)
+
     # Check that navigation links work (navigate to a subprogram correctly
     # scrolls down to it).
     subp_clicked = "Not_Within"
