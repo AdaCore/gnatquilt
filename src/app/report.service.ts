@@ -148,11 +148,11 @@ export abstract class StatsWithEnStats extends Stats implements Enumerable {
   }
 
   computeLines(stats: Record<Status, number>): number {
-    this.total = Object.values(stats).reduce(
+    var total = Object.values(stats).reduce(
       (sum: number, current: number) => sum + current
     );
-    this.total -= stats.noCode;
-    return this.total;
+    total -= stats.noCode || 0;
+    return total;
   }
 
   computeStats(levels: Set<string>): void {
@@ -161,7 +161,7 @@ export abstract class StatsWithEnStats extends Stats implements Enumerable {
         this.total = Object.values(this.liStats).reduce(
           (sum: number, current: number) => sum + current
         );
-        this.total -= this.liStats.noCode;
+        this.total -= this.liStats.noCode || 0;
         break;
       case StatKindType.entities:
         [this.total, this.enStats] = aggregateEntitiesStats(
