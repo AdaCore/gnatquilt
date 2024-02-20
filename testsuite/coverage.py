@@ -19,6 +19,7 @@ class CoverageStatus(Enum):
     EXEMPTED_NO_VIOLATION = 5
     NOT_COVERABLE = 6
     UNDETERMINED_COVERAGE = 7
+    EXEMPTED_UNDETERMINED_COVERAGE = 8
 
     def __str__(self):
 
@@ -30,6 +31,7 @@ class CoverageStatus(Enum):
             5: "Exempted no Violation",
             6: "Not Coverable",
             7: "Undetermined Coverage",
+            8: "Exempted with Undetermined Coverage items",
         }
         return string_repr[self.value]
 
