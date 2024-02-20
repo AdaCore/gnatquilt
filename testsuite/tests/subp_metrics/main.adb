@@ -177,6 +177,14 @@ procedure Main is
 
    function Id (A : T) return T is (A);
 
+   generic
+      type T is (<>);
+   function Id_Exempted (A : T) return T;
+
+   pragma Annotate (Xcov, Exempt_On);
+   function Id_Exempted (A : T) return T is (A);
+   pragma Annotate (Xcov, Exempt_Off);
+
    function Id_Int is new Id (T => Integer);
 
    function Id_Int_Renamed (A : Integer) return Integer renames Id_Int;
