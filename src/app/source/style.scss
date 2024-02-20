@@ -284,7 +284,7 @@
       @include bgline-hover($xcov-line-not-coverable);
     }
 
-    &-undetermined-cov {
+    &-undetermined-coverage {
       @include bgline-hover($xcov-line-undetermined-coverage);
     }
 
