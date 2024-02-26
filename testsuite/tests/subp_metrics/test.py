@@ -15,6 +15,14 @@ with FirefoxDriver() as driver:
     driver.get("file://" + os.getcwd() + "/obj/index.html")
     driver.find_element(By.LINK_TEXT, "main.adb").click()
 
+    # Check that undetermined coverage is reported
+    driver.check_subp_stat("Id", CoverageStatus.UNDETERMINED_COVERAGE, 1)
+
+    # Check that exempted undetermined coverage is reported
+    driver.check_subp_stat(
+        "Id_Exempted", CoverageStatus.EXEMPTED_UNDETERMINED_COVERAGE, 1
+    )
+
     # Check subprogram metrics values
 
     driver.check_subp_stat("Alias_Gt", CoverageStatus.NOT_COVERED, 1)
