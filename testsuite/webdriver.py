@@ -10,6 +10,7 @@ from selenium.webdriver.firefox.options import Options
 class FirefoxDriver(webdriver.Firefox):
     def __init__(self):
         firefox_options = Options()
+        firefox_options.add_argument("--headless")
         firefox_options.binary_location = find_executable("firefox")
 
         # As in production mode, firefox is not located at the standard
