@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ReportService, setStatKind, StatKindType } from './report.service';
+import { Router, Scroll } from '@angular/router';
+import { delay, filter } from 'rxjs/operators';
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +17,22 @@ export class AppComponent implements OnInit {
 
   levelsClicked: Set<string> = new Set();
   linesClicked = true;
-  constructor(private reportService: ReportService) {
+  constructor(router: Router, viewportScroller: ViewportScroller, private reportService: ReportService) {
+    router.events
+    .pipe(filter((e): e is Scroll => e instanceof Scroll))
+    .pipe(delay(0))
+    .subscribe((e) => {
+      if (e.position) {
+        // backward navigation
+        viewportScroller.scrollToPosition(e.position);
+      } else if (e.anchor) {
+        // anchor navigation
+        viewportScroller.scrollToAnchor(e.anchor);
+      } else {
+        // forward navigation
+        viewportScroller.scrollToPosition([0, 0]);
+      }
+    });
     this.coverageLevel$ = reportService.getCoverageLevel();
     this.coverageLevel$.subscribe((coverageLevel: string) => {
       // It is important that all the level strings in allLevels actually
