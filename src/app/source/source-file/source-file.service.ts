@@ -4,6 +4,7 @@ import { LoadJsonService } from '../../load-json.service';
 import {
   computePercentages,
   ReportService,
+  Report,
   Source,
   StatsWithEnStats,
 } from '../../report.service';
@@ -186,18 +187,22 @@ export class SourceFileService {
     private loadJSONService: LoadJsonService,
     private reportService: ReportService
   ) {
-    route.paramMap
-      .pipe(take(1))
-      .pipe(
-        switchMap((paramMap: ParamMap) =>
+    // We have to wait for the report to load prior to loading the source
+    // file.
+    reportService.getReport().subscribe((_ : Report) => {
+      route.paramMap
+        .pipe(take(1))
+        .pipe(
+          switchMap((paramMap: ParamMap) =>
           loadJSONService.getJSON(paramMap.get('sourceName'))
+          )
         )
-      )
-      .pipe(map((data: ISourceAnnotated) => new AnnotatedSource(data)))
-      .subscribe((source: AnnotatedSource) => this.source$.next(source));
-    this.scos = this.source.pipe(
-      map((source: AnnotatedSource) => computeSco(source.mappings))
-    );
+        .pipe(map((data: ISourceAnnotated) => new AnnotatedSource(data)))
+        .subscribe((source: AnnotatedSource) => this.source$.next(source));
+      this.scos = this.source.pipe(
+        map((source: AnnotatedSource) => computeSco(source.mappings))
+      );
+    });
   }
 
   getSource(): Observable<AnnotatedSource> {
