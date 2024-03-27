@@ -25,7 +25,7 @@ export class EnumerableInfoComponent implements OnInit {
 
   @Input() isSource: boolean;
 
-  // The summary part of the dhtml report gives a view of the sources of the project
+  // The summary part of the HTML report gives a view of the sources of the project
   // arborescence. Each source is attached to the project it belongs to, and
   // we rely on this information (the source name + the project name) to then
   // load the right source when the user wants to visit it. Note that this is
