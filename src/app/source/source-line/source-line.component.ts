@@ -2,9 +2,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -13,6 +15,7 @@ import { statusProperties, symbolToStat } from '../../ctx.service';
 import { Status } from '../../../models/app-enum';
 import {
   ExpandCollapseService,
+  SelectLineService,
   SelectSCOService,
 } from '../source-file/source-file.service';
 import { ReplaySubject, Subscription } from 'rxjs';
@@ -57,7 +60,8 @@ export class SourceLineComponent implements OnInit, OnDestroy {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private selectSCOService: SelectSCOService,
-    private expandCollapseService: ExpandCollapseService
+    private expandCollapseService: ExpandCollapseService,
+    private selectLineService: SelectLineService
   ) {}
 
   ngOnInit(): void {
@@ -160,5 +164,9 @@ export class SourceLineComponent implements OnInit, OnDestroy {
   @ViewChild(MatTooltip)
   set matTooltip(v: MatTooltip) {
     delete (v as any)._viewContainerRef;
+  }
+
+  onSelectLine(): void {
+    this.selectLineService.emitSelectLineEvent(this.getLineno());
   }
 }

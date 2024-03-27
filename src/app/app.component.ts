@@ -40,9 +40,6 @@ export class AppComponent implements OnInit {
         } else if (e.anchor) {
           // anchor navigation
           viewportScroller.scrollToAnchor(e.anchor);
-        } else {
-          // forward navigation
-          viewportScroller.scrollToPosition([0, 0]);
         }
       });
     this.coverageLevel$ = reportService.getCoverageLevel();

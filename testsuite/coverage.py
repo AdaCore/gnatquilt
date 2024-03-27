@@ -56,7 +56,7 @@ def build_run_and_coverage(
     extra_coverage_args=None,
 ):
     """
-    Helper to produce a dhtml report by running a gnatcov binary-traces
+    Helper to produce an html report by running a gnatcov binary-traces
     based, or instrumentation-based workflow, depending on the parameter mode
     (bin-traces or src-traces) Configuration of the commands is done through the
     project, mains, level parameters. One can add extra switches to the gprbuild
