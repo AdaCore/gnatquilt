@@ -830,7 +830,7 @@ export class VirtualScrollerComponent implements OnInit, OnChanges, OnDestroy {
 
   protected padding: number = 0;
   protected previousViewPort: IViewport = <any>{};
-  protected currentTween: tween.Tween;
+  protected currentTween: tween.Tween<any>;
   protected cachedItemsLength: number;
 
   protected disposeScrollHandler: () => void | undefined;

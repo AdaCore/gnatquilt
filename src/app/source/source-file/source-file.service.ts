@@ -23,7 +23,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { map, switchMap, take } from 'rxjs/operators';
 import { Enumerable, Enumerables } from '../../../interface/report.model';
 import { SourceLineComponent } from '../source-line/source-line.component';
-import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
+import { VirtualScrollerComponent } from './virtual-scroller';
 
 export class ScopeMetrics
   extends StatsWithEnStats
