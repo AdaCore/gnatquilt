@@ -25,7 +25,7 @@ export class LoadJsonService {
     const key: string = keySplit[keySplit.length - 1];
     return this.scriptService.loadScript(this.prefix + key).pipe(
       map(
-        (_anything: any) =>
+        (_) =>
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-return
           REPORT[key]
       )

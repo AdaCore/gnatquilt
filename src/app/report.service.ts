@@ -206,7 +206,7 @@ export class Source extends StatsWithEnStats implements ISource, Enumerable {
     return [];
   }
 
-  setChildren(v: Array<Enumerable>): void {}
+  setChildren(_: Array<Enumerable>): void {}
 }
 
 // This implements coverage reporting for a specific project, see the
@@ -245,7 +245,7 @@ export class Project extends Stats implements Enumerable, Enumerables {
     return [];
   }
 
-  setChildren(v: Array<Enumerable>): void {}
+  setChildren(_: Array<Enumerable>): void {}
 
   getHeadName(): string {
     return 'Sources';
@@ -327,7 +327,7 @@ export class Report extends Stats implements Enumerables, Enumerable {
     return [];
   }
 
-  setChildren(v: Array<Enumerable>): void {}
+  setChildren(_: Array<Enumerable>): void {}
 }
 
 @Injectable({
