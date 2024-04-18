@@ -33,11 +33,6 @@
             <tr
               class="{{ getClass(mapping) }} xcov-source-line"
               app-source-line
-              [isExpanded]="
-                expandCollapseService.isLineExpanded(mapping.line.lineNumber)
-              "
-              (expand)="expandCollapseService.expandedLine($event, scroll)"
-              (collapse)="expandCollapseService.collapsedLine($event, scroll)"
               [mapping]="mapping"
             ></tr>
           </ng-container>

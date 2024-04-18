@@ -34,11 +34,14 @@ import { EnumerableTableComponent } from '../../enumerable_table/enumerable-tabl
 })
 export class SourceFileComponent implements OnInit, OnDestroy {
   @ViewChild(EnumerableTableComponent) enumerable!: EnumerableTableComponent;
+  @ViewChild(VirtualScrollerComponent) scroller!: VirtualScrollerComponent;
 
   source$: Observable<AnnotatedSource>;
   ctx$: Observable<Ctx>;
 
   private updateLevelSubscription: Subscription;
+  private expandSubscription: Subscription;
+  private collapseSubscription: Subscription;
 
   constructor(
     private ctxService: CtxService,
@@ -88,10 +91,23 @@ export class SourceFileComponent implements OnInit, OnDestroy {
     return mapping.messages.length !== 0;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.expandSubscription = this.expandCollapseService
+      .expandEventListener()
+      .subscribe((lineno: string) => {
+        this.scroller.invalidateCachedMeasurementAtIndex(Number(lineno) - 1);
+      });
+    this.collapseSubscription = this.expandCollapseService
+      .collapseEventListener()
+      .subscribe((lineno: string) => {
+        this.scroller.invalidateCachedMeasurementAtIndex(Number(lineno) - 1);
+      });
+  }
 
   ngOnDestroy(): void {
     this.updateLevelSubscription.unsubscribe();
+    this.expandSubscription.unsubscribe();
+    this.collapseSubscription.unsubscribe();
   }
 
   clickedOnEnumerable(

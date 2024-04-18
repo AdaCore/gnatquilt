@@ -22,8 +22,6 @@ import {
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { map, switchMap, take } from 'rxjs/operators';
 import { Enumerable, Enumerables } from '../../../interface/report.model';
-import { SourceLineComponent } from '../source-line/source-line.component';
-import { VirtualScrollerComponent } from './virtual-scroller';
 
 export class ScopeMetrics
   extends StatsWithEnStats
@@ -235,35 +233,42 @@ export class ExpandCollapseService {
   expandedLines: Set<string> = new Set<string>();
   collapsedLines: Set<string> = new Set<string>();
 
+  private collapseEvent = new Subject<string>();
+  private expandEvent = new Subject<string>();
+
   autoCollapse = true;
   constructor() {}
 
-  expandedLine(
-    expandedLine: SourceLineComponent,
-    scroller: VirtualScrollerComponent
-  ): void {
+  expandLine(lineno: string): void {
     // user triggered expansion with click
+
     if (this.autoCollapse) {
       // when auto collapsing, every expanded line other than the one clicked should collapse
+      for (const expandedLine of this.expandedLines) {
+        this.collapseEvent.next(expandedLine);
+      }
       this.expandedLines.clear();
     }
-    const lineno: string = expandedLine.getLineno();
     this.expandedLines.add(lineno);
     this.collapsedLines.delete(lineno);
-    scroller.invalidateCachedMeasurementAtIndex(Number(lineno) - 1);
+    this.expandEvent.next(lineno);
   }
 
-  collapsedLine(
-    collapsedLine: SourceLineComponent,
-    scroller: VirtualScrollerComponent
-  ): void {
-    const lineno: string = collapsedLine.getLineno();
+  collapseLine(lineno: string): void {
     this.expandedLines.delete(lineno);
     this.collapsedLines.add(lineno);
-    scroller.invalidateCachedMeasurementAtIndex(Number(lineno) - 1);
+    this.collapseEvent.next(lineno);
   }
 
   isLineExpanded(lineno: string): boolean {
     return this.expandedLines.has(lineno) && !this.collapsedLines.has(lineno);
+  }
+
+  expandEventListener(): Observable<string> {
+    return this.expandEvent.asObservable();
+  }
+
+  collapseEventListener(): Observable<string> {
+    return this.collapseEvent.asObservable();
   }
 }
