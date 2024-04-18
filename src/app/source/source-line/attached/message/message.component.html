@@ -8,7 +8,10 @@
       <td>
         <div class="xcov-source-line-attached-message-body">
           <ng-container *ngIf="hasSco() && (sco$ | async) as sco">
-            <span class="xcov-source-line-attached-sco"
+            <span
+              class="xcov-source-line-attached-sco"
+              (click)="showText()"
+              matTooltip="Select Text"
               >{{ sco.kind }} {{ sco.text }} at {{ strLowOrUp(sco.range, 0) }}
             </span>
           </ng-container>

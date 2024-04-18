@@ -28,7 +28,7 @@
     "@angular/router": "^17.3.2",
     "cheerio": "^1.0.0-rc.12",
     "material-design-icons": "^3.0.1",
-    "ngx-highlightjs": "^10.0.0",
+    "highlight.js": "^11.9.0",
     "ngx-script-loader": "^3.0.0",
     "ngx-virtual-scroller": "github:iharbeck/ngx-virtual-scroller",
     "rxjs": "^7.8.1",

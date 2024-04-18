@@ -14,7 +14,6 @@ import { FormsModule } from '@angular/forms';
 import { EnumerableTableModule } from '../enumerable_table/enumerable-table.module';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { VirtualScrollerModule } from './source-file/virtual-scroller';
 
 @NgModule({
@@ -37,19 +36,6 @@ import { VirtualScrollerModule } from './source-file/virtual-scroller';
     EnumerableTableModule,
     MatIconModule,
     RouterModule,
-    HighlightModule,
-  ],
-  providers: [
-    {
-      provide: HIGHLIGHT_OPTIONS,
-      useValue: {
-        coreLibraryLoader: () => import('highlight.js/lib/core'),
-        languages: {
-          ada: () => import('highlight.js/lib/languages/ada'),
-          cpp: () => import('highlight.js/lib/languages/cpp'),
-        },
-      },
-    },
   ],
   exports: [SourceFileComponent],
 })

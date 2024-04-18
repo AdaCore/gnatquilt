@@ -148,7 +148,7 @@ export abstract class StatsWithEnStats extends Stats implements Enumerable {
   }
 
   computeLines(stats: Record<Status, number>): number {
-    var total = Object.values(stats).reduce(
+    let total = Object.values(stats).reduce(
       (sum: number, current: number) => sum + current
     );
     total -= stats.noCode || 0;

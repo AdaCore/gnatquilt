@@ -96,6 +96,7 @@ export interface IScopeMetrics {
 }
 
 export interface ISourceAnnotated extends ISource {
+  language: string;
   scopeMetrics: IScopeMetrics;
   mappings: Mapping[];
 }

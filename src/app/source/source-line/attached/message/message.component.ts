@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Message, strLowOrUp } from '../../../../../interface/data.model';
 import {
   ScoProperties,
+  SelectSCOService,
   SourceFileService,
 } from '../../../source-file/source-file.service';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
@@ -18,7 +19,16 @@ export class MessageComponent implements OnInit {
   sco$: Observable<ScoProperties>;
   strLowOrUp = strLowOrUp;
 
-  constructor(private sourceFileService: SourceFileService) {}
+  constructor(
+    private sourceFileService: SourceFileService,
+    private selectSCOService: SelectSCOService
+  ) {}
+
+  showText(): void {
+    this.sco$.pipe(take(1)).subscribe((sco: ScoProperties) => {
+      this.selectSCOService.emitSelectSCOEvent(sco.range);
+    });
+  }
 
   hasSco(): boolean {
     return this.message.kind !== 'info' && this.message.sco !== undefined;

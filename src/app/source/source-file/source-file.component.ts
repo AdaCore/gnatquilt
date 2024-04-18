@@ -19,10 +19,11 @@ import {
   ExpandCollapseService,
   SourceFileService,
   ScopeMetrics,
+  SelectSCOService,
 } from './source-file.service';
-import { Observable, Subject, Subscription, zip } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ReportService } from '../../report.service';
-import { Enumerable, Enumerables } from '../../../interface/report.model';
+import { Enumerable } from '../../../interface/report.model';
 import { VirtualScrollerComponent } from './virtual-scroller';
 import { EnumerableTableComponent } from '../../enumerable_table/enumerable-table.component';
 
@@ -30,7 +31,7 @@ import { EnumerableTableComponent } from '../../enumerable_table/enumerable-tabl
   selector: 'app-source',
   templateUrl: './source-file.component.html',
   styleUrls: ['../style.scss'],
-  providers: [SourceFileService, ExpandCollapseService],
+  providers: [SourceFileService, ExpandCollapseService, SelectSCOService],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

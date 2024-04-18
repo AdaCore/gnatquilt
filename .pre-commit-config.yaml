@@ -6,7 +6,6 @@ repos:
         types: [file]
         files: \.(py)$
         additional_dependencies:
-          - flake8-bugbear
           - flake8-builtins
           - flake8-comprehensions
           - flake8-docstrings
