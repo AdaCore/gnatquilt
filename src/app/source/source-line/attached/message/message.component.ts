@@ -16,7 +16,6 @@ export class MessageComponent implements OnInit {
 
   sco$: Observable<ScoProperties>;
   strLowOrUp = strLowOrUp;
-  private strMsg: string;
 
   constructor(private sourceFileService: SourceFileService) {}
 
@@ -35,6 +34,5 @@ export class MessageComponent implements OnInit {
     if (this.hasSco()) {
       this.sco$ = this.sourceFileService.getSCO(this.getScoId());
     }
-    this.strMsg = this.message.message;
   }
 }
