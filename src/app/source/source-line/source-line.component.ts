@@ -2,14 +2,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
-  Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { Mapping } from '../../../interface/data.model';
+import { Mapping, Range } from '../../../interface/data.model';
 import { statusProperties, symbolToStat } from '../../ctx.service';
 import { Status } from '../../../models/app-enum';
 import { ExpandCollapseService } from '../source-file/source-file.service';

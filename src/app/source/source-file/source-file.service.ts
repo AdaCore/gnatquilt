@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { LoadJsonService } from '../../load-json.service';
 import {
@@ -9,10 +9,7 @@ import {
   StatsWithEnStats,
 } from '../../report.service';
 import {
-  AnnotatedSCO,
   Decision,
-  EntityStats,
-  ISource,
   ISourceAnnotated,
   IScopeMetrics,
   Mapping,
