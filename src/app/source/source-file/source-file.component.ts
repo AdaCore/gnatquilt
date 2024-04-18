@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnDestroy,
@@ -31,6 +32,7 @@ import { EnumerableTableComponent } from '../../enumerable_table/enumerable-tabl
   styleUrls: ['../style.scss'],
   providers: [SourceFileService, ExpandCollapseService],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SourceFileComponent implements OnInit, OnDestroy {
   @ViewChild(EnumerableTableComponent) enumerable!: EnumerableTableComponent;

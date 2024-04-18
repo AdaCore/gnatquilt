@@ -1,4 +1,6 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -12,12 +14,14 @@ import { statusProperties, symbolToStat } from '../../ctx.service';
 import { Status } from '../../../models/app-enum';
 import { ExpandCollapseService } from '../source-file/source-file.service';
 import { ReplaySubject, Subscription } from 'rxjs';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-source-line, [app-source-line]',
   templateUrl: './source-line.component.html',
   styleUrls: ['../style.scss'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SourceLineComponent implements OnInit, OnDestroy {
   @Input() mapping: Mapping;
@@ -38,6 +42,10 @@ export class SourceLineComponent implements OnInit, OnDestroy {
   private expandSubscription: Subscription;
 
   constructor(private expandCollapseService: ExpandCollapseService) {}
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private expandCollapseService: ExpandCollapseService
+  ) {}
 
   ngOnInit(): void {
     this.coverageStatus = symbolToStat.get(this.mapping.coverage);
@@ -112,5 +120,13 @@ export class SourceLineComponent implements OnInit, OnDestroy {
 
   getLineno(): string {
     return this.mapping.line.lineNumber;
+  }
+
+  /* Hovering a tooltip triggers the change detection. This is a workaround for
+  it. For more information, see
+  https://github.com/angular/components/issues/10306#issuecomment-1206204298 */
+  @ViewChild(MatTooltip)
+  set matTooltip(v: MatTooltip) {
+    delete (v as any)._viewContainerRef;
   }
 }
