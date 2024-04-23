@@ -66,6 +66,15 @@ with FirefoxDriver() as driver:
 
     driver.check_subp_stat("main", CoverageStatus.COVERED, 14)
 
+    # Check that there are no scope metrics for a lambda expression, which is
+    # by definition unamed, and thus does not have a scope name).
+    assertion_error = False
+    try:
+        driver.find_subp_tr("")
+    except AssertionError:
+        assertion_error = True
+    assert assertion_error, "Scope metrics for lambda expression"
+
     # Check the other files
 
     def check_metrics(file, func, covered, not_covered, stmt=False):
