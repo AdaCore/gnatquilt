@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { LoadJsonService } from '../../load-json.service';
 import {
@@ -9,10 +9,7 @@ import {
   StatsWithEnStats,
 } from '../../report.service';
 import {
-  AnnotatedSCO,
   Decision,
-  EntityStats,
-  ISource,
   ISourceAnnotated,
   IScopeMetrics,
   Mapping,
@@ -22,8 +19,7 @@ import {
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { map, switchMap, take } from 'rxjs/operators';
 import { Enumerable, Enumerables } from '../../../interface/report.model';
-import { SourceLineComponent } from '../source-line/source-line.component';
-import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
+import hljs from 'highlight.js';
 
 export class ScopeMetrics
   extends StatsWithEnStats
@@ -74,11 +70,15 @@ export class ScopeMetrics
 }
 
 export class AnnotatedSource extends Source implements Enumerables {
+  language: string;
+  // Language for the source file (can be undefined)
+
   scopeMetrics: ScopeMetrics;
   mappings: Mapping[];
 
   constructor(data: ISourceAnnotated) {
     super(data);
+    this.language = data.language;
     if (data.scopeMetrics) {
       this.scopeMetrics = new ScopeMetrics(data.scopeMetrics);
     }
@@ -235,35 +235,126 @@ export class ExpandCollapseService {
   expandedLines: Set<string> = new Set<string>();
   collapsedLines: Set<string> = new Set<string>();
 
+  private collapseEvent = new Subject<string>();
+  private expandEvent = new Subject<string>();
+
   autoCollapse = true;
   constructor() {}
 
-  expandedLine(
-    expandedLine: SourceLineComponent,
-    scroller: VirtualScrollerComponent
-  ): void {
+  expandLine(lineno: string): void {
     // user triggered expansion with click
+
     if (this.autoCollapse) {
       // when auto collapsing, every expanded line other than the one clicked should collapse
+      for (const expandedLine of this.expandedLines) {
+        this.collapseEvent.next(expandedLine);
+      }
       this.expandedLines.clear();
     }
-    const lineno: string = expandedLine.getLineno();
     this.expandedLines.add(lineno);
     this.collapsedLines.delete(lineno);
-    scroller.invalidateCachedMeasurementAtIndex(Number(lineno) - 1);
+    this.expandEvent.next(lineno);
   }
 
-  collapsedLine(
-    collapsedLine: SourceLineComponent,
-    scroller: VirtualScrollerComponent
-  ): void {
-    const lineno: string = collapsedLine.getLineno();
+  collapseLine(lineno: string): void {
     this.expandedLines.delete(lineno);
     this.collapsedLines.add(lineno);
-    scroller.invalidateCachedMeasurementAtIndex(Number(lineno) - 1);
+    this.collapseEvent.next(lineno);
   }
 
   isLineExpanded(lineno: string): boolean {
     return this.expandedLines.has(lineno) && !this.collapsedLines.has(lineno);
+  }
+
+  expandEventListener(): Observable<string> {
+    return this.expandEvent.asObservable();
+  }
+
+  collapseEventListener(): Observable<string> {
+    return this.collapseEvent.asObservable();
+  }
+}
+
+@Injectable()
+export class SelectSCOService {
+  private selectSCOEvent = new ReplaySubject<Range>(1);
+
+  constructor() {}
+
+  emitSelectSCOEvent(rng: Range) {
+    this.selectSCOEvent.next(rng);
+  }
+
+  selectSCOEventListener(): Observable<Range> {
+    return this.selectSCOEvent.asObservable();
+  }
+
+  inRange(lineno: number, rng: Range): boolean {
+    return lineno >= rng[0][0] && lineno <= rng[1][0];
+  }
+
+  /* Turn the given string into an HTML safe span. Note that the highlight
+  functions take care of sanitizing the string. */
+  safe_span(str: string, lang: string, selected: boolean = false): string {
+    if (lang) {
+      var highlighted = hljs.highlight(str, { language: lang }).value;
+    } else {
+      var highlighted = hljs.highlightAuto(str, ['ada', 'c', 'cpp']).value;
+    }
+    return (
+      '<span ' +
+      (selected ? 'class="selected"' : '') +
+      '>' +
+      highlighted +
+      '</span>'
+    );
+  }
+
+  selectText(rng: Range, mapping: Mapping, lang: string) {
+    const lineno = parseInt(mapping.line.lineNumber);
+    const linesrc = mapping.line.src;
+    const startLine = rng[0][0];
+    const endLine = rng[1][0];
+    // Adjust the column offset for slices
+    const startColumn = rng[0][1] - 1;
+    const endColumn = rng[1][1];
+    var html = '';
+    if (this.inRange(lineno, rng)) {
+      // Check if this is beginning of the range
+      if (lineno == startLine) {
+        if (lineno == endLine) {
+          // Three spans in that case:
+          //   * Source code before the selected span
+          //   * Selected span
+          //   * Source code after the selected span
+          html += this.safe_span(linesrc.slice(0, startColumn), lang);
+          html += this.safe_span(
+            linesrc.slice(startColumn, endColumn),
+            lang,
+            true
+          );
+          html += this.safe_span(linesrc.slice(endColumn), lang);
+        } else {
+          // Two spans in that case:
+          //   * Source code before the selected span
+          //   * Selected span
+          html += this.safe_span(linesrc.slice(0, startColumn), lang);
+          html += this.safe_span(linesrc.slice(startColumn), lang, true);
+        }
+      } else if (lineno == endLine) {
+        // Two spans in that case:
+        //   * Selected span
+        //   * Source code after the selected span
+        html += this.safe_span(linesrc.slice(0, endColumn), lang, true);
+        html += this.safe_span(linesrc.slice(endColumn), lang);
+      } else {
+        // One span in that case:
+        //   * Selected span
+        html += this.safe_span(linesrc, lang, true);
+      }
+      return html;
+    } else {
+      return this.safe_span(mapping.line.src, lang);
+    }
   }
 }

@@ -1,14 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ReportService, setStatKind, StatKindType } from './report.service';
 import { Router, Scroll } from '@angular/router';
 import { delay, filter } from 'rxjs/operators';
 import { ViewportScroller } from '@angular/common';
+import hljs from 'highlight.js';
+import ada from 'highlight.js/lib/languages/ada';
+import c from 'highlight.js/lib/languages/c';
+import cpp from 'highlight.js/lib/languages/cpp';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
   title = 'gnatquilt';
@@ -17,22 +22,29 @@ export class AppComponent implements OnInit {
 
   levelsClicked: Set<string> = new Set();
   linesClicked = true;
-  constructor(router: Router, viewportScroller: ViewportScroller, private reportService: ReportService) {
+  constructor(
+    router: Router,
+    viewportScroller: ViewportScroller,
+    private reportService: ReportService
+  ) {
+    hljs.registerLanguage('ada', ada);
+    hljs.registerLanguage('c', c);
+    hljs.registerLanguage('cpp', cpp);
     router.events
-    .pipe(filter((e): e is Scroll => e instanceof Scroll))
-    .pipe(delay(0))
-    .subscribe((e) => {
-      if (e.position) {
-        // backward navigation
-        viewportScroller.scrollToPosition(e.position);
-      } else if (e.anchor) {
-        // anchor navigation
-        viewportScroller.scrollToAnchor(e.anchor);
-      } else {
-        // forward navigation
-        viewportScroller.scrollToPosition([0, 0]);
-      }
-    });
+      .pipe(filter((e): e is Scroll => e instanceof Scroll))
+      .pipe(delay(0))
+      .subscribe((e) => {
+        if (e.position) {
+          // backward navigation
+          viewportScroller.scrollToPosition(e.position);
+        } else if (e.anchor) {
+          // anchor navigation
+          viewportScroller.scrollToAnchor(e.anchor);
+        } else {
+          // forward navigation
+          viewportScroller.scrollToPosition([0, 0]);
+        }
+      });
     this.coverageLevel$ = reportService.getCoverageLevel();
     this.coverageLevel$.subscribe((coverageLevel: string) => {
       // It is important that all the level strings in allLevels actually

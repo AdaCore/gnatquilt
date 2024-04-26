@@ -113,18 +113,7 @@ module.exports = {
         },
       },
     ],
-    '@typescript-eslint/typedef': [
-      'error',
-      {
-        arrowParameter: true,
-        variableDeclaration: true,
-        'call-signature': true,
-        parameter: true,
-        'property-declaration': true,
-        'variable-declaration': true,
-        'member-variable-declaration': true,
-      },
-    ],
+    '@typescript-eslint/typedef': 'error',
     '@typescript-eslint/member-ordering': 'error',
     '@typescript-eslint/naming-convention': 'error',
     '@typescript-eslint/no-array-constructor': 'error',
@@ -209,7 +198,7 @@ module.exports = {
     'import/no-deprecated': 'warn',
     'jsdoc/check-alignment': 'error',
     'jsdoc/check-indentation': 'error',
-    'jsdoc/newline-after-description': 'error',
+    'jsdoc/newline-after-description': 'off',
     'jsdoc/no-types': 'error',
     'max-classes-per-file': 'off',
     'max-len': [

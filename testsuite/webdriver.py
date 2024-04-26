@@ -3,7 +3,6 @@ from distutils.spawn import find_executable
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.firefox.options import Options
 
 
@@ -144,7 +143,9 @@ class FirefoxDriver(webdriver.Firefox):
                     By.XPATH, ".//mat-icon[text() =' expand_more ']"
                 )
                 if expand:
-                    expand[0].click()
+                    # Workaround to avoid "Element is not clickable at point"
+                    # issues.
+                    self.execute_script("arguments[0].click();", expand[0])
                     expanded = True
 
         # Check that we have found a sufficient number of matches.
@@ -184,3 +185,39 @@ class FirefoxDriver(webdriver.Firefox):
             .find_element(By.XPATH, ".//span")
             .click()
         )
+
+    def expand_line(self, line):
+        """
+        :param integer line: line to expand.
+
+        Expand the given line.
+        """
+        line_elem = self.find_element(
+            By.XPATH,
+            "//tr[contains(@class, 'xcov-source-line') and"
+            f" contains(., {line!r})]//mat-icon",
+        )
+        line_elem.click()
+
+    def check_sco_selection(self, line, violation_number, expected):
+        """
+        :param integer line: line showing the violation message.
+        :param integer violation_number: indice of the violation (whether this
+        is the first / second / ... violation of the line).
+        :param list[string]: expected list of selected excerpts.
+
+        Check SCO selection
+        """
+        # Start by expanding the line
+        self.expand_line(line)
+
+        # Then, select the appropriate SCO
+        self.find_elements(By.XPATH, "//span[@mattooltip='Select Text']")[
+            violation_number
+        ].click()
+
+        selected_spans = self.find_elements(
+            By.XPATH, "//span[@class='selected']"
+        )
+        for (span, exp) in zip(selected_spans, expected, strict=True):
+            assert span.text == exp

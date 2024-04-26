@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnDestroy,
@@ -18,10 +19,11 @@ import {
   ExpandCollapseService,
   SourceFileService,
   ScopeMetrics,
+  SelectSCOService,
 } from './source-file.service';
-import { Observable, Subject, Subscription, zip } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ReportService } from '../../report.service';
-import { Enumerable, Enumerables } from '../../../interface/report.model';
+import { Enumerable } from '../../../interface/report.model';
 import { VirtualScrollerComponent } from './virtual-scroller';
 import { EnumerableTableComponent } from '../../enumerable_table/enumerable-table.component';
 
@@ -29,16 +31,20 @@ import { EnumerableTableComponent } from '../../enumerable_table/enumerable-tabl
   selector: 'app-source',
   templateUrl: './source-file.component.html',
   styleUrls: ['../style.scss'],
-  providers: [SourceFileService, ExpandCollapseService],
+  providers: [SourceFileService, ExpandCollapseService, SelectSCOService],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SourceFileComponent implements OnInit, OnDestroy {
   @ViewChild(EnumerableTableComponent) enumerable!: EnumerableTableComponent;
+  @ViewChild(VirtualScrollerComponent) scroller!: VirtualScrollerComponent;
 
   source$: Observable<AnnotatedSource>;
   ctx$: Observable<Ctx>;
 
   private updateLevelSubscription: Subscription;
+  private expandSubscription: Subscription;
+  private collapseSubscription: Subscription;
 
   constructor(
     private ctxService: CtxService,
@@ -88,10 +94,23 @@ export class SourceFileComponent implements OnInit, OnDestroy {
     return mapping.messages.length !== 0;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.expandSubscription = this.expandCollapseService
+      .expandEventListener()
+      .subscribe((lineno: string) => {
+        this.scroller.invalidateCachedMeasurementAtIndex(Number(lineno) - 1);
+      });
+    this.collapseSubscription = this.expandCollapseService
+      .collapseEventListener()
+      .subscribe((lineno: string) => {
+        this.scroller.invalidateCachedMeasurementAtIndex(Number(lineno) - 1);
+      });
+  }
 
   ngOnDestroy(): void {
     this.updateLevelSubscription.unsubscribe();
+    this.expandSubscription.unsubscribe();
+    this.collapseSubscription.unsubscribe();
   }
 
   clickedOnEnumerable(

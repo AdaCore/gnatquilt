@@ -309,3 +309,10 @@ tbody {
   width: 100%;
   border-collapse: collapse !important;
 }
+
+.selected {
+  background-color: rgba(0, 0, 0, 0.1); /* Subtle background color */
+  color: inherit; /* Keep text color consistent with the rest of the page */
+  border-radius: 3px; /* Adds a slight border radius to soften the edges */
+  padding: 2px; /* Adds padding to separate the selected text from surrounding content */
+}

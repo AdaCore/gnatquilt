@@ -1,4 +1,3 @@
-@import '~material-design-icons/iconfont/material-icons.css';
 @import '~highlight.js/styles/github.css';
 $xcov-font-size: 12px;
 $xcov-font-color: #222;
@@ -18,7 +17,7 @@ $xcov-summary-exempted-with-violation: rgba(128, 60, 190, 0.5);
 $xcov-summary-exempted-with-undet-cov: rgba(25, 125, 255, 0.75);
 
 $xcov-line-covered: rgba(172, 233, 124, 1);
-$xcov-line-partially-covered: rgba(255, 2255, 170, 1);
+$xcov-line-partially-covered: rgba(255, 255, 170, 1);
 $xcov-line-not-covered: rgba(255, 144, 144, 1);
 $xcov-line-not-coverable: rgba(0, 0, 0, 0.1);
 $xcov-line-undetermined-coverage: #adacac;
@@ -104,4 +103,13 @@ pre {
 html,
 body {
   height: 100%;
+}
+// https://stackoverflow.com/questions/2310734/how-to-make-html-text-unselectable
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
