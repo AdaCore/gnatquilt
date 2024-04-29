@@ -1,0 +1,20 @@
+workflow:
+  rules:
+    # Run the CI on merge requests only
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+test:
+  services:
+     - image:pe-base-firefox
+     - cpu:16
+     - mem:16
+  script:
+    - require_issue
+    - generic_anod_ci
+    - . /tmp/ci_env.sh
+    - anod build gnatcov
+    - anod test gnatquilt
+    - testsuite_reports
+  artifacts:
+    reports:
+      junit: xunit-*.xml
