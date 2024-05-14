@@ -1,5 +1,8 @@
-<td (click)="onToggleClick()" class="xcov-source-row-line-no unselectable">
-  <div class="xcov-source-line-code xcov-source-line-number">
+<td
+  (click)="onToggleClick()"
+  class="xcov-source-row-line-no unselectable xcov-source-line-number"
+>
+  <div class="xcov-source-line-code">
     <mat-icon
       *ngIf="hasAttached() && !isExpanded"
       class="xcov-source-line-mark"
@@ -27,12 +30,12 @@
     }}</pre>
   </div>
 </td>
-<td class="xcov-source-row-text">
+<td
+  (click)="onSelectLine()"
+  class="xcov-source-row-text xcov-source-line-text xcov-source-line-code"
+>
   <ng-container *ngIf="getHTMLText | async as txt">
-    <div
-      class="xcov-source-line-text xcov-source-line-code"
-      [innerHTML]="txt"
-    ></div>
+    <div [innerHTML]="txt"></div>
   </ng-container>
   <ng-container *ngIf="hasAttached() && isExpanded">
     <ng-container *ngFor="let message of mapping.messages">

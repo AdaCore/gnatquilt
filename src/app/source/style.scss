@@ -4,17 +4,20 @@
 // Partial line background, full on hover
 @mixin bgline-hover($color) {
   &-expanded,
+  &-selected,
   &:hover {
     .xcov-source-line-text {
+      background-color: $color;
+    }
+    .xcov-source-line-number {
+      background-color: $xcov-line-number-bgcolor-hover;
+    }
+    .xcov-source-line-coverage {
       background-color: $color;
     }
   }
   .xcov-source-line-coverage {
     background-color: $color;
-  }
-
-  &:hover .xcov-source-line-number {
-    background-color: $xcov-line-number-bgcolor-hover;
   }
 }
 

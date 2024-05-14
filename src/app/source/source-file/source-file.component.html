@@ -31,7 +31,7 @@
         <tbody #container class="xcov-source-content">
           <ng-container *ngFor="let mapping of scroll.viewPortItems">
             <tr
-              class="{{ getClass(mapping) }} xcov-source-line"
+              class="{{ getClass(mapping) }}"
               app-source-line
               [mapping]="mapping"
               [language]="source.language"

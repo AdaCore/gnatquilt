@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { LoadJsonService } from '../../load-json.service';
 import {
@@ -356,5 +356,20 @@ export class SelectSCOService {
     } else {
       return this.safe_span(mapping.line.src, lang);
     }
+  }
+}
+
+@Injectable()
+export class SelectLineService {
+  private selectLineEvent = new ReplaySubject<string>(1);
+
+  constructor() {}
+
+  emitSelectLineEvent(lineno: string) {
+    this.selectLineEvent.next(lineno);
+  }
+
+  selectLineEventListener(): Observable<string> {
+    return this.selectLineEvent.asObservable();
   }
 }
