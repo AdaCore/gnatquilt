@@ -189,20 +189,23 @@ export class SourceFileService {
   ) {
     // We have to wait for the report to load prior to loading the source
     // file.
-    reportService.getReport().subscribe((_ : Report) => {
-      route.paramMap
-        .pipe(take(1))
-        .pipe(
-          switchMap((paramMap: ParamMap) =>
-          loadJSONService.getJSON(paramMap.get('sourceName'))
+    reportService
+      .getReport()
+      .pipe(take(1))
+      .subscribe((_: Report) => {
+        route.paramMap
+          .pipe(
+            switchMap((paramMap: ParamMap) =>
+              loadJSONService.getJSON(paramMap.get('sourceName'))
+            )
           )
-        )
-        .pipe(map((data: ISourceAnnotated) => new AnnotatedSource(data)))
-        .subscribe((source: AnnotatedSource) => this.source$.next(source));
-      this.scos = this.source.pipe(
-        map((source: AnnotatedSource) => computeSco(source.mappings))
-      );
-    });
+          .subscribe((data: ISourceAnnotated) =>
+            this.source$.next(new AnnotatedSource(data))
+          );
+        this.scos = this.source.pipe(
+          map((source: AnnotatedSource) => computeSco(source.mappings))
+        );
+      });
   }
 
   getSource(): Observable<AnnotatedSource> {
