@@ -53,7 +53,7 @@
 <td *ngFor="let status of ctx.properties" class="xcov-table-count">
   <div class="xcov-table-cell">
     <span>
-      {{ getStat(enumerable, status) }}
+      {{ getStat(enumerable, status) || 0}}
     </span>
     <span class="unselectable">
       {{ enumerable.getStatsPercent()[status] }}%

@@ -106,18 +106,12 @@ export function setStatKind(setKind: StatKindType): void {
 }
 
 export abstract class Stats implements Enumerable {
-  liStats: Record<Status, number> = initStatus();
-  enStats: Record<Status, number> = initStatus();
+  stats: Record<Status, number> = initStatus();
   statsPercent: Record<Status, number> = initStatus();
   total = 0;
 
   getStats(): Record<Status, number> {
-    switch (statKind) {
-      case StatKindType.entities:
-        return this.enStats;
-      case StatKindType.lines:
-        return this.liStats;
-    }
+    return this.stats;
   }
 
   getStatsPercent(): Record<Status, number> {
@@ -130,19 +124,35 @@ export abstract class Stats implements Enumerable {
 }
 
 export abstract class StatsWithEnStats extends Stats implements Enumerable {
+  // This implements entity metrics reporting. enAllStats contains statistics
+  // for every metric (e.g. statement, decision ...), as opposed to enStats
+  // which contains statistics for the currently selected metric.
   enAllStats: Array<EntityStats>;
+  enStats: Record<Status, number>;
+
+  // This implements line metrics reporting.
+  liStats: Record<Status, number>;
 
   constructor(enAllStats: Array<EntityStats>) {
     super();
     this.enAllStats = enAllStats;
   }
 
+  getStats(): Record<Status, number> {
+    switch (statKind) {
+      case StatKindType.entities:
+        return this.enStats;
+      case StatKindType.lines:
+        return this.liStats;
+    }
+  }
+
   computeLines(stats: Record<Status, number>): number {
-    this.total = Object.values(stats).reduce(
+    var total = Object.values(stats).reduce(
       (sum: number, current: number) => sum + current
     );
-    this.total -= stats.noCode;
-    return this.total;
+    total -= stats.noCode || 0;
+    return total;
   }
 
   computeStats(levels: Set<string>): void {
@@ -151,7 +161,7 @@ export abstract class StatsWithEnStats extends Stats implements Enumerable {
         this.total = Object.values(this.liStats).reduce(
           (sum: number, current: number) => sum + current
         );
-        this.total -= this.liStats.noCode;
+        this.total -= this.liStats.noCode || 0;
         break;
       case StatKindType.entities:
         [this.total, this.enStats] = aggregateEntitiesStats(
@@ -164,6 +174,8 @@ export abstract class StatsWithEnStats extends Stats implements Enumerable {
   }
 }
 
+// This implements coverage reporting for a specific source. It is used both in
+// in the index view and in the source file view.
 export class Source extends StatsWithEnStats implements ISource, Enumerable {
   filename: string;
   hunkFilename: string;
@@ -197,9 +209,12 @@ export class Source extends StatsWithEnStats implements ISource, Enumerable {
   setChildren(v: Array<Enumerable>): void {}
 }
 
+// This implements coverage reporting for a specific project, see the
+// <project_name> section in the index view for a project named
+// <project_name>.gpr.
 export class Project extends Stats implements Enumerable, Enumerables {
   total: number;
-  projectFiles: Source[] = [];
+  sources: Source[] = [];
 
   constructor(public projectName: string) {
     super();
@@ -207,21 +222,14 @@ export class Project extends Stats implements Enumerable, Enumerables {
   }
 
   addSource(source: Source): void {
-    this.projectFiles.push(source);
+    this.sources.push(source);
   }
 
   computeStats(levels: Set<string>): void {
-    this.projectFiles.forEach((s: Source) => {
+    this.sources.forEach((s: Source) => {
       s.computeStats(levels);
     });
-    switch (statKind) {
-      case StatKindType.entities:
-        [this.total, this.enStats] = computeAggregatedStats(this.projectFiles);
-        break;
-      case StatKindType.lines:
-        [this.total, this.liStats] = computeAggregatedStats(this.projectFiles);
-        break;
-    }
+    [this.total, this.stats] = computeAggregatedStats(this.sources);
     this.statsPercent = computePercentages(this.total, this.getStats());
   }
 
@@ -230,7 +238,7 @@ export class Project extends Stats implements Enumerable, Enumerables {
   }
 
   getEnumerables(): Array<Enumerable> {
-    return this.projectFiles;
+    return this.sources;
   }
 
   getChildren(): Array<Enumerable> {
@@ -256,6 +264,8 @@ export class Trace {
   }
 }
 
+// This implements the coverage reporting for the whole project tree, see the
+// Overview section in the index view.
 export class Report extends Stats implements Enumerables, Enumerable {
   projects: Project[];
   coverageLevel: string;
@@ -275,10 +285,10 @@ export class Report extends Stats implements Enumerables, Enumerable {
       const project: Project = item[1];
       project.computeStats(new Set());
     }
-    [this.total, this.liStats] = computeAggregatedStats(
+    [this.total, this.stats] = computeAggregatedStats(
       Array.from(projects.values())
     );
-    this.statsPercent = computePercentages(this.total, this.liStats);
+    this.statsPercent = computePercentages(this.total, this.stats);
     this.projects = Array.from(projects.values());
     this.coverageLevel = data.coverageLevel;
 
@@ -292,8 +302,8 @@ export class Report extends Stats implements Enumerables, Enumerable {
             new Trace(trace.filename, trace.date, trace.tag),
           ])
     );
-    // Do not directly use the map here, but store all the values in a <key, value> Array to avoid
-    // subsequent issues with the change detection.
+    // Do not directly use the map here, but store all the values in a
+    // <key, value> Array to avoid subsequent issues with the change detection.
     this.traces = Array.from(tracesMap.entries());
   }
 
@@ -309,14 +319,7 @@ export class Report extends Stats implements Enumerables, Enumerable {
 
   computeStats(levels: Set<string>): void {
     this.projects.forEach((project: Project) => project.computeStats(levels));
-    switch (statKind) {
-      case StatKindType.entities:
-        [this.total, this.enStats] = computeAggregatedStats(this.projects);
-        break;
-      case StatKindType.lines:
-        [this.total, this.liStats] = computeAggregatedStats(this.projects);
-        break;
-    }
+    [this.total, this.stats] = computeAggregatedStats(this.projects);
     this.statsPercent = computePercentages(this.total, this.getStats());
   }
 
@@ -403,7 +406,7 @@ export class ReportService {
       map((report: Report) =>
         report.projects
           .find((p: Project) => p.projectName === projectName)
-          .projectFiles.find((s: Source) => s.hunkFilename === sourceName)
+          .sources.find((s: Source) => s.hunkFilename === sourceName)
       )
     );
   }

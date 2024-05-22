@@ -26,7 +26,6 @@ export class SourceLineComponent implements OnInit {
   statusProperties = statusProperties;
   coverageStatus: Status;
   coverageClass: string;
-  coverageClassLowlight: string;
   classExpanded = '';
   onClick: () => void;
 
@@ -34,7 +33,6 @@ export class SourceLineComponent implements OnInit {
     this.coverageStatus = symbolToStat.get(this.mapping.coverage);
     this.coverageClass =
       'xcov-source-line' + statusProperties[this.coverageStatus].classSuffix;
-    this.coverageClassLowlight = this.coverageClass + '-lowlight';
     // eslint-disable-next-line @typescript-eslint/unbound-method
     this.onClick = this.hasAttached() ? this.expandOrCollapse : () => {};
     if (this.hasAttached()) {
