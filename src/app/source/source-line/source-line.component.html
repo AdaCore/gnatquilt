@@ -38,9 +38,13 @@
     <div [innerHTML]="txt"></div>
   </ng-container>
   <ng-container *ngIf="hasAttached() && isExpanded">
-    <ng-container *ngFor="let message of mapping.messages">
+    <ng-container *ngFor="let message of mapping.messages; index as i">
       <ng-container *ngIf="message">
-        <app-message [message]="message"></app-message>
+        <app-message
+          [message]="message"
+          [line]="mapping.line.lineNumber"
+          [message_id]="i"
+        ></app-message>
       </ng-container>
     </ng-container>
     <ng-container *ngIf="mapping.instructionSet">

@@ -24,6 +24,7 @@ import {
   ScopeMetrics,
   SelectSCOService,
   SelectLineService,
+  SelectMessageService,
 } from './source-file.service';
 import { Observable, Subscription, take } from 'rxjs';
 import { ReportService } from '../../report.service';
@@ -48,6 +49,7 @@ import {
     ExpandCollapseService,
     SelectSCOService,
     SelectLineService,
+    SelectMessageService,
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -90,9 +92,19 @@ export class SourceFileComponent implements OnInit, OnDestroy {
       }
     );
     this.selectedLine = this._route.snapshot.params['line'];
-    // Subscribe to URL parameter changes
+
+    // Subscribe to URL parameter changes. The user can link to a specific line
+    // or a message.
     this._route.queryParams.subscribe((params: Params) => {
       this.selectedLine = params['line'];
+
+      // Check if the user also selected a message, in which case we need to
+      // expand the line message contents.
+      if (params['message']) {
+        this.expandCollapseService.expandLine(this.selectedLine);
+      }
+
+      // Scroll to the specific line
       if (this.selectedLine) {
         this.scrollLineno();
       }

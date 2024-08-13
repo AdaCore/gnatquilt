@@ -81,16 +81,8 @@
 
     &-expanded {
       background-color: transparent;
-
-      .xcov-source {
-        &-row-line-no,
-        &-line-number {
-          background-color: $xcov-line-number-bgcolor-hover;
-        }
-      }
     }
 
-    &-number,
     &-coverage,
     &-message-info {
       float: left;
@@ -150,32 +142,28 @@
 
       white-space: pre-line;
 
-      tr {
-        td {
-          width: 1%;
+      &-message-label {
+        width: 1%;
+        padding: 2px 10px;
+        border-right: $xcov-table-body-border;
+        background-color: $xcov-line-number-bgcolor;
+      }
 
-          * {
-            padding: 2px 10px;
-          }
+      &-message-body {
+        width: 99%;
+        padding: 2px 10px;
+        border-right: none;
+        background-color: transparent;
+      }
 
-          border-right: $xcov-table-body-border;
-          background-color: $xcov-line-number-bgcolor;
-
-          &:last-child {
-            width: 99%;
-
-            border-right: none;
-            background-color: transparent;
-          }
-        }
-
+      .xcov-source-line-attached-row {
+        &-selected,
         &:hover {
-          td {
+          .xcov-source-line-attached-message-label {
             background-color: $xcov-line-number-bgcolor-hover;
-
-            &:last-child {
-              background-color: transparent;
-            }
+          }
+          .xcov-source-line-attached-message-body {
+            background-color: $xcov-table-row-hover;
           }
         }
       }
