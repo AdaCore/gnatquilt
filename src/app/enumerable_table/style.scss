@@ -132,6 +132,10 @@
     background-color: $xcov-summary-undetermined-coverage;
   }
 
+  &-disabled-coverage {
+    background-color: $xcov-summary-disabled-coverage;
+  }
+
   &-exempted-no-violation {
     background-color: $xcov-summary-exempted-no-violation;
   }

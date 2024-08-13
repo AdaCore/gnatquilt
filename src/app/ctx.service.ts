@@ -32,6 +32,11 @@ function allProperties(): Record<Status, Properties> {
       '-undetermined-coverage',
       '?'
     ),
+    disabledCoverage: new Properties(
+      'Disabled Coverage',
+      '-disabled-coverage',
+      'D'
+    ),
     exemptedNoViolation: new Properties(
       'Exempted no Violation',
       '-exempted-no-violation',
@@ -68,6 +73,7 @@ function coverageSymbolToStatus(): Map<string, Status> {
     ['-', Status.notCovered],
     ['0', Status.notCoverable],
     ['?', Status.undeterminedCoverage],
+    ['D', Status.disabledCoverage],
     ['*', Status.exemptedWithViolation],
     ['@', Status.exemptedWithUndetCov],
     ['#', Status.exemptedNoViolation],
@@ -103,6 +109,7 @@ export class Ctx {
       Status.notCovered,
       Status.notCoverable,
       Status.undeterminedCoverage,
+      Status.disabledCoverage,
       Status.exemptedWithViolation,
       Status.exemptedWithUndetCov,
       Status.exemptedNoViolation,
