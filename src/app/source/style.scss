@@ -241,6 +241,10 @@
             background-color: $xcov-line-undetermined-coverage;
           }
 
+          &-disabled-coverage {
+            background-color: $xcov-line-disabled-coverage;
+          }
+
           &-exempted-no-violation {
             background-color: $xcov-line-exempted-no-violation;
           }
@@ -289,6 +293,10 @@
 
     &-undetermined-coverage {
       @include bgline-hover($xcov-line-undetermined-coverage);
+    }
+
+    &-disabled-coverage {
+      @include bgline-hover($xcov-line-disabled-coverage);
     }
 
     &-exempted-no-violation {
