@@ -1,5 +1,5 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 import { LoadJsonService } from '../../load-json.service';
 import {
   computePercentages,
@@ -16,7 +16,7 @@ import {
   Range,
   Statement,
 } from '../../../interface/data.model';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
 import { map, switchMap, take } from 'rxjs/operators';
 import { Enumerable, Enumerables } from '../../../interface/report.model';
 import hljs from 'highlight.js';
@@ -371,5 +371,41 @@ export class SelectLineService {
 
   selectLineEventListener(): Observable<string> {
     return this.selectLineEvent.asObservable();
+  }
+}
+
+@Injectable()
+export class SelectMessageService {
+  private selectMessageEvent = new BehaviorSubject<[string, string]>([
+    '-1',
+    '-1',
+  ]);
+
+  constructor(
+    private _route: ActivatedRoute,
+    private _router: Router
+  ) {
+    // Subscribe to URL parameter changes
+    this._route.queryParams.subscribe((params: Params) => {
+      this.selectMessageEvent.next([params['line'], params['message']]);
+    });
+  }
+
+  emitSelectMessageEvent(line: string, message: string) {
+    this._router.navigate([], {
+      relativeTo: this._route,
+      queryParams: {
+        line: line,
+        message: message,
+      },
+      queryParamsHandling: 'merge',
+      // preserve the existing query params in the route
+      skipLocationChange: false,
+      // do not trigger navigation
+    });
+  }
+
+  selectMessageEventListener(): Observable<[string, string]> {
+    return this.selectMessageEvent.asObservable();
   }
 }

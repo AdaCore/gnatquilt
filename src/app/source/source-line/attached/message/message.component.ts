@@ -1,8 +1,15 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Message, strLowOrUp } from '../../../../../interface/data.model';
 import {
   ScoProperties,
   SelectSCOService,
+  SelectMessageService,
   SourceFileService,
 } from '../../../source-file/source-file.service';
 import { Observable, take } from 'rxjs';
@@ -15,13 +22,20 @@ import { MatTooltip } from '@angular/material/tooltip';
 })
 export class MessageComponent implements OnInit {
   @Input() message: Message;
+  @Input() line: string;
+  @Input() message_id: string;
 
   sco$: Observable<ScoProperties>;
   strLowOrUp = strLowOrUp;
 
+  // Suffix indicating whether the message has been selected or not
+  selectedSuffix: string = '';
+
   constructor(
     private sourceFileService: SourceFileService,
-    private selectSCOService: SelectSCOService
+    private selectSCOService: SelectSCOService,
+    private selectMessageService: SelectMessageService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   showText(): void {
@@ -45,6 +59,16 @@ export class MessageComponent implements OnInit {
     if (this.hasSco()) {
       this.sco$ = this.sourceFileService.getSCO(this.getScoId());
     }
+    this.selectMessageService
+      .selectMessageEventListener()
+      .subscribe(([line, message]: [string, string]) => {
+        if (line == this.line && message == this.message_id) {
+          this.selectedSuffix = '-selected';
+        } else {
+          this.selectedSuffix = '';
+        }
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   /* Hovering a tooltip triggers the change detection. This is a workaround for
@@ -53,5 +77,14 @@ export class MessageComponent implements OnInit {
   @ViewChild(MatTooltip)
   set matTooltip(v: MatTooltip) {
     delete (v as any)._viewContainerRef;
+  }
+
+  onSelectMessage(event): void {
+    // Avoid triggering the line selection in addition to the violation selection
+    event.stopPropagation();
+    this.selectMessageService.emitSelectMessageEvent(
+      this.line,
+      this.message_id
+    );
   }
 }
