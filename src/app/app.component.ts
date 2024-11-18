@@ -61,6 +61,9 @@ export class AppComponent implements OnInit {
           this.allLevels.add('Decision');
           this.allLevels.add('UC_MCDC');
         }
+        if (coverageLevel.includes('fun_call')) {
+          this.allLevels.add('Function and call');
+        }
       }
     });
   }
