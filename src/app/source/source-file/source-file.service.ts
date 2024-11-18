@@ -9,12 +9,11 @@ import {
   StatsWithEnStats,
 } from '../../report.service';
 import {
-  Decision,
   ISourceAnnotated,
   IScopeMetrics,
   Mapping,
   Range,
-  Statement,
+  AnnotatedSCO,
 } from '../../../interface/data.model';
 import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
 import { map, switchMap, take } from 'rxjs/operators';
@@ -129,36 +128,18 @@ export class ScoProperties {
  * @return [mapping of sco id to source coverage obligation properties]
  */
 function computeSco(mappings: Mapping[]): Map<number, ScoProperties> {
-  const scos: Map<number, ScoProperties> = new Map<number, ScoProperties>();
+  const result: Map<number, ScoProperties> = new Map<number, ScoProperties>();
 
   for (const mapping of mappings) {
-    const statements: Statement[] = mapping.statements || [];
-    for (const statement of statements) {
-      scos.set(
-        Number(statement.id),
-        new ScoProperties(
-          'statement',
-          statement.text,
-          statement.range,
-          statement.annotations
-        )
+    const scos: AnnotatedSCO[] = mapping.scos || [];
+    for (const sco of scos) {
+      result.set(
+        Number(sco.id),
+        new ScoProperties(sco.kind, sco.text, sco.range, sco.annotations)
       );
-    }
-
-    const decisions: Decision[] = mapping.decisions || [];
-    for (const decision of decisions) {
-      scos.set(
-        Number(decision.id),
-        new ScoProperties(
-          'decision',
-          decision.text,
-          decision.range,
-          decision.annotations
-        )
-      );
-      if (decision.conditions) {
-        for (const condition of decision.conditions) {
-          scos.set(
+      if (sco.kind == 'decision') {
+        for (const condition of sco.conditions) {
+          result.set(
             Number(condition.id),
             new ScoProperties(
               'condition',
@@ -171,7 +152,7 @@ function computeSco(mappings: Mapping[]): Map<number, ScoProperties> {
       }
     }
   }
-  return scos;
+  return result;
 }
 
 @Injectable()
