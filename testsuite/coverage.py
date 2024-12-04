@@ -41,8 +41,11 @@ class Entities(Enum):
     Decision = 2
     MCDC = 3
     UC_MCDC = 4
+    Fun_Call = 5
 
     def __str__(self):
+        if self is Entities.Fun_Call:
+            return "Function and call"
         return self.name
 
 

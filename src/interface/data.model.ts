@@ -64,25 +64,20 @@ export interface Message {
 
 export interface AnnotatedSCO {
   id: string;
+  kind: string;
   text: string;
   coverage: string;
   range: Range;
   annotations: string[];
-}
-export type Statement = AnnotatedSCO;
-
-export type Condition = AnnotatedSCO;
-
-export interface Decision extends AnnotatedSCO {
-  conditions: Condition[];
+  // This is only defined when kind is "decision"
+  conditions: AnnotatedSCO[];
 }
 
 export interface Mapping {
   coverage: string;
   line: Line;
   messages: Message[];
-  statements: Statement[];
-  decisions: Decision[];
+  scos: AnnotatedSCO[];
   instructionSet: InstructionSet;
 }
 

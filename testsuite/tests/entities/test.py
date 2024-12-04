@@ -11,16 +11,16 @@ with FirefoxDriver() as driver:
     build_run_and_coverage(
         "src-traces",
         "p.gpr",
-        "stmt+mcdc",
+        "stmt+mcdc+fun_call",
         ["obj/t1", "obj/t2", "obj/t_exemption"],
     )
 
     driver.get("file://" + os.getcwd() + "/obj/index.html")
 
-    driver.check_file_stat("Prj2", "pk2.adb", CoverageStatus.COVERED, 1)
-    driver.check_file_stat("Prj1", "pk1.adb", CoverageStatus.COVERED, 1)
-    driver.check_file_stat("P", "t1.adb", CoverageStatus.COVERED, 2)
-    driver.check_file_stat("P", "t2.adb", CoverageStatus.COVERED, 2)
+    driver.check_file_stat("Prj2", "pk2.adb", CoverageStatus.COVERED, 2)
+    driver.check_file_stat("Prj1", "pk1.adb", CoverageStatus.COVERED, 3)
+    driver.check_file_stat("P", "t1.adb", CoverageStatus.COVERED, 3)
+    driver.check_file_stat("P", "t2.adb", CoverageStatus.COVERED, 3)
 
     driver.report_on_entities([Entities.Stmt])
     driver.check_project_stat("P", CoverageStatus.COVERED, 9)
@@ -37,8 +37,11 @@ with FirefoxDriver() as driver:
     driver.report_on_entities([Entities.Stmt, Entities.Decision])
     driver.check_project_stat("Prj2", CoverageStatus.PARTIALLY_COVERED, 1)
 
+    driver.report_on_entities([Entities.Fun_Call])
+    driver.check_project_stat("P", CoverageStatus.COVERED, 13)
+
     driver.report_on_entities([Entities.Stmt, Entities.Decision, Entities.MCDC])
     driver.check_total_stat(CoverageStatus.COVERED, 18)
 
     driver.report_on_lines()
-    driver.check_total_stat(CoverageStatus.COVERED, 7)
+    driver.check_total_stat(CoverageStatus.COVERED, 14)
