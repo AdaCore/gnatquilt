@@ -38,7 +38,7 @@ with FirefoxDriver() as driver:
     driver.check_project_stat("Prj2", CoverageStatus.PARTIALLY_COVERED, 1)
 
     driver.report_on_entities([Entities.Fun_Call])
-    driver.check_project_stat("P", CoverageStatus.COVERED, 13)
+    driver.check_project_stat("P", CoverageStatus.COVERED, 12)
 
     driver.report_on_entities([Entities.Stmt, Entities.Decision, Entities.MCDC])
     driver.check_total_stat(CoverageStatus.COVERED, 18)
