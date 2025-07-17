@@ -40,12 +40,12 @@ function allProperties(): Record<Status, Properties> {
     exemptedNoViolation: new Properties(
       'Exempted no Violation',
       '-exempted-no-violation',
-      '*'
+      '#'
     ),
     exemptedWithViolation: new Properties(
       'Exempted with Violation',
       '-exempted-with-violation',
-      '#'
+      '*'
     ),
     exemptedWithUndetCov: new Properties(
       'Exempted with Undetermined Coverage items',
