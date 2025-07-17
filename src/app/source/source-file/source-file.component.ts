@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   OnInit,
   QueryList,
@@ -193,6 +194,57 @@ export class SourceFileComponent implements OnInit, OnDestroy {
       .subscribe((lineno: string) => {
         this.scroller.invalidateCachedMeasurementAtIndex(Number(lineno) - 1);
       });
+  }
+
+  selectFirstViolation() {
+    this.source$.subscribe((source: AnnotatedSource) => {
+      for (let mapping of source.mappings) {
+        if (this.sourceService.hasViolation(mapping)) {
+          this.selectLine(mapping.line.lineNumber);
+          return;
+        }
+      }
+    });
+  }
+
+  @HostListener('document:keydown.n', ['$event'])
+  onNext(e: KeyboardEvent) {
+    if (!this.selectedLine) {
+      this.selectFirstViolation();
+    } else {
+      this.source$.subscribe((source: AnnotatedSource) => {
+        // Note: the source.mappings line array is 0-indexed, so
+        // source.mappings[selectedLine] corresponds to the line right after
+        // the selected line, thus no need to adjust the offset here.
+        for (
+          var i = this.parseInt(this.selectedLine);
+          i < source.mappings.length;
+          i++
+        ) {
+          if (this.sourceService.hasViolation(source.mappings[i])) {
+            this.selectLine(source.mappings[i].line.lineNumber);
+            return;
+          }
+        }
+      });
+    }
+  }
+
+  @HostListener('document:keydown.p', ['$event'])
+  onPrevious(e: KeyboardEvent) {
+    if (!this.selectedLine) {
+      this.selectFirstViolation();
+    } else {
+      this.source$.subscribe((source: AnnotatedSource) => {
+        // See the comment in onNext for the offset adjustment.
+        for (var i = this.parseInt(this.selectedLine) - 2; i >= 0; i--) {
+          if (this.sourceService.hasViolation(source.mappings[i])) {
+            this.selectLine(source.mappings[i].line.lineNumber);
+            return;
+          }
+        }
+      });
+    }
   }
 
   ngOnDestroy(): void {

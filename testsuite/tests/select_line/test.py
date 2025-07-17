@@ -12,17 +12,17 @@ from webdriver import FirefoxDriver
 with FirefoxDriver() as driver:
 
     def check_line_selection(expected_text):
-        for source_line_td in driver.find_elements(
+        selected_line = driver.find_element(
             By.XPATH,
             "//tr[contains(@class, 'selected')]"
             "//td[contains(@class, 'xcov-source-row-text')]",
-        ):
-            # We cannot surround the whole assert expression with parenthesis,
-            # as it will otherwise turn the assertion expression into a tuple
-            # that would always be True.
-            assert (
-                source_line_td.text == expected_text
-            ), f"Expected {expected_text!r} but got {source_line_td.text!r}"
+        )
+        # We cannot surround the whole assert expression with parenthesis,
+        # as it will otherwise turn the assertion expression into a tuple
+        # that would always be True.
+        assert (
+            selected_line.text == expected_text
+        ), f"Expected {expected_text!r} but got {selected_line.text!r}"
 
     build_run_and_coverage(
         "src-traces",

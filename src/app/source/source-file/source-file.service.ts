@@ -209,6 +209,11 @@ export class SourceFileService {
       this.source$.next(source);
     });
   }
+
+  violationStr = new Set(['!', '-', '?']);
+  hasViolation(m: Mapping) {
+    return this.violationStr.has(m.coverage);
+  }
 }
 
 @Injectable()
