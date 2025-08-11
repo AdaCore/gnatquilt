@@ -66,7 +66,7 @@ export class SourceFileComponent implements OnInit, OnDestroy {
 
   source$: Observable<AnnotatedSource>;
   ctx$: Observable<Ctx>;
-  selectedLine: string = '-1';
+  selectedLine: number = -1;
   showSearch: boolean = false;
   showHits: boolean = false;
 
@@ -98,12 +98,12 @@ export class SourceFileComponent implements OnInit, OnDestroy {
         sourceService.computeLevelStats(levels);
       }
     );
-    this.selectedLine = this._route.snapshot.params['line'];
+    this.selectedLine = parseInt(this._route.snapshot.params['line']);
 
     // Subscribe to URL parameter changes. The user can link to a specific line
     // or a message.
     this._route.queryParams.subscribe((params: Params) => {
-      this.selectedLine = params['line'];
+      this.selectedLine = parseInt(params['line']);
 
       // Check if the user also selected a message, in which case we need to
       // expand the line message contents.
@@ -118,7 +118,7 @@ export class SourceFileComponent implements OnInit, OnDestroy {
     });
     this.selectLineService
       .selectLineEventListener()
-      .subscribe((lineno: string) => this.selectLine(lineno));
+      .subscribe((lineno: number) => this.selectLine(lineno));
 
     this.searchService
       .activeMatchEventListener()
@@ -139,15 +139,9 @@ export class SourceFileComponent implements OnInit, OnDestroy {
   scrollLineno() {
     setTimeout(() => {
       for (var scroll of this.scrollerAvailable.toArray()) {
-        if (this.isNumeric(this.selectedLine)) {
+        if (this.selectedLine) {
           // Offset the scroll index to properly center the selected line
-          scroll.scrollToIndex(
-            this.parseInt(this.selectedLine) - 30,
-            true,
-            0,
-            0,
-            undefined
-          );
+          scroll.scrollToIndex(this.selectedLine - 30, true, 0, 0, undefined);
           this.changeDetectorRef.reattach();
           this.changeDetectorRef.markForCheck();
         } else {
@@ -194,13 +188,13 @@ export class SourceFileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.expandSubscription = this.expandCollapseService
       .expandEventListener()
-      .subscribe((lineno: string) => {
-        this.scroller.invalidateCachedMeasurementAtIndex(Number(lineno) - 1);
+      .subscribe((lineno: number) => {
+        this.scroller.invalidateCachedMeasurementAtIndex(lineno - 1);
       });
     this.collapseSubscription = this.expandCollapseService
       .collapseEventListener()
-      .subscribe((lineno: string) => {
-        this.scroller.invalidateCachedMeasurementAtIndex(Number(lineno) - 1);
+      .subscribe((lineno: number) => {
+        this.scroller.invalidateCachedMeasurementAtIndex(lineno - 1);
       });
   }
 
@@ -255,11 +249,7 @@ export class SourceFileComponent implements OnInit, OnDestroy {
         // Note: the source.mappings line array is 0-indexed, so
         // source.mappings[selectedLine] corresponds to the line right after
         // the selected line, thus no need to adjust the offset here.
-        for (
-          var i = this.parseInt(this.selectedLine);
-          i < source.mappings.length;
-          i++
-        ) {
+        for (var i = this.selectedLine; i < source.mappings.length; i++) {
           if (this.sourceService.hasViolation(source.mappings[i])) {
             this.selectLine(source.mappings[i].line.lineNumber);
             return;
@@ -276,7 +266,7 @@ export class SourceFileComponent implements OnInit, OnDestroy {
     } else {
       this.source$.subscribe((source: AnnotatedSource) => {
         // See the comment in onNext for the offset adjustment.
-        for (var i = this.parseInt(this.selectedLine) - 2; i >= 0; i--) {
+        for (var i = this.selectedLine - 2; i >= 0; i--) {
           if (this.sourceService.hasViolation(source.mappings[i])) {
             this.selectLine(source.mappings[i].line.lineNumber);
             return;
@@ -302,7 +292,7 @@ export class SourceFileComponent implements OnInit, OnDestroy {
     }
   }
 
-  selectLine(line: string): void {
+  selectLine(line: number): void {
     this._router.navigate([], {
       relativeTo: this._route,
       queryParams: {

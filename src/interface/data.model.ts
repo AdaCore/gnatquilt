@@ -34,7 +34,7 @@ export function strLowOrUp(range: Range, lowerOrUpper: 0 | 1): string {
 }
 
 export interface Line {
-  lineNumber: string;
+  lineNumber: number;
   src: string;
 }
 

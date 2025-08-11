@@ -219,16 +219,16 @@ export class SourceFileService {
 
 @Injectable()
 export class ExpandCollapseService {
-  expandedLines: Set<string> = new Set<string>();
-  collapsedLines: Set<string> = new Set<string>();
+  expandedLines: Set<number> = new Set<number>();
+  collapsedLines: Set<number> = new Set<number>();
 
-  private collapseEvent = new Subject<string>();
-  private expandEvent = new Subject<string>();
+  private collapseEvent = new Subject<number>();
+  private expandEvent = new Subject<number>();
 
   autoCollapse = true;
   constructor() {}
 
-  expandLine(lineno: string): void {
+  expandLine(lineno: number): void {
     // user triggered expansion with click
 
     if (this.autoCollapse) {
@@ -243,21 +243,21 @@ export class ExpandCollapseService {
     this.expandEvent.next(lineno);
   }
 
-  collapseLine(lineno: string): void {
+  collapseLine(lineno: number): void {
     this.expandedLines.delete(lineno);
     this.collapsedLines.add(lineno);
     this.collapseEvent.next(lineno);
   }
 
-  isLineExpanded(lineno: string): boolean {
+  isLineExpanded(lineno: number): boolean {
     return this.expandedLines.has(lineno) && !this.collapsedLines.has(lineno);
   }
 
-  expandEventListener(): Observable<string> {
+  expandEventListener(): Observable<number> {
     return this.expandEvent.asObservable();
   }
 
-  collapseEventListener(): Observable<string> {
+  collapseEventListener(): Observable<number> {
     return this.collapseEvent.asObservable();
   }
 }
@@ -298,7 +298,7 @@ export class SelectSCOService {
   }
 
   selectText(rng: Range, mapping: Mapping, lang: string) {
-    const lineno = parseInt(mapping.line.lineNumber);
+    const lineno = mapping.line.lineNumber;
     const linesrc = mapping.line.src;
     const startLine = rng[0][0];
     const endLine = rng[1][0];
@@ -348,15 +348,15 @@ export class SelectSCOService {
 
 @Injectable()
 export class SelectLineService {
-  private selectLineEvent = new ReplaySubject<string>(1);
+  private selectLineEvent = new ReplaySubject<number>(1);
 
   constructor() {}
 
-  emitSelectLineEvent(lineno: string) {
+  emitSelectLineEvent(lineno: number) {
     this.selectLineEvent.next(lineno);
   }
 
-  selectLineEventListener(): Observable<string> {
+  selectLineEventListener(): Observable<number> {
     return this.selectLineEvent.asObservable();
   }
 }
@@ -467,7 +467,7 @@ export class SearchService {
     this.source.subscribe((source: AnnotatedSource) => {
       for (const mapping of source.mappings) {
         // Only search in the source code.
-        const linenumber = parseInt(mapping.line.lineNumber);
+        const linenumber = mapping.line.lineNumber;
         const srcMatches = [...mapping.line.src.matchAll(regex)];
         srcMatches.forEach((match, i) => {
           this.allMatches.push([linenumber, match.index]);

@@ -93,9 +93,9 @@ export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
       // mechanism.
       this.expandSubscription = this.expandCollapseService
         .expandEventListener()
-        .subscribe((lineno: string) => {
+        .subscribe((lineno: number) => {
           if (
-            lineno != this.mapping.line.lineNumber &&
+            lineno != this.getLineno() &&
             this.expandCollapseService.autoCollapse &&
             this.isExpanded
           ) {
@@ -129,10 +129,10 @@ export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
     this.activeMatchSubscription = this.searchService
       .activeMatchEventListener()
       .subscribe((linenumber) => {
-        if (parseInt(this.mapping.line.lineNumber) == linenumber) {
+        if (this.getLineno() == linenumber) {
           this.searchService.showActiveMatch(
             this.host.nativeElement,
-            parseInt(this.mapping.line.lineNumber)
+            this.getLineno()
           );
         }
       });
@@ -141,7 +141,7 @@ export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
   updateSearch(): void {
     this.searchService.showMatchesInDom(
       this.host.nativeElement,
-      parseInt(this.mapping.line.lineNumber)
+      this.getLineno()
     );
   }
 
@@ -149,7 +149,7 @@ export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
     this.updateSearch();
     this.searchService.showActiveMatch(
       this.host.nativeElement,
-      parseInt(this.mapping.line.lineNumber)
+      this.getLineno()
     );
   }
 
@@ -195,8 +195,7 @@ export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.mapping.messages.length !== 0;
   }
 
-  getLineno(): string {
-    // TODO: return number rather than string and do the code adaptations
+  getLineno(): number {
     return this.mapping.line.lineNumber;
   }
 
