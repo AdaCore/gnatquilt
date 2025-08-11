@@ -26,6 +26,7 @@ import {
   SelectSCOService,
   SelectLineService,
   SelectMessageService,
+  SearchService,
 } from './source-file.service';
 import { Observable, Subscription, take } from 'rxjs';
 import { ReportService } from '../../report.service';
@@ -51,6 +52,7 @@ import {
     SelectSCOService,
     SelectLineService,
     SelectMessageService,
+    SearchService,
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,12 +60,15 @@ import {
 export class SourceFileComponent implements OnInit, OnDestroy {
   @ViewChild(EnumerableTableComponent) enumerable!: EnumerableTableComponent;
   @ViewChild(VirtualScrollerComponent) scroller!: VirtualScrollerComponent;
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   @ViewChildren('scroll')
   scrollerAvailable!: QueryList<VirtualScrollerComponent>;
 
   source$: Observable<AnnotatedSource>;
   ctx$: Observable<Ctx>;
   selectedLine: string = '-1';
+  showSearch: boolean = false;
+  showHits: boolean = false;
 
   private updateLevelSubscription: Subscription;
   private expandSubscription: Subscription;
@@ -79,6 +84,7 @@ export class SourceFileComponent implements OnInit, OnDestroy {
     private sourceService: SourceFileService,
     private expandCollapseService: ExpandCollapseService,
     private selectLineService: SelectLineService,
+    private searchService: SearchService,
     private changeDetectorRef: ChangeDetectorRef,
     private _route: ActivatedRoute,
     private _router: Router
@@ -112,9 +118,11 @@ export class SourceFileComponent implements OnInit, OnDestroy {
     });
     this.selectLineService
       .selectLineEventListener()
-      .subscribe((lineno: string) => {
-        this.selectLine(lineno);
-      });
+      .subscribe((lineno: string) => this.selectLine(lineno));
+
+    this.searchService
+      .activeMatchEventListener()
+      .subscribe((lineno: number) => this.scrollToMatch(lineno));
   }
 
   ngAfterViewInit() {
@@ -130,7 +138,7 @@ export class SourceFileComponent implements OnInit, OnDestroy {
 
   scrollLineno() {
     setTimeout(() => {
-      for (var scroll of this.scrollerAvailable) {
+      for (var scroll of this.scrollerAvailable.toArray()) {
         if (this.isNumeric(this.selectedLine)) {
           // Offset the scroll index to properly center the selected line
           scroll.scrollToIndex(
@@ -207,8 +215,39 @@ export class SourceFileComponent implements OnInit, OnDestroy {
     });
   }
 
-  @HostListener('document:keydown.n', ['$event'])
-  onNext(e: KeyboardEvent) {
+  // Handling of keyboard shortcuts:
+  //   * n to go to the next violation
+  //   * p to go to the previous violation
+  //   * CTRL+F to search for a code excerpt in the source code
+  @HostListener('window:keydown', ['$event'])
+  handleGlobalKeys(event: KeyboardEvent) {
+    const activeTag = document.activeElement?.tagName;
+
+    if (this.showSearch && activeTag === 'INPUT') {
+      // Don't interfere while user is typing
+      return;
+    }
+
+    // Handle other keys globally
+    if (event.key === 'n') {
+      this.onNext();
+    }
+    if (event.key === 'p') {
+      this.onPrevious();
+    }
+
+    if (event.ctrlKey && event.key === 'f') {
+      event.preventDefault();
+      this.toggleSearch();
+    }
+
+    if (event.key === 'Escape' && this.showSearch) {
+      this.closeSearch();
+    }
+  }
+
+  // Navigation to next violation
+  onNext() {
     if (!this.selectedLine) {
       this.selectFirstViolation();
     } else {
@@ -230,8 +269,8 @@ export class SourceFileComponent implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener('document:keydown.p', ['$event'])
-  onPrevious(e: KeyboardEvent) {
+  // Navigation to previous violation
+  onPrevious() {
     if (!this.selectedLine) {
       this.selectFirstViolation();
     } else {
@@ -248,6 +287,7 @@ export class SourceFileComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // Remove all subscriptions
     this.updateLevelSubscription.unsubscribe();
     this.expandSubscription.unsubscribe();
     this.collapseSubscription.unsubscribe();
@@ -273,5 +313,60 @@ export class SourceFileComponent implements OnInit, OnDestroy {
       skipLocationChange: false,
       // do not trigger navigation
     });
+  }
+
+  // Search related code
+
+  toggleSearch() {
+    this.showSearch = true;
+
+    setTimeout(() => this.searchInput?.nativeElement.focus(), 100);
+  }
+
+  closeSearch() {
+    this.searchService.clearHighlights();
+    this.showSearch = false;
+    this.searchService.reinitialize();
+  }
+
+  onSearchChange() {
+    this.searchService.search(this.searchInput.nativeElement.value);
+    this.showHits = this.searchService.hits() > 0;
+  }
+
+  prevMatch() {
+    this.searchService.previousMatch();
+  }
+
+  nextMatch() {
+    this.searchService.nextMatch();
+  }
+
+  hits() {
+    return this.searchService.hits();
+  }
+
+  activeIndex() {
+    return this.searchService.activeIndex();
+  }
+
+  scrollToMatch(index: number) {
+    // If the element is already visible, do not use the virtual
+    // scroller but native scrolling. This avoids flickering.
+    //
+    // Note that this also means that when using the native scroller
+    // after using the virtual scrolling (e.g. when going to the next
+    // match which is on the same line), it will scroll again: this is
+    // deemed as a minor inconvenience.
+    const indexStr = index.toString();
+    const elements = document.querySelectorAll('.xcov-source-line-code');
+    const el = Array.from(elements).find(
+      (el) => el.textContent?.trim() === indexStr
+    );
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      this.scroller.scrollToIndex(index, false, 100, 0, undefined);
+    }
   }
 }

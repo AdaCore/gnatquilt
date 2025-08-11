@@ -315,3 +315,49 @@ tbody {
   border-radius: 3px; /* Adds a slight border radius to soften the edges */
   padding: 2px; /* Adds padding to separate the selected text from surrounding content */
 }
+
+.fixbar {
+  width: 100%;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  height: 30px;
+  background-repeat: repeat-x;
+  z-index: 1;
+  bottom: 0px;
+}
+
+.search-widget {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #fff;
+  padding: 8px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  border-radius: 6px;
+}
+
+.search-hits {
+  font-size: 20px;
+  font-style: italic;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.search-input {
+  padding: 4px;
+  font-size: 20px;
+}
+
+.search-highlight {
+  background-color: yellow !important;
+}
+
+.active-match {
+  background-color: orange !important;
+}

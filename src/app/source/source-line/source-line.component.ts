@@ -1,12 +1,12 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
+  ElementRef,
   Input,
   OnDestroy,
   OnInit,
-  Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -15,6 +15,7 @@ import { statusProperties, symbolToStat } from '../../ctx.service';
 import { Status } from '../../../models/app-enum';
 import {
   ExpandCollapseService,
+  SearchService,
   SelectLineService,
   SelectSCOService,
 } from '../source-file/source-file.service';
@@ -28,9 +29,10 @@ import { MatTooltip } from '@angular/material/tooltip';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SourceLineComponent implements OnInit, OnDestroy {
+export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() mapping: Mapping;
   @Input() language: string;
+  @ViewChild('sourceCode') sourceCode!: ElementRef<HTMLTableCellElement>;
 
   isExpanded: boolean;
   classExpanded = '';
@@ -40,12 +42,17 @@ export class SourceLineComponent implements OnInit, OnDestroy {
   coverageStatus: Status;
   coverageClass: string;
 
+  searchMatches: number = 0;
+  // Number of search matches on the line
+
   onToggleClick: () => void;
   // Callback for when the user expand/collapse a line's message /
   // instruction set.
 
   private selectSubscription: Subscription;
   private expandSubscription: Subscription;
+  private searchSubscription: Subscription;
+  private activeMatchSubscription: Subscription;
 
   getHTMLText: ReplaySubject<string> = new ReplaySubject(1);
   // HTML excerpt for the source code. To implement SCO selection, we need to potentially
@@ -58,10 +65,12 @@ export class SourceLineComponent implements OnInit, OnDestroy {
   //   * Three spans if the SCO starts at the source code line and ends on it.
 
   constructor(
+    private host: ElementRef,
     private changeDetectorRef: ChangeDetectorRef,
     private selectSCOService: SelectSCOService,
     private expandCollapseService: ExpandCollapseService,
-    private selectLineService: SelectLineService
+    private selectLineService: SelectLineService,
+    private searchService: SearchService
   ) {}
 
   ngOnInit(): void {
@@ -112,6 +121,36 @@ export class SourceLineComponent implements OnInit, OnDestroy {
           );
         });
     }
+
+    // Subscribe to search changes
+    this.searchSubscription = this.searchService
+      .searchEventListener()
+      .subscribe((_) => this.updateSearch());
+    this.activeMatchSubscription = this.searchService
+      .activeMatchEventListener()
+      .subscribe((linenumber) => {
+        if (parseInt(this.mapping.line.lineNumber) == linenumber) {
+          this.searchService.showActiveMatch(
+            this.host.nativeElement,
+            parseInt(this.mapping.line.lineNumber)
+          );
+        }
+      });
+  }
+
+  updateSearch(): void {
+    this.searchService.showMatchesInDom(
+      this.host.nativeElement,
+      parseInt(this.mapping.line.lineNumber)
+    );
+  }
+
+  ngAfterViewInit(): void {
+    this.updateSearch();
+    this.searchService.showActiveMatch(
+      this.host.nativeElement,
+      parseInt(this.mapping.line.lineNumber)
+    );
   }
 
   ngOnDestroy(): void {
@@ -121,6 +160,8 @@ export class SourceLineComponent implements OnInit, OnDestroy {
     if (this.selectSubscription) {
       this.selectSubscription.unsubscribe();
     }
+    this.searchSubscription.unsubscribe();
+    this.activeMatchSubscription.unsubscribe();
   }
 
   collapseAttached(): void {
@@ -155,6 +196,7 @@ export class SourceLineComponent implements OnInit, OnDestroy {
   }
 
   getLineno(): string {
+    // TODO: return number rather than string and do the code adaptations
     return this.mapping.line.lineNumber;
   }
 
