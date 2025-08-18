@@ -19,6 +19,26 @@
           Auto Collapse
         </mat-checkbox>
       </div>
+      <div class="search-widget" *ngIf="showSearch">
+        <input
+          #searchInput
+          type="text"
+          (input)="onSearchChange()"
+          placeholder="Search..."
+          class="search-input"
+        />
+        <span class="search-hits" *ngIf="showHits"
+          >{{ activeIndex() + 1 }}/{{ hits() }}</span
+        >
+        <button (click)="prevMatch()">
+          <mat-icon>keyboard_arrow_up</mat-icon>
+        </button>
+        <button (click)="nextMatch()">
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+        <button (click)="closeSearch()"><mat-icon>close</mat-icon></button>
+      </div>
+
       <virtual-scroller
         id="scroll"
         #scroll
