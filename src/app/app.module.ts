@@ -18,7 +18,10 @@ import {
 import { AppComponent } from './app.component';
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomReuseStrategy } from './route/custom-route-reuse-strategy';
-import { HttpClientModule } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { SourceFileModule } from './source/source-file.module';
 import { EnumerableTableModule } from './enumerable_table/enumerable-table.module';
@@ -28,10 +31,10 @@ import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [AppComponent, ReportComponent, TraceMenuComponent],
+  bootstrap: [AppComponent],
   imports: [
     BrowserModule,
     CommonModule,
-    HttpClientModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatTooltipModule,
@@ -53,7 +56,7 @@ import { MatIconModule } from '@angular/material/icon';
       provide: RouteReuseStrategy,
       useClass: CustomReuseStrategy,
     },
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
 })
 export class AppModule {}
