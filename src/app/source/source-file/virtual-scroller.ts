@@ -174,6 +174,7 @@ export interface IViewport extends IPageInfo {
       }
     `,
   ],
+  standalone: false,
 })
 export class VirtualScrollerComponent implements OnInit, OnChanges, OnDestroy {
   public viewPortItems: any[];
@@ -1054,7 +1055,9 @@ export class VirtualScrollerComponent implements OnInit, OnChanges, OnDestroy {
 
   protected getScrollElement(): HTMLElement {
     return this.parentScroll instanceof Window
-      ? document.scrollingElement || document.documentElement || document.body
+      ? (document.scrollingElement as HTMLElement) ||
+          document.documentElement ||
+          document.body
       : this.parentScroll || this.element.nativeElement;
   }
 

@@ -19,6 +19,7 @@ import { MatTooltip } from '@angular/material/tooltip';
   selector: 'app-message, [app-message]',
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.scss'],
+  standalone: false,
 })
 export class MessageComponent implements OnInit {
   @Input() message: Message;

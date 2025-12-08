@@ -28,6 +28,7 @@ import { MatTooltip } from '@angular/material/tooltip';
   styleUrls: ['../style.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() mapping: Mapping;

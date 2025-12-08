@@ -8,6 +8,7 @@ import { Status } from '../../models/app-enum';
   templateUrl: './summary.component.html',
   styleUrls: ['./style.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class SummaryComponent implements OnInit {
   @Input() ctx: Ctx;

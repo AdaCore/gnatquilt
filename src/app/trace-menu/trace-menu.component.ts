@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
   selector: 'app-trace-menu',
   templateUrl: './trace-menu.component.html',
   styleUrls: ['./trace-menu.component.scss'],
+  standalone: false,
 })
 export class TraceMenuComponent implements OnInit {
   traces$: Observable<Iterable<[string, Trace[]]>>;

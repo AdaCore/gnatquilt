@@ -18,6 +18,7 @@ import { Project, statKind, StatKindType } from '../report.service';
   templateUrl: './enumerable-table.component.html',
   styleUrls: ['./style.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class EnumerableTableComponent implements OnInit {
   // loading is faster when inputting the context instead of using the CtxService in class constructor

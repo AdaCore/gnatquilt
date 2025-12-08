@@ -12,6 +12,7 @@ import { Status } from '../../../../../models/app-enum';
   templateUrl: './instruction-set.component.html',
   styleUrls: ['../../../style.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class InstructionSetComponent implements OnInit {
   @Input() instructionSet: InstructionSet;

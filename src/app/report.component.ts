@@ -10,6 +10,7 @@ import { Ctx, CtxService, Properties, statusProperties } from './ctx.service';
   selector: 'app-report',
   templateUrl: './report.component.html',
   styleUrls: ['./app.component.scss'],
+  standalone: false,
 })
 export class ReportComponent implements OnInit {
   total: Enumerables;

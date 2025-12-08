@@ -14,6 +14,7 @@ import cpp from 'highlight.js/lib/languages/cpp';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AppComponent implements OnInit {
   title = 'gnatquilt';

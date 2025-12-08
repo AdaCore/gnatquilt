@@ -56,6 +56,7 @@ import {
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SourceFileComponent implements OnInit, OnDestroy {
   @ViewChild(EnumerableTableComponent) enumerable!: EnumerableTableComponent;

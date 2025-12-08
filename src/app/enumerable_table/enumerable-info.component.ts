@@ -17,6 +17,7 @@ import { Source } from '../report.service';
   styleUrls: ['./style.scss'],
   // if removed, shadows parent style
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class EnumerableInfoComponent implements OnInit {
   @Input() enumerable: Enumerable;
