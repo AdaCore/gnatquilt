@@ -19,7 +19,6 @@ import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
 import { map, switchMap, take } from 'rxjs/operators';
 import { Enumerable, Enumerables } from '../../../interface/report.model';
 import hljs from 'highlight.js';
-import { text } from 'cheerio/lib/api/manipulation';
 
 export class ScopeMetrics
   extends StatsWithEnStats
