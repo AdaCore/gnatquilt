@@ -2,9 +2,10 @@
   <table class="xcov-source-line-attached">
     <tbody></tbody>
 
-    <ng-container
-      *ngFor="let instructionBlock of instructionSet.instructionBlocks"
-    >
+    @for (
+      instructionBlock of instructionSet.instructionBlocks;
+      track instructionBlock
+    ) {
       <ng-container
         [ngTemplateOutlet]="instructionBlockHeader"
         [ngTemplateOutletContext]="{ blockName: instructionBlock.name }"
@@ -22,9 +23,10 @@
         }"
       >
       </ng-container>
-      <ng-container
-        *ngFor="let instruction of instructionBlock.instructions.slice(1)"
-      >
+      @for (
+        instruction of instructionBlock.instructions.slice(1);
+        track instruction
+      ) {
         <ng-container
           [ngTemplateOutlet]="instructionLine"
           [ngTemplateOutletContext]="{
@@ -36,8 +38,8 @@
           }"
         >
         </ng-container>
-      </ng-container>
-    </ng-container>
+      }
+    }
   </table>
 </div>
 
@@ -52,10 +54,7 @@
     <td></td>
     <td>
       <div
-        class="
-          xcov-source-line-attached-insn-asm
-          xcov-source-line-attached-insn-symbol
-        "
+        class="xcov-source-line-attached-insn-asm xcov-source-line-attached-insn-symbol"
       >
         {{ blockName }}
       </div>
@@ -72,10 +71,7 @@
   <tr class="xcov-source-line-attached-row">
     <td>
       <div
-        class="
-          xcov-source-line-attached-insn-offset
-          xcov-source-line-attached-insn-symbol
-        "
+        class="xcov-source-line-attached-insn-offset xcov-source-line-attached-insn-symbol"
       >
         {{ offset }}
       </div>

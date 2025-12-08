@@ -9,20 +9,20 @@
         {{ message.kind }}
       </td>
       <td class="xcov-source-line-attached-message-body">
-        <ng-container *ngIf="hasSco() && (sco$ | async) as sco">
+        @if (hasSco() && (sco$ | async); as sco) {
           <span
             class="xcov-source-line-attached-sco"
             (click)="showText()"
             matTooltip="Select Text"
             >{{ sco.kind }} {{ sco.text }} at {{ strLowOrUp(sco.range, 0) }}
           </span>
-        </ng-container>
+        }
         {{ message.message }}
-        <ng-container *ngIf="hasSco() && (sco$ | async) as sco">
-          <ng-container *ngFor="let annotation of sco.annotations">
+        @if (hasSco() && (sco$ | async); as sco) {
+          @for (annotation of sco.annotations; track annotation) {
             <div>note: {{ annotation }}</div>
-          </ng-container>
-        </ng-container>
+          }
+        }
       </td>
     </tr>
   </table>

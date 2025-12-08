@@ -1,9 +1,9 @@
 <h1 class="xcov-report-title">GNATcoverage report</h1>
-<ng-container *ngIf="coverageLevel$ | async as coverageLevel">
+@if (coverageLevel$ | async; as coverageLevel) {
   <h2 class="xcov-report-coverage-level">
     Coverage level: {{ coverageLevel }}
   </h2>
-</ng-container>
+}
 <div class="button-row">
   <button
     [ngClass]="{ levelClicked: linesClicked }"
@@ -14,14 +14,15 @@
   </button>
 </div>
 <div class="button-row">
-  <button
-    *ngFor="let level of allLevels"
-    [ngClass]="{ levelClicked: levelsClicked.has(level) }"
-    mat-stroked-button
-    (click)="onClick(level)"
-  >
-    {{ level }}
-  </button>
+  @for (level of allLevels; track level) {
+    <button
+      [ngClass]="{ levelClicked: levelsClicked.has(level) }"
+      mat-stroked-button
+      (click)="onClick(level)"
+    >
+      {{ level }}
+    </button>
+  }
 </div>
 <div class="xcov-report-content">
   <router-outlet></router-outlet>

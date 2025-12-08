@@ -1,8 +1,8 @@
 <td class="xcov-table-filename">
-  <ng-container *ngIf="isSource; else elseBlock">
+  @if (isSource) {
     <!-- a source file in the index
-             at this point, enumerable is a source, see if source is missing or not -->
-    <ng-container *ngIf="enumerable['missingSource']; else sourceBlock">
+    at this point, enumerable is a source, see if source is missing or not -->
+    @if (enumerable['missingSource']) {
       <!-- source has no code, most of the time because it is a runtime file when activating branch level-->
       <span class="xcov-table-missing-source">
         {{ enumerable.getName() }}
@@ -10,8 +10,7 @@
           (missing source, not executed?)
         </span>
       </span>
-    </ng-container>
-    <ng-template #sourceBlock>
+    } @else {
       <!-- a link to an annotated source in the index-->
       <a
         routerLink="/sources/{{ projectName }}/{{
@@ -20,46 +19,48 @@
       >
         {{ enumerable.getName() }}
       </a>
-    </ng-template>
-  </ng-container>
-
-  <ng-template #elseBlock>
+    }
+  } @else {
     <div style="margin-left: {{ margin }}px">
-      <mat-icon
-        *ngIf="!isLeaf && !isExpanded"
-        inline="true"
-        style="float: left; position: relative"
-        matTooltip="Click to expand"
-        (click)="expand()"
-      >
-        expand_more
-      </mat-icon>
-      <mat-icon
-        *ngIf="!isLeaf && isExpanded"
-        inline="true"
-        style="float: left; position: relative"
-        matTooltip="Click to collapse"
-        (click)="collapse()"
-      >
-        expand_less
-      </mat-icon>
+      @if (!isLeaf && !isExpanded) {
+        <mat-icon
+          inline="true"
+          style="float: left; position: relative"
+          matTooltip="Click to expand"
+          (click)="expand()"
+        >
+          expand_more
+        </mat-icon>
+      }
+      @if (!isLeaf && isExpanded) {
+        <mat-icon
+          inline="true"
+          style="float: left; position: relative"
+          matTooltip="Click to collapse"
+          (click)="collapse()"
+        >
+          expand_less
+        </mat-icon>
+      }
       <span (click)="clickOnEnumerable()">{{ enumerable.getName() }}</span>
     </div>
-  </ng-template>
+  }
 </td>
 <td [style.width.%]="ctx.width" class="xcov-table-count">
   {{ enumerable.total }}
 </td>
-<td *ngFor="let status of ctx.properties" class="xcov-table-count">
-  <div class="xcov-table-cell">
-    <span>
-      {{ getStat(enumerable, status) || 0}}
-    </span>
-    <span class="unselectable">
-      {{ enumerable.getStatsPercent()[status] }}%
-    </span>
-  </div>
-</td>
+@for (status of ctx.properties; track status) {
+  <td class="xcov-table-count">
+    <div class="xcov-table-cell">
+      <span>
+        {{ getStat(enumerable, status) || 0 }}
+      </span>
+      <span class="unselectable">
+        {{ enumerable.getStatsPercent()[status] }}%
+      </span>
+    </div>
+  </td>
+}
 <td class="xcov-table-summary">
   <app-summary [ctx]="ctx" [enumerable]="enumerable"></app-summary>
 </td>

@@ -1,7 +1,7 @@
 <div class="xcov-navigation">
   <a routerLink="/traces">⇪ Show traces table</a>
 </div>
-<ng-container *ngIf="data$ | async as o">
+@if (data$ | async; as o) {
   <h2
     class="xcov-section-title"
     id="overview"
@@ -16,29 +16,29 @@
     [project]="o.total"
     [isSource]="false"
   ></app-enumerable-table>
-
   <app-enumerable-table
     [ctx]="o.ctx"
     [project]="o.report"
     [isSource]="false"
   ></app-enumerable-table>
-  <div *ngFor="let project of o.report.projects">
-    <h2
-      class="xcov-section-title"
-      id="project-{{ project.projectName }}"
-      tabindex="0"
-      role="tab"
-      aria-expanded="true"
-    >
-      ❯ {{ project.projectName }}
-    </h2>
-    <app-enumerable-table
-      [ctx]="o.ctx"
-      [project]="project"
-      [isSource]="true"
-    ></app-enumerable-table>
-  </div>
-
+  @for (project of o.report.projects; track project) {
+    <div>
+      <h2
+        class="xcov-section-title"
+        id="project-{{ project.projectName }}"
+        tabindex="0"
+        role="tab"
+        aria-expanded="true"
+      >
+        ❯ {{ project.projectName }}
+      </h2>
+      <app-enumerable-table
+        [ctx]="o.ctx"
+        [project]="project"
+        [isSource]="true"
+      ></app-enumerable-table>
+    </div>
+  }
   <div class="xcov-help">
     <p>The results (total and per file) contain:</p>
     <ul>
@@ -74,14 +74,13 @@
     <table class="xcov-help-legend">
       <tbody>
         <tr>
-          <td
-            *ngFor="let status of o.ctx.properties"
-            class="xcov-help{{ statusProperties[status].classSuffix }}"
-          >
-            {{ statusProperties[status].name }}
-          </td>
+          @for (status of o.ctx.properties; track status) {
+            <td class="xcov-help{{ statusProperties[status].classSuffix }}">
+              {{ statusProperties[status].name }}
+            </td>
+          }
         </tr>
       </tbody>
     </table>
   </div>
-</ng-container>
+}

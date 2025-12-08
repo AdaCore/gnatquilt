@@ -2,7 +2,7 @@
   <a [routerLink]="['/report']">⇪ Back to sources list</a>
 </div>
 <div class="xcov-report-content">
-  <ng-container *ngIf="source$ | async as source">
+  @if (source$ | async; as source) {
     <h2 class="xcov-section-title" id=":c">❯ {{ source.filename }}</h2>
     <app-enumerable-table
       [ctx]="ctx$ | async"
@@ -19,26 +19,29 @@
           Auto Collapse
         </mat-checkbox>
       </div>
-      <div class="search-widget" *ngIf="showSearch">
-        <input
-          #searchInput
-          type="text"
-          (input)="onSearchChange()"
-          placeholder="Search..."
-          class="search-input"
-        />
-        <span class="search-hits" *ngIf="showHits"
-          >{{ activeIndex() + 1 }}/{{ hits() }}</span
-        >
-        <button (click)="prevMatch()">
-          <mat-icon>keyboard_arrow_up</mat-icon>
-        </button>
-        <button (click)="nextMatch()">
-          <mat-icon>keyboard_arrow_down</mat-icon>
-        </button>
-        <button (click)="closeSearch()"><mat-icon>close</mat-icon></button>
-      </div>
-
+      @if (showSearch) {
+        <div class="search-widget">
+          <input
+            #searchInput
+            type="text"
+            (input)="onSearchChange()"
+            placeholder="Search..."
+            class="search-input"
+          />
+          @if (showHits) {
+            <span class="search-hits"
+              >{{ activeIndex() + 1 }}/{{ hits() }}</span
+            >
+          }
+          <button (click)="prevMatch()">
+            <mat-icon>keyboard_arrow_up</mat-icon>
+          </button>
+          <button (click)="nextMatch()">
+            <mat-icon>keyboard_arrow_down</mat-icon>
+          </button>
+          <button (click)="closeSearch()"><mat-icon>close</mat-icon></button>
+        </div>
+      }
       <virtual-scroller
         id="scroll"
         #scroll
@@ -49,16 +52,16 @@
         [enableUnequalChildrenSizes]="true"
       >
         <tbody #container class="xcov-source-content">
-          <ng-container *ngFor="let mapping of scroll.viewPortItems">
+          @for (mapping of scroll.viewPortItems; track mapping) {
             <tr
               class="{{ getClass(mapping) }}"
               app-source-line
               [mapping]="mapping"
               [language]="source.language"
             ></tr>
-          </ng-container>
+          }
         </tbody>
       </virtual-scroller>
     </table>
-  </ng-container>
+  }
 </div>
