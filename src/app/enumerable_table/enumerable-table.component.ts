@@ -6,21 +6,26 @@ import {
   OnInit,
   Output,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
-import { Sort } from '@angular/material/sort';
+import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import { Status } from '../../models/app-enum';
 import { Enumerable, Enumerables } from '../../interface/report.model';
 import { Ctx, Properties, statusProperties } from '../ctx.service';
 import { Project, statKind, StatKindType } from '../report.service';
+import { NgTemplateOutlet } from '@angular/common';
+import { EnumerableInfoComponent } from './enumerable-info.component';
 
 @Component({
   selector: 'app-enumerable-table',
   templateUrl: './enumerable-table.component.html',
   styleUrls: ['./style.scss'],
   encapsulation: ViewEncapsulation.None,
-  standalone: false,
+  imports: [MatSort, MatSortHeader, NgTemplateOutlet, EnumerableInfoComponent],
 })
 export class EnumerableTableComponent implements OnInit {
+  private cd = inject(ChangeDetectorRef);
+
   // loading is faster when inputting the context instead of using the CtxService in class constructor
   // i have no explanation to that, investigate
   @Input() ctx: Ctx;
@@ -28,7 +33,7 @@ export class EnumerableTableComponent implements OnInit {
   @Input() isSource: boolean;
   @Output() clickedOnEnumerable = new EventEmitter<Enumerable>();
 
-  public sortedData: Array<Enumerable>;
+  public sortedData: Enumerable[];
   public total: number;
   statusProperties: Record<Status, Properties> = statusProperties;
 
@@ -38,8 +43,6 @@ export class EnumerableTableComponent implements OnInit {
 
   // Track the expanded sub-metrics
   expandedSubMetrics: Set<Enumerable> = new Set<Enumerable>();
-
-  public constructor(private cd: ChangeDetectorRef) {}
 
   checkChanges(): void {
     this.cd.markForCheck();
@@ -59,7 +62,6 @@ export class EnumerableTableComponent implements OnInit {
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     function sortEnum(data: Enumerable[]): Enumerable[] {
       for (const e of data) {
         if (e.getChildren().length > 0) {
@@ -73,11 +75,12 @@ export class EnumerableTableComponent implements OnInit {
             return compare(a.getName(), b.getName(), isAsc);
           case 'total':
             return compare(a.total, b.total, isAsc);
-          default:
+          default: {
             const status: string = sort.active;
             return Status[status] !== undefined
               ? compare(a.getStats()[status], b.getStats()[status], isAsc)
               : 0;
+          }
         }
       });
     }

@@ -9,6 +9,7 @@ import {
   OnInit,
   ViewChild,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import { Mapping, Range } from '../../../interface/data.model';
 import { statusProperties, symbolToStat } from '../../ctx.service';
@@ -21,6 +22,10 @@ import {
 } from '../source-file/source-file.service';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MessageComponent } from './attached/message/message.component';
+import { InstructionSetComponent } from './attached/instruction-set/instruction-set.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-source-line, [app-source-line]',
@@ -28,9 +33,22 @@ import { MatTooltip } from '@angular/material/tooltip';
   styleUrls: ['../style.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    MatIcon,
+    MatTooltip,
+    MessageComponent,
+    InstructionSetComponent,
+    AsyncPipe,
+  ],
 })
 export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
+  private host = inject(ElementRef);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+  private selectSCOService = inject(SelectSCOService);
+  private expandCollapseService = inject(ExpandCollapseService);
+  private selectLineService = inject(SelectLineService);
+  private searchService = inject(SearchService);
+
   @Input() mapping: Mapping;
   @Input() language: string;
   @ViewChild('sourceCode') sourceCode!: ElementRef<HTMLTableCellElement>;
@@ -43,44 +61,21 @@ export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
   coverageStatus: Status;
   coverageClass: string;
 
-  searchMatches: number = 0;
+  searchMatches = 0;
   // Number of search matches on the line
-
-  onToggleClick: () => void;
-  // Callback for when the user expand/collapse a line's message /
-  // instruction set.
 
   private selectSubscription: Subscription;
   private expandSubscription: Subscription;
   private searchSubscription: Subscription;
   private activeMatchSubscription: Subscription;
 
-  getHTMLText: ReplaySubject<string> = new ReplaySubject(1);
-  // HTML excerpt for the source code. To implement SCO selection, we need to potentially
-  // split the source code into different spans to differentiate the parts of the source line
-  // that are a part of the SCO from the parts that are not:
-  //   * A single span if the source code line does not belong to the selected SCO
-  //   * A single span if SCO starts before the source code line, and ends after.
-  //   * Two spans if the SCO starts at the source code line, but ends at another one,
-  //     or if ends at the source code line, but starts at another one.
-  //   * Three spans if the SCO starts at the source code line and ends on it.
-
-  constructor(
-    private host: ElementRef,
-    private changeDetectorRef: ChangeDetectorRef,
-    private selectSCOService: SelectSCOService,
-    private expandCollapseService: ExpandCollapseService,
-    private selectLineService: SelectLineService,
-    private searchService: SearchService
-  ) {}
+  getHTMLText = new ReplaySubject<string>(1);
 
   ngOnInit(): void {
     this.coverageStatus = symbolToStat.get(this.mapping.coverage);
     this.coverageClass =
       'xcov-source-line' + statusProperties[this.coverageStatus].classSuffix;
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    this.onToggleClick = this.hasAttached() ? this.expandOrCollapse : () => {};
     if (this.hasAttached()) {
       // Check if the line was expanded
       this.isExpanded = this.expandCollapseService.isLineExpanded(
@@ -205,6 +200,7 @@ export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
   https://github.com/angular/components/issues/10306#issuecomment-1206204298 */
   @ViewChild(MatTooltip)
   set matTooltip(v: MatTooltip) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     delete (v as any)._viewContainerRef;
   }
 

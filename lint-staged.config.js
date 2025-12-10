@@ -1,3 +1,3 @@
 module.exports = {
-  '*': 'npx prettier --config .prettierrc --write',
+  '*{.ts,html,scss}': ['eslint --fix', 'prettier --write'],
 };

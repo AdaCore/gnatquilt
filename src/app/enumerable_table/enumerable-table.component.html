@@ -46,7 +46,7 @@
               [isSource]="isSource"
               [projectName]="projectName"
               [margin]="margin"
-              [isLeaf]="enumerable.getChildren().length == 0"
+              [isLeaf]="enumerable.getChildren().length === 0"
               (clickedOnEnumerable)="clickOnEnumerable($event)"
               (expanded)="expand($event)"
               (collapsed)="collapse($event)"
@@ -58,7 +58,7 @@
               context: {
                 enumerables: enumerable.getChildren(),
                 margin: margin + 20,
-                visible: visible && isExpanded(enumerable)
+                visible: visible && isExpanded(enumerable),
               }
             "
           >

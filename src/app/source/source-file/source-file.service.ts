@@ -1,4 +1,4 @@
-import { ElementRef, Injectable, ViewChild } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 import { LoadJsonService } from '../../load-json.service';
 import {
@@ -26,7 +26,7 @@ export class ScopeMetrics
 {
   scopeLine: number;
   scopeName: string;
-  children: Array<ScopeMetrics> = new Array<ScopeMetrics>();
+  children: ScopeMetrics[] = new Array<ScopeMetrics>();
 
   constructor(scopeMetrics: IScopeMetrics) {
     super(scopeMetrics.enAllStats);
@@ -44,11 +44,11 @@ export class ScopeMetrics
     return this.scopeName;
   }
 
-  getChildren(): Array<ScopeMetrics> {
+  getChildren(): ScopeMetrics[] {
     return this.children;
   }
 
-  setChildren(v: Array<ScopeMetrics>): void {
+  setChildren(v: ScopeMetrics[]): void {
     this.children = v;
   }
 
@@ -63,7 +63,7 @@ export class ScopeMetrics
     return 'Source';
   }
 
-  getEnumerables(): Array<Enumerable> {
+  getEnumerables(): Enumerable[] {
     return [this];
   }
 }
@@ -95,7 +95,7 @@ export class AnnotatedSource extends Source implements Enumerables {
     return 'Source';
   }
 
-  getEnumerables(): Array<Enumerable> {
+  getEnumerables(): Enumerable[] {
     return [this];
   }
 
@@ -157,17 +157,21 @@ function computeSco(mappings: Mapping[]): Map<number, ScoProperties> {
 
 @Injectable()
 export class SourceFileService {
+  private route = inject(ActivatedRoute);
+  private loadJSONService = inject(LoadJsonService);
+  private reportService = inject(ReportService);
+
   sourceStats: Observable<Enumerables>;
   source$: Subject<AnnotatedSource> = new ReplaySubject<AnnotatedSource>();
   source: Observable<AnnotatedSource> = this.source$.asObservable();
   scos: Observable<Map<number, ScoProperties>>;
   projectName: ReplaySubject<string> = new ReplaySubject<string>();
 
-  constructor(
-    private route: ActivatedRoute,
-    private loadJSONService: LoadJsonService,
-    private reportService: ReportService
-  ) {
+  constructor() {
+    const route = this.route;
+    const loadJSONService = this.loadJSONService;
+    const reportService = this.reportService;
+
     // We have to wait for the report to load prior to loading the source
     // file.
     reportService
@@ -225,7 +229,6 @@ export class ExpandCollapseService {
   private expandEvent = new Subject<number>();
 
   autoCollapse = true;
-  constructor() {}
 
   expandLine(lineno: number): void {
     // user triggered expansion with click
@@ -265,8 +268,6 @@ export class ExpandCollapseService {
 export class SelectSCOService {
   private selectSCOEvent = new ReplaySubject<Range>(1);
 
-  constructor() {}
-
   emitSelectSCOEvent(rng: Range) {
     this.selectSCOEvent.next(rng);
   }
@@ -281,11 +282,12 @@ export class SelectSCOService {
 
   /* Turn the given string into an HTML safe span. Note that the highlight
   functions take care of sanitizing the string. */
-  safe_span(str: string, lang: string, selected: boolean = false): string {
+  safe_span(str: string, lang: string, selected = false): string {
+    let highlighted;
     if (lang) {
-      var highlighted = hljs.highlight(str, { language: lang }).value;
+      highlighted = hljs.highlight(str, { language: lang }).value;
     } else {
-      var highlighted = hljs.highlightAuto(str, ['ada', 'c', 'cpp']).value;
+      highlighted = hljs.highlightAuto(str, ['ada', 'c', 'cpp']).value;
     }
     return (
       '<span ' +
@@ -304,7 +306,7 @@ export class SelectSCOService {
     // Adjust the column offset for slices
     const startColumn = rng[0][1] - 1;
     const endColumn = rng[1][1];
-    var html = '';
+    let html = '';
     if (this.inRange(lineno, rng)) {
       // Check if this is beginning of the range
       if (lineno == startLine) {
@@ -349,8 +351,6 @@ export class SelectSCOService {
 export class SelectLineService {
   private selectLineEvent = new ReplaySubject<number>(1);
 
-  constructor() {}
-
   emitSelectLineEvent(lineno: number) {
     this.selectLineEvent.next(lineno);
   }
@@ -362,15 +362,15 @@ export class SelectLineService {
 
 @Injectable()
 export class SelectMessageService {
+  private _route = inject(ActivatedRoute);
+  private _router = inject(Router);
+
   private selectMessageEvent = new BehaviorSubject<[string, string]>([
     '-1',
     '-1',
   ]);
 
-  constructor(
-    private _route: ActivatedRoute,
-    private _router: Router
-  ) {
+  constructor() {
     // Subscribe to URL parameter changes
     this._route.queryParams.subscribe((params: Params) => {
       this.selectMessageEvent.next([params['line'], params['message']]);
@@ -398,14 +398,16 @@ export class SelectMessageService {
 
 @Injectable()
 export class SearchService {
+  private sourceFileService = inject(SourceFileService);
+
   searchTerm = '';
   searchTermLength = 0;
 
-  activeMatchIndex: number = -1;
-  activeMatchNth: number = -1;
+  activeMatchIndex = -1;
+  activeMatchNth = -1;
   activeMatch: HTMLElement = undefined;
 
-  linesMatched: Map<number, number> = new Map();
+  linesMatched = new Map<number, number>();
   // Map the line number to the index of the first match of the line in
   // allMatches.
 
@@ -421,7 +423,7 @@ export class SearchService {
 
   source: ReplaySubject<AnnotatedSource> = new ReplaySubject<AnnotatedSource>();
 
-  constructor(private sourceFileService: SourceFileService) {
+  constructor() {
     this.sourceFileService.source$
       .pipe(take(1))
       .subscribe((source: AnnotatedSource) => {
@@ -468,7 +470,7 @@ export class SearchService {
         // Only search in the source code.
         const linenumber = mapping.line.lineNumber;
         const srcMatches = [...mapping.line.src.matchAll(regex)];
-        srcMatches.forEach((match, i) => {
+        srcMatches.forEach((match, _i) => {
           this.allMatches.push([linenumber, match.index]);
           if (!this.linesMatched.has(linenumber))
             this.linesMatched.set(linenumber, this.allMatches.length - 1);
@@ -492,11 +494,6 @@ export class SearchService {
     // Exit early if the line does not contain search results
     if (!this.linesMatched.has(linenumber)) return;
 
-    // Matches found for the given HTML element
-    var elementMatches = [];
-
-    // Explore the given HTML element and look for matches for the search term
-    const regex = new RegExp(this.searchTerm, 'gi');
     const textNodes: Node[] = [];
 
     // Start by finding the source code line
@@ -513,7 +510,7 @@ export class SearchService {
         return NodeFilter.FILTER_REJECT;
       },
     });
-    var sourceCodeNode = walker.nextNode();
+    const sourceCodeNode = walker.nextNode();
 
     walker = document.createTreeWalker(sourceCodeNode, NodeFilter.SHOW_TEXT);
     while (walker.nextNode()) {
@@ -521,27 +518,27 @@ export class SearchService {
     }
 
     // Offset tracking the column number
-    var totalOffset = 0;
-    var rng = document.createRange();
-    var currentMatchIndex = this.linesMatched.get(linenumber);
+    let totalOffset = 0;
+    const rng = document.createRange();
+    let currentMatchIndex = this.linesMatched.get(linenumber);
 
     // Start (inclusive) and end (exclusive) of the current match
-    var currentMatchStart = this.allMatches[currentMatchIndex][1];
-    var currentMatchEnd = currentMatchStart + this.searchTermLength;
+    let currentMatchStart = this.allMatches[currentMatchIndex][1];
+    let currentMatchEnd = currentMatchStart + this.searchTermLength;
 
     // Track whether we found the start of a match
-    var foundStart = false;
+    let foundStart = false;
 
     // Track whether we found a match
-    var foundMatch = false;
+    let foundMatch = false;
 
     for (let node of textNodes) {
       // Check if we have a match starting here
 
       // Use a partialOffset to track the position in the current text node,
       // as it may contain multiple matches.
-      var partialOffset = totalOffset;
-      var textLength = node.textContent.length;
+      let partialOffset = totalOffset;
+      let textLength = node.textContent.length;
 
       // Increment the totalOffset as we may modify the node below
       totalOffset = totalOffset + node.textContent.length;
@@ -558,7 +555,7 @@ export class SearchService {
 
           // Note: extractContents extracts (i.e. remove them from the DOM) the
           // text nodes in the range and their common ancestors.
-          let frag = rng.extractContents();
+          const frag = rng.extractContents();
           const span = document.createElement('span');
           span.className = 'search-highlight';
           span.appendChild(frag);
@@ -602,7 +599,7 @@ export class SearchService {
   }
 
   highlightNodes(element) {
-    var highlightNodes = [];
+    const highlightNodes = [];
     const walker = document.createTreeWalker(element, NodeFilter.SHOW_ELEMENT, {
       acceptNode: (node) => {
         if (
@@ -623,7 +620,7 @@ export class SearchService {
   showActiveMatch(element, linenumber) {
     if (!this.linesMatched.has(linenumber)) return;
     if (this.allMatches[this.activeMatchIndex][0] !== linenumber) return;
-    let highlightNodes = this.highlightNodes(element);
+    const highlightNodes = this.highlightNodes(element);
     highlightNodes[this.activeMatchNth].classList.add('active-match');
     if (this.activeMatch) {
       this.activeMatch.classList.remove('active-match');
@@ -633,7 +630,7 @@ export class SearchService {
 
   clearHighlights() {
     // Find highlighted spans
-    var highlightNodes = this.highlightNodes(document.body);
+    const highlightNodes = this.highlightNodes(document.body);
 
     // Remove the highlighting
     highlightNodes.forEach((node) => {
@@ -680,7 +677,7 @@ export class SearchService {
       if (newMatch[0] === oldMatch[0]) {
         this.activeMatchNth = this.activeMatchNth - 1;
       } else {
-        var tmpIndex = this.activeMatchIndex - 1;
+        let tmpIndex = this.activeMatchIndex - 1;
         this.activeMatchNth = 0;
         while (tmpIndex >= 0 && this.allMatches[tmpIndex][0] === newMatch[0]) {
           this.activeMatchNth = this.activeMatchNth + 1;

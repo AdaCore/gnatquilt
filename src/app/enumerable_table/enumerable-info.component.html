@@ -42,7 +42,13 @@
           expand_less
         </mat-icon>
       }
-      <span (click)="clickOnEnumerable()">{{ enumerable.getName() }}</span>
+      <span
+        [ignoreForKeyEvents]
+        role="button"
+        tabindex="{0}"
+        (click)="clickOnEnumerable()"
+        >{{ enumerable.getName() }}</span
+      >
     </div>
   }
 </td>

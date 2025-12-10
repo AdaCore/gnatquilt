@@ -1,33 +1,36 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ReportService, setStatKind, StatKindType } from './report.service';
-import { Router, Scroll } from '@angular/router';
+import { Router, Scroll, RouterOutlet } from '@angular/router';
 import { delay, filter } from 'rxjs/operators';
-import { ViewportScroller } from '@angular/common';
+import { ViewportScroller, NgClass, AsyncPipe } from '@angular/common';
 import hljs from 'highlight.js';
 import ada from 'highlight.js/lib/languages/ada';
 import c from 'highlight.js/lib/languages/c';
 import cpp from 'highlight.js/lib/languages/cpp';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [MatButton, NgClass, RouterOutlet, AsyncPipe],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
+  private reportService = inject(ReportService);
+
   title = 'gnatquilt';
   coverageLevel$: Observable<string>;
-  allLevels: Set<string> = new Set();
+  allLevels = new Set<string>();
 
-  levelsClicked: Set<string> = new Set();
+  levelsClicked = new Set<string>();
   linesClicked = true;
-  constructor(
-    router: Router,
-    viewportScroller: ViewportScroller,
-    private reportService: ReportService
-  ) {
+  constructor() {
+    const router = inject(Router);
+    const viewportScroller = inject(ViewportScroller);
+    const reportService = this.reportService;
+
     hljs.registerLanguage('ada', ada);
     hljs.registerLanguage('c', c);
     hljs.registerLanguage('cpp', cpp);
@@ -68,8 +71,6 @@ export class AppComponent implements OnInit {
       }
     });
   }
-
-  ngOnInit(): void {}
 
   onClick(level: string): void {
     this.linesClicked = false;

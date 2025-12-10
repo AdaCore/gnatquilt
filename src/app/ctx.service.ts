@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Enumerable } from '../interface/report.model';
 import { Status } from '../models/app-enum';
 import { ReportService } from './report.service';
@@ -86,9 +86,9 @@ export const statusProperties: Record<Status, Properties> = allProperties();
 export const symbolToStat: Map<string, Status> = coverageSymbolToStatus();
 
 export class Ctx {
-  properties: Array<Status>;
+  properties: Status[];
   width: number;
-  levels: Set<string> = new Set();
+  levels = new Set<string>();
 
   constructor(aggregatedStats: Enumerable) {
     this.properties = this.propertiesOfInterest(aggregatedStats);
@@ -102,8 +102,8 @@ export class Ctx {
    * as an example, if a project has 0 exempted lines, no need to report on exemptions]
    * @return [list of coverage status to report]
    */
-  propertiesOfInterest(aggregatedStats: Enumerable): Array<Status> {
-    const properties: Array<Status> = [
+  propertiesOfInterest(aggregatedStats: Enumerable): Status[] {
+    const properties: Status[] = [
       Status.covered,
       Status.partiallyCovered,
       Status.notCovered,
@@ -125,9 +125,9 @@ export class Ctx {
    * @param pOfInterest [list of status]
    * @return [width in the coverage summary table for each status]
    */
-  computeWidth(pOfInterest: Array<Status>): number {
+  computeWidth(pOfInterest: Status[]): number {
     // rule conflicting with no-inferrable-types
-    // eslint-disable-next-line @typescript-eslint/typedef
+
     const fullWidth = 60; // td `xcov-count` get 60% of the whole array.
     // total is not included in propertiesOfInterest and should be included there
     return fullWidth / (Object.keys(pOfInterest).length + 1);
@@ -138,10 +138,12 @@ export class Ctx {
   providedIn: 'root',
 })
 export class CtxService {
+  private reportService = inject(ReportService);
+
   ctx$: ReplaySubject<Ctx> = new ReplaySubject<Ctx>(1);
   ctx: Observable<Ctx> = this.ctx$.asObservable();
 
-  constructor(private reportService: ReportService) {
+  constructor() {
     const data: Observable<Enumerable> = this.reportService.getReport();
     data.subscribe((report: Enumerable) => this.ctx$.next(new Ctx(report)));
   }

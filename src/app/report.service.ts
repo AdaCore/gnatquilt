@@ -1,7 +1,7 @@
 import { Enumerable, Enumerables } from '../interface/report.model';
 import { EntityStats, IReport, ISource, ITrace } from '../interface/data.model';
 import { initStatus, Status } from '../models/app-enum';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { LoadJsonService } from './load-json.service';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -45,7 +45,7 @@ export function computePercentages(
  * @return [aggregated total number of lines, aggregated statistics]
  */
 export function computeAggregatedStats(
-  aggregate: Array<Enumerable>
+  aggregate: Enumerable[]
 ): [number, Record<Status, number>] {
   const total: number = aggregate
     .map((enumerable: Enumerable) => enumerable.total)
@@ -79,11 +79,11 @@ export function computeAggregatedStats(
  * @return [aggregated total number of coverage obligations, aggregated statistics]
  */
 export function aggregateEntitiesStats(
-  enAllStats: Array<EntityStats>,
+  enAllStats: EntityStats[],
   levels: Set<string>
 ): [number, Record<Status, number>] {
   const enStats: Record<Status, number> = initStatus();
-  // eslint-disable-next-line @typescript-eslint/typedef
+
   let total = 0;
   enAllStats.forEach((entity: EntityStats) => {
     if (levels.has(entity.level)) {
@@ -119,21 +119,21 @@ export abstract class Stats implements Enumerable {
   }
 
   abstract getName(): string;
-  abstract getChildren(): Array<Enumerable>;
-  abstract setChildren(v: Array<Enumerable>): void;
+  abstract getChildren(): Enumerable[];
+  abstract setChildren(v: Enumerable[]): void;
 }
 
 export abstract class StatsWithEnStats extends Stats implements Enumerable {
   // This implements entity metrics reporting. enAllStats contains statistics
   // for every metric (e.g. statement, decision ...), as opposed to enStats
   // which contains statistics for the currently selected metric.
-  enAllStats: Array<EntityStats>;
+  enAllStats: EntityStats[];
   enStats: Record<Status, number>;
 
   // This implements line metrics reporting.
   liStats: Record<Status, number>;
 
-  constructor(enAllStats: Array<EntityStats>) {
+  constructor(enAllStats: EntityStats[]) {
     super();
     this.enAllStats = enAllStats;
   }
@@ -202,11 +202,11 @@ export class Source extends StatsWithEnStats implements ISource, Enumerable {
     return this.hunkFilename;
   }
 
-  getChildren(): Array<Enumerable> {
+  getChildren(): Enumerable[] {
     return [];
   }
 
-  setChildren(_: Array<Enumerable>): void {}
+  override setChildren(_: Enumerable[]): void {}
 }
 
 // This implements coverage reporting for a specific project, see the
@@ -237,15 +237,15 @@ export class Project extends Stats implements Enumerable, Enumerables {
     return this.projectName;
   }
 
-  getEnumerables(): Array<Enumerable> {
+  getEnumerables(): Enumerable[] {
     return this.sources;
   }
 
-  getChildren(): Array<Enumerable> {
+  getChildren(): Enumerable[] {
     return [];
   }
 
-  setChildren(_: Array<Enumerable>): void {}
+  override setChildren(_: Enumerable[]): void {}
 
   getHeadName(): string {
     return 'Sources';
@@ -270,7 +270,7 @@ export class Report extends Stats implements Enumerables, Enumerable {
   projects: Project[];
   coverageLevel: string;
   total: number;
-  traces: Array<[string, Trace[]]>;
+  traces: [string, Trace[]][];
 
   constructor(data: IReport) {
     super();
@@ -309,7 +309,7 @@ export class Report extends Stats implements Enumerables, Enumerable {
 
   getName: () => string = () => 'Total';
 
-  getEnumerables(): Array<Enumerable> {
+  getEnumerables(): Enumerable[] {
     return this.projects;
   }
 
@@ -323,25 +323,26 @@ export class Report extends Stats implements Enumerables, Enumerable {
     this.statsPercent = computePercentages(this.total, this.getStats());
   }
 
-  getChildren(): Array<Enumerable> {
+  getChildren(): Enumerable[] {
     return [];
   }
 
-  setChildren(_: Array<Enumerable>): void {}
+  override setChildren(_: Enumerable[]): void {}
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReportService {
+  private loadJSONService = inject(LoadJsonService);
+
   report$: Subject<Report> = new ReplaySubject<Report>();
   report: Observable<Report> = this.report$.asObservable();
   total: Observable<Enumerables>;
   levelStats: Set<string> = new Set<string>();
   levelStatsUpdated: Subject<Set<string>> = new Subject<Set<string>>();
 
-  constructor(private loadJSONService: LoadJsonService) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  constructor() {
     const data: Observable<IReport> = this.loadJSONService.getJSON('report.js');
     data.subscribe((report: IReport) => this.report$.next(new Report(report)));
     this.total = this.report.pipe(
@@ -354,7 +355,7 @@ export class ReportService {
               this.enumerable = enumerable;
             }
 
-            getEnumerables(): Array<Enumerable> {
+            getEnumerables(): Enumerable[] {
               return [this.enumerable];
             }
 

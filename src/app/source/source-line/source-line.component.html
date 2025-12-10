@@ -1,13 +1,11 @@
-<td
-  (click)="onToggleClick()"
-  class="xcov-source-row-line-no unselectable xcov-source-line-number"
->
+<td class="xcov-source-row-line-no unselectable xcov-source-line-number">
   <div class="xcov-source-line-code">
     @if (hasAttached() && !isExpanded) {
       <mat-icon
         class="xcov-source-line-mark"
         inline="true"
         matTooltip="Click to expand"
+        (click)="expandOrCollapse()"
         >expand_more
       </mat-icon>
     }
@@ -16,6 +14,7 @@
         class="xcov-source-line-mark"
         inline="true"
         matTooltip="Click to collapse"
+        (click)="expandOrCollapse()"
         >expand_less
       </mat-icon>
     }
@@ -33,6 +32,7 @@
   </div>
 </td>
 <td
+  #sourceCode
   (click)="onSelectLine()"
   class="xcov-source-row-text xcov-source-line-text xcov-source-line-code"
 >
@@ -40,12 +40,12 @@
     <div [innerHTML]="txt"></div>
   }
   @if (hasAttached() && isExpanded) {
-    @for (message of mapping.messages; track message; let i = $index) {
+    @for (message of mapping.messages; track $index) {
       @if (message) {
         <app-message
           [message]="message"
           [line]="mapping.line.lineNumber"
-          [message_id]="i"
+          [message_id]="$index"
         ></app-message>
       }
     }

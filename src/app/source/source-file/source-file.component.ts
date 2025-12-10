@@ -10,6 +10,8 @@ import {
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
+  AfterViewInit,
+  inject,
 } from '@angular/core';
 import { Mapping } from '../../../interface/data.model';
 import {
@@ -34,13 +36,12 @@ import { Enumerable } from '../../../interface/report.model';
 import { VirtualScrollerComponent } from './virtual-scroller';
 import { EnumerableTableComponent } from '../../enumerable_table/enumerable-table.component';
 import { SourceLineComponent } from '../source-line/source-line.component';
-import {
-  ActivatedRoute,
-  NavigationStart,
-  ParamMap,
-  Params,
-  Router,
-} from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { SourceFileModule } from '../source-file.module';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-source',
@@ -56,9 +57,29 @@ import {
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    RouterLink,
+    EnumerableTableComponent,
+    MatCheckbox,
+    FormsModule,
+    MatIcon,
+    VirtualScrollerComponent,
+    SourceLineComponent,
+    SourceFileModule,
+    AsyncPipe,
+  ],
 })
-export class SourceFileComponent implements OnInit, OnDestroy {
+export class SourceFileComponent implements OnInit, OnDestroy, AfterViewInit {
+  private ctxService = inject(CtxService);
+  private reportService = inject(ReportService);
+  private sourceService = inject(SourceFileService);
+  private expandCollapseService = inject(ExpandCollapseService);
+  private selectLineService = inject(SelectLineService);
+  private searchService = inject(SearchService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+  private _route = inject(ActivatedRoute);
+  private _router = inject(Router);
+
   @ViewChild(EnumerableTableComponent) enumerable!: EnumerableTableComponent;
   @ViewChild(VirtualScrollerComponent) scroller!: VirtualScrollerComponent;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
@@ -67,9 +88,9 @@ export class SourceFileComponent implements OnInit, OnDestroy {
 
   source$: Observable<AnnotatedSource>;
   ctx$: Observable<Ctx>;
-  selectedLine: number = -1;
-  showSearch: boolean = false;
-  showHits: boolean = false;
+  selectedLine = -1;
+  showSearch = false;
+  showHits = false;
 
   private updateLevelSubscription: Subscription;
   private expandSubscription: Subscription;
@@ -79,17 +100,11 @@ export class SourceFileComponent implements OnInit, OnDestroy {
     return /^-?\d+$/.test(value);
   }
 
-  constructor(
-    private ctxService: CtxService,
-    private reportService: ReportService,
-    private sourceService: SourceFileService,
-    private expandCollapseService: ExpandCollapseService,
-    private selectLineService: SelectLineService,
-    private searchService: SearchService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private _route: ActivatedRoute,
-    private _router: Router
-  ) {
+  constructor() {
+    const ctxService = this.ctxService;
+    const reportService = this.reportService;
+    const sourceService = this.sourceService;
+
     this.source$ = sourceService.getSource();
     this.ctx$ = ctxService.getCtx();
     sourceService.computeLevelStats(reportService.getLevelStats());
@@ -139,7 +154,7 @@ export class SourceFileComponent implements OnInit, OnDestroy {
 
   scrollLineno() {
     setTimeout(() => {
-      for (var scroll of this.scrollerAvailable.toArray()) {
+      for (const scroll of this.scrollerAvailable.toArray()) {
         if (this.selectedLine) {
           // Offset the scroll index to properly center the selected line
           scroll.scrollToIndex(this.selectedLine - 30, true, 0, 0, undefined);
@@ -164,7 +179,7 @@ export class SourceFileComponent implements OnInit, OnDestroy {
   }
 
   getClass(mapping: Mapping): string {
-    var coverageClass: string =
+    let coverageClass: string =
       'xcov-source-line' +
       statusProperties[symbolToStat.get(mapping.coverage)].classSuffix;
     // Check whether the line is expanded or not
@@ -201,7 +216,7 @@ export class SourceFileComponent implements OnInit, OnDestroy {
 
   selectFirstViolation() {
     this.source$.subscribe((source: AnnotatedSource) => {
-      for (let mapping of source.mappings) {
+      for (const mapping of source.mappings) {
         if (this.sourceService.hasViolation(mapping)) {
           this.selectLine(mapping.line.lineNumber);
           return;
@@ -250,7 +265,7 @@ export class SourceFileComponent implements OnInit, OnDestroy {
         // Note: the source.mappings line array is 0-indexed, so
         // source.mappings[selectedLine] corresponds to the line right after
         // the selected line, thus no need to adjust the offset here.
-        for (var i = this.selectedLine; i < source.mappings.length; i++) {
+        for (let i = this.selectedLine; i < source.mappings.length; i++) {
           if (this.sourceService.hasViolation(source.mappings[i])) {
             this.selectLine(source.mappings[i].line.lineNumber);
             return;
@@ -267,7 +282,7 @@ export class SourceFileComponent implements OnInit, OnDestroy {
     } else {
       this.source$.subscribe((source: AnnotatedSource) => {
         // See the comment in onNext for the offset adjustment.
-        for (var i = this.selectedLine - 2; i >= 0; i--) {
+        for (let i = this.selectedLine - 2; i >= 0; i--) {
           if (this.sourceService.hasViolation(source.mappings[i])) {
             this.selectLine(source.mappings[i].line.lineNumber);
             return;
