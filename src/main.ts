@@ -55,6 +55,5 @@ bootstrapApplication(AppComponent, {
       provide: RouteReuseStrategy,
       useClass: CustomReuseStrategy,
     },
-    provideHttpClient(withInterceptorsFromDi()),
   ],
 }).catch((err) => console.error(err));

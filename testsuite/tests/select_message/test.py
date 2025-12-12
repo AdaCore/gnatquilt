@@ -12,6 +12,7 @@ from webdriver import FirefoxDriver
 with FirefoxDriver() as driver:
 
     def check_message_selection(expected_text):
+        driver.implicitly_wait(1)
         sco_text = driver.find_element(
             By.XPATH,
             "//tr[contains(@class, 'selected')]"

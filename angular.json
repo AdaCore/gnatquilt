@@ -16,8 +16,8 @@
             "outputPath": {
               "base": "dist/gnatquilt"
             },
+            "outputMode": "static",
             "index": "src/index.html",
-            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/test/dhtml"],
             "styles": [
@@ -29,8 +29,7 @@
             "extractLicenses": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true,
-            "browser": "src/main.ts"
+            "namedChunks": true
           },
           "configurations": {
             "production": {
