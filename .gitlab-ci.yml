@@ -14,6 +14,8 @@ test:
     - . /tmp/ci_env.sh
     - anod build gnatcov
     - anod test gnatquilt
+    - anod install e3-for-testing
+    - eval $(anod printenv e3-for-testing)
     - testsuite_reports
   artifacts:
     reports:
