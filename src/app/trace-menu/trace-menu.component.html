@@ -2,8 +2,8 @@
   <a routerLink="/report">⇪ Back to sources list</a>
 </div>
 
-<ng-container *ngIf="traces$ | async as allTraces">
-  <ng-container *ngFor="let programTraces of allTraces">
+@if (traces$ | async; as allTraces) {
+  @for (programTraces of allTraces; track programTraces) {
     <h2 class="xcov-section-title">❯{{ programTraces[0] }}</h2>
     <table class="xcov-traces-table">
       <thead>
@@ -12,16 +12,14 @@
         <th matTooltip="The tag associated with this run, if any">Tag</th>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let trace of programTraces[1]; let i = index"
-          class="{{ getIndexClass(i) }}"
-        >
-          <td>{{ trace.filename }}</td>
-          <td>{{ trace.date }}</td>
-          <td>{{ trace.tag }}</td>
-        </tr>
+        @for (trace of programTraces[1]; track trace; let i = $index) {
+          <tr class="{{ getIndexClass(i) }}">
+            <td>{{ trace.filename }}</td>
+            <td>{{ trace.date }}</td>
+            <td>{{ trace.tag }}</td>
+          </tr>
+        }
       </tbody>
     </table>
-  </ng-container>
-  <h2 class="xcov-section-title"></h2>
-</ng-container>
+  }
+}

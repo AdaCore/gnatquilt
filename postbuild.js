@@ -1,6 +1,6 @@
 const cheerio = require('cheerio');
 const fs = require('fs');
-const indexFilePath = 'dist/gnatquilt/index.html';
+const indexFilePath = 'dist/gnatquilt/browser/index.html';
 
 console.log('After build script started...');
 
@@ -19,19 +19,6 @@ fs.readFile(indexFilePath, 'utf8', function (err, data) {
   // violates the same origin policy in the browser (and prevents us from loading the script without launching
   // a server).
   $('html').find('script').removeAttr('type');
-
-  // As we are generating a static html page, we can't load scripts through HTTP request. Highlight.js
-  // relies on such a mechanism to load its scripts. To work around that, we will load the generated scripts
-  // preemptively, so that they are not loaded later through HTTP requests.
-  $('html').append(
-    '<script src=node_modules_highlight_js_es_core_js.js></script>'
-  );
-  $('html').append(
-    '<script src=node_modules_highlight_js_es_languages_ada_js.js></script>'
-  );
-  $('html').append(
-    '<script src=node_modules_highlight_js_es_languages_cpp_js.js></script>'
-  );
 
   fs.writeFile(indexFilePath, $.html(), function (err) {
     if (err) return console.log(err);

@@ -6,8 +6,8 @@ export interface Enumerable {
   getName(): string;
   getStats(): Record<Status, number>;
   getStatsPercent(): Record<Status, number>;
-  getChildren(): Array<Enumerable>;
-  setChildren(v: Array<Enumerable>): void;
+  getChildren(): Enumerable[];
+  setChildren(v: Enumerable[]): void;
 }
 
 export interface EnumerableService {
@@ -15,7 +15,7 @@ export interface EnumerableService {
 }
 
 export interface Enumerables {
-  getEnumerables(): Array<Enumerable>;
+  getEnumerables(): Enumerable[];
   getHeadName(): string;
 }
 

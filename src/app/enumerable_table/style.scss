@@ -1,5 +1,5 @@
-@import '../../styles';
-@import '../app.component';
+@use '../../styles';
+@use '../app.component';
 
 .xcov-table {
   margin-left: 5%;
@@ -16,7 +16,7 @@
         width: 35px;
         font-size: 0.8em;
         font-style: italic;
-        color: $xcov-disabled-color;
+        color: styles.$xcov-disabled-color;
       }
     }
   }
@@ -42,7 +42,7 @@
   &-filename {
     &-project {
       margin-left: 15px;
-      color: $xcov-disabled-color;
+      color: styles.$xcov-disabled-color;
     }
 
     a {
@@ -62,7 +62,7 @@
   &-filename {
     padding: 4px 3px;
 
-    font-size: $xcov-font-size;
+    font-size: styles.$xcov-font-size;
     font-weight: normal;
   }
 
@@ -72,10 +72,10 @@
 
   thead {
     color: white;
-    background: $xcov-table-header-bgcolor;
+    background: styles.$xcov-table-header-bgcolor;
 
     th {
-      border: $xcov-table-header-border;
+      border: styles.$xcov-table-header-border;
     }
   }
 
@@ -91,7 +91,7 @@
   margin: 0;
 
   tbody tr {
-    border: $xcov-summary-table-border;
+    border: styles.$xcov-summary-table-border;
   }
 
   tbody td {
@@ -109,43 +109,43 @@
   }
 
   &-not-applicable {
-    background-color: $xcov-summary-not-applicable;
+    background-color: styles.$xcov-summary-not-applicable;
   }
 
   &-covered {
-    background-color: $xcov-summary-covered;
+    background-color: styles.$xcov-summary-covered;
   }
 
   &-partially-covered {
-    background-color: $xcov-summary-partially-covered;
+    background-color: styles.$xcov-summary-partially-covered;
   }
 
   &-not-covered {
-    background-color: $xcov-summary-not-covered;
+    background-color: styles.$xcov-summary-not-covered;
   }
 
   &-not-coverable {
-    background-color: $xcov-summary-not-coverable;
+    background-color: styles.$xcov-summary-not-coverable;
   }
 
   &-undetermined-coverage {
-    background-color: $xcov-summary-undetermined-coverage;
+    background-color: styles.$xcov-summary-undetermined-coverage;
   }
 
   &-disabled-coverage {
-    background-color: $xcov-summary-disabled-coverage;
+    background-color: styles.$xcov-summary-disabled-coverage;
   }
 
   &-exempted-no-violation {
-    background-color: $xcov-summary-exempted-no-violation;
+    background-color: styles.$xcov-summary-exempted-no-violation;
   }
 
   &-exempted-with-violation {
-    background-color: $xcov-summary-exempted-with-violation;
+    background-color: styles.$xcov-summary-exempted-with-violation;
   }
 
   &-exempted-with-undet-cov {
-    background-color: $xcov-summary-exempted-with-undet-cov;
+    background-color: styles.$xcov-summary-exempted-with-undet-cov;
   }
 }
 // https://stackoverflow.com/questions/2310734/how-to-make-html-text-unselectable

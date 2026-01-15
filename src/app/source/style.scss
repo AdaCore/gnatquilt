@@ -1,5 +1,5 @@
-@import '../../styles';
-@import '../app.component';
+@use '../../styles';
+@use '../app.component';
 
 // Partial line background, full on hover
 @mixin bgline-hover($color) {
@@ -10,7 +10,7 @@
       background-color: $color;
     }
     .xcov-source-line-number {
-      background-color: $xcov-line-number-bgcolor-hover;
+      background-color: styles.$xcov-line-number-bgcolor-hover;
     }
     .xcov-source-line-coverage {
       background-color: $color;
@@ -30,7 +30,7 @@
     width: 100%;
     margin-bottom: 50px;
     padding-bottom: 50px;
-    border: $xcov-table-body-border;
+    border: styles.$xcov-table-body-border;
   }
 
   &-toolbar {
@@ -51,11 +51,11 @@
     &-line-no,
     &-cov-symbol {
       position: relative;
-      border-right: $xcov-table-body-border;
+      border-right: styles.$xcov-table-body-border;
     }
 
     &-line-no {
-      background-color: $xcov-line-number-bgcolor;
+      background-color: styles.$xcov-line-number-bgcolor;
       vertical-align: top;
       width: 1%;
       outline: 0;
@@ -90,7 +90,7 @@
     }
 
     &-message-info {
-      border-right: $xcov-table-body-border;
+      border-right: styles.$xcov-table-body-border;
     }
 
     &-number {
@@ -120,7 +120,7 @@
       // virtual scroller.
       line-height: 20px !important;
 
-      font: $xcov-font-size-monospace $xcov-font-family-monospace;
+      font: styles.$xcov-font-size-monospace styles.$xcov-font-family-monospace;
     }
 
     &-mark {
@@ -133,7 +133,7 @@
     }
 
     &-attached {
-      border: $xcov-table-body-border;
+      border: styles.$xcov-table-body-border;
       background-color: white;
 
       width: 100%;
@@ -145,8 +145,8 @@
       &-message-label {
         width: 1%;
         padding: 2px 10px;
-        border-right: $xcov-table-body-border;
-        background-color: $xcov-line-number-bgcolor;
+        border-right: styles.$xcov-table-body-border;
+        background-color: styles.$xcov-line-number-bgcolor;
       }
 
       &-message-body {
@@ -160,10 +160,10 @@
         &-selected,
         &:hover {
           .xcov-source-line-attached-message-label {
-            background-color: $xcov-line-number-bgcolor-hover;
+            background-color: styles.$xcov-line-number-bgcolor-hover;
           }
           .xcov-source-line-attached-message-body {
-            background-color: $xcov-table-row-hover;
+            background-color: styles.$xcov-table-row-hover;
           }
         }
       }
@@ -174,7 +174,7 @@
           text-transform: capitalize;
         }
         &-body {
-          font: $xcov-font-size $xcov-font-family-monospace;
+          font: styles.$xcov-font-size styles.$xcov-font-family-monospace;
           line-height: 18px;
         }
       }
@@ -182,8 +182,8 @@
       &-sco {
         padding: 0 !important;
         font-weight: bold;
-        color: $xcov-link-color;
-        font: $xcov-font-size $xcov-font-family-monospace;
+        color: styles.$xcov-link-color;
+        font: styles.$xcov-font-size styles.$xcov-font-family-monospace;
         display: inline-block;
       }
 
@@ -196,12 +196,12 @@
         &-address,
         &-coverage,
         &-asm {
-          font: $xcov-font-size $xcov-font-family-monospace;
+          font: styles.$xcov-font-size styles.$xcov-font-family-monospace;
         }
 
         &-padding {
           text-align: center;
-          color: $xcov-disabled-color;
+          color: styles.$xcov-disabled-color;
         }
 
         &-tooltip {
@@ -210,46 +210,46 @@
 
         &-coverage {
           &-covered {
-            background-color: $xcov-line-covered;
+            background-color: styles.$xcov-line-covered;
           }
 
           &-partially-covered {
-            background-color: $xcov-line-partially-covered;
+            background-color: styles.$xcov-line-partially-covered;
           }
 
           &-not-covered {
-            background-color: $xcov-line-not-covered;
+            background-color: styles.$xcov-line-not-covered;
           }
 
           &-not-coverable {
-            background-color: $xcov-line-not-coverable;
+            background-color: styles.$xcov-line-not-coverable;
           }
 
           &-undetermined-coverage {
-            background-color: $xcov-line-undetermined-coverage;
+            background-color: styles.$xcov-line-undetermined-coverage;
           }
 
           &-disabled-coverage {
-            background-color: $xcov-line-disabled-coverage;
+            background-color: styles.$xcov-line-disabled-coverage;
           }
 
           &-exempted-no-violation {
-            background-color: $xcov-line-exempted-no-violation;
+            background-color: styles.$xcov-line-exempted-no-violation;
           }
 
           &-exempted-with-violation {
-            background-color: $xcov-line-exempted-with-violation;
+            background-color: styles.$xcov-line-exempted-with-violation;
           }
 
           &-exempted-with-undet-cov {
-            background-color: $xcov-line-exempted-with-undet-cov;
+            background-color: styles.$xcov-line-exempted-with-undet-cov;
           }
         }
       }
     }
 
     &-no-code {
-      @include bgline-hover($xcov-table-row-hover);
+      @include bgline-hover(styles.$xcov-table-row-hover);
 
       // Override the settings for xcov-source-line-coverage , as we don't want it to be colorized in case of
       // no code.
@@ -258,45 +258,45 @@
       }
       &:hover {
         .xcov-source-line-coverage {
-          background-color: $xcov-table-row-hover;
+          background-color: styles.$xcov-table-row-hover;
         }
       }
     }
 
     &-covered {
-      @include bgline-hover($xcov-line-covered);
+      @include bgline-hover(styles.$xcov-line-covered);
     }
 
     &-partially-covered {
-      @include bgline-hover($xcov-line-partially-covered);
+      @include bgline-hover(styles.$xcov-line-partially-covered);
     }
 
     &-not-covered {
-      @include bgline-hover($xcov-line-not-covered);
+      @include bgline-hover(styles.$xcov-line-not-covered);
     }
 
     &-not-coverable {
-      @include bgline-hover($xcov-line-not-coverable);
+      @include bgline-hover(styles.$xcov-line-not-coverable);
     }
 
     &-undetermined-coverage {
-      @include bgline-hover($xcov-line-undetermined-coverage);
+      @include bgline-hover(styles.$xcov-line-undetermined-coverage);
     }
 
     &-disabled-coverage {
-      @include bgline-hover($xcov-line-disabled-coverage);
+      @include bgline-hover(styles.$xcov-line-disabled-coverage);
     }
 
     &-exempted-no-violation {
-      @include bgline-hover($xcov-line-exempted-no-violation);
+      @include bgline-hover(styles.$xcov-line-exempted-no-violation);
     }
 
     &-exempted-with-violation {
-      @include bgline-hover($xcov-line-exempted-with-violation);
+      @include bgline-hover(styles.$xcov-line-exempted-with-violation);
     }
 
     &-exempted-with-undet-cov {
-      @include bgline-hover($xcov-line-exempted-with-undet-cov);
+      @include bgline-hover(styles.$xcov-line-exempted-with-undet-cov);
     }
   }
 }

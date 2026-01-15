@@ -1,6 +1,6 @@
 /* Tables */
 
-@import '../styles';
+@use '../styles';
 
 span.xcov-table-missing-source {
   color: grey;
@@ -95,44 +95,44 @@ span.xcov-table-missing-source-note {
 
     td {
       padding: 2px 0;
-      border: $xcov-summary-table-border;
+      border: styles.$xcov-summary-table-border;
     }
   }
 
   &-covered {
-    background-color: $xcov-summary-covered;
+    background-color: styles.$xcov-summary-covered;
   }
 
   &-partially-covered {
-    background-color: $xcov-summary-partially-covered;
+    background-color: styles.$xcov-summary-partially-covered;
   }
 
   &-not-covered {
-    background-color: $xcov-summary-not-covered;
+    background-color: styles.$xcov-summary-not-covered;
   }
 
   &-not-coverable {
-    background-color: $xcov-summary-not-coverable;
+    background-color: styles.$xcov-summary-not-coverable;
   }
 
   &-undetermined-coverage {
-    background-color: $xcov-summary-undetermined-coverage;
+    background-color: styles.$xcov-summary-undetermined-coverage;
   }
 
   &-disabled-coverage {
-    background-color: $xcov-summary-disabled-coverage;
+    background-color: styles.$xcov-summary-disabled-coverage;
   }
 
   &-exempted-no-violation {
-    background-color: $xcov-summary-exempted-no-violation;
+    background-color: styles.$xcov-summary-exempted-no-violation;
   }
 
   &-exempted-with-violation {
-    background-color: $xcov-summary-exempted-with-violation;
+    background-color: styles.$xcov-summary-exempted-with-violation;
   }
 
   &-exempted-with-undet-cov {
-    background-color: $xcov-summary-exempted-with-undet-cov;
+    background-color: styles.$xcov-summary-exempted-with-undet-cov;
   }
 }
 

@@ -1,17 +1,24 @@
 import { Status } from '../models/app-enum';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Enumerables } from '../interface/report.model';
 import { Report, ReportService } from './report.service';
 import { Observable, Subscription, zip } from 'rxjs';
 import { Ctx, CtxService, Properties, statusProperties } from './ctx.service';
+import { RouterLink } from '@angular/router';
+import { EnumerableTableComponent } from './enumerable_table/enumerable-table.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
   styleUrls: ['./app.component.scss'],
+  imports: [RouterLink, EnumerableTableComponent, AsyncPipe],
 })
-export class ReportComponent implements OnInit {
+export class ReportComponent {
+  reportService = inject(ReportService);
+  ctxService = inject(CtxService);
+
   total: Enumerables;
   ctx$: Observable<Ctx>;
   report$: Observable<Report>;
@@ -21,10 +28,10 @@ export class ReportComponent implements OnInit {
 
   private updateLevelSubscription: Subscription;
 
-  constructor(
-    public reportService: ReportService,
-    public ctxService: CtxService
-  ) {
+  constructor() {
+    const reportService = this.reportService;
+    const ctxService = this.ctxService;
+
     this.ctx$ = ctxService.getCtx();
     this.report$ = reportService.getReport();
     this.total$ = reportService.getTotal();
@@ -40,6 +47,4 @@ export class ReportComponent implements OnInit {
       (levels: Set<string>) => reportService.computeLevelStats(levels)
     );
   }
-
-  ngOnInit(): void {}
 }

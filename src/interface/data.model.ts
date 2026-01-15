@@ -10,7 +10,7 @@ export interface ISource {
   // computed metrics for the file, either line, or coverage entity (stmt,
   // decision, ...) oriented.
   liStats: Record<Status, number>;
-  enAllStats: Array<EntityStats>;
+  enAllStats: EntityStats[];
   hunkFilename: string;
   missingSource: boolean;
   project: string;
@@ -84,9 +84,9 @@ export interface Mapping {
 export interface IScopeMetrics {
   scopeName: string;
   scopeLine: number;
-  children: Array<IScopeMetrics>;
+  children: IScopeMetrics[];
   stats: Record<Status, number>;
-  enAllStats: Array<EntityStats>;
+  enAllStats: EntityStats[];
 }
 
 export interface ISourceAnnotated extends ISource {

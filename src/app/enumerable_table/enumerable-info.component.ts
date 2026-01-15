@@ -2,7 +2,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
@@ -10,6 +9,10 @@ import { Enumerable } from '../../interface/report.model';
 import { Ctx, Properties, statusProperties } from '../ctx.service';
 import { Status } from '../../models/app-enum';
 import { Source } from '../report.service';
+import { RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { SummaryComponent } from './summary.component';
 
 @Component({
   selector: 'app-enumerable-info, [app-enumerable-info]',
@@ -17,8 +20,9 @@ import { Source } from '../report.service';
   styleUrls: ['./style.scss'],
   // if removed, shadows parent style
   encapsulation: ViewEncapsulation.None,
+  imports: [RouterLink, MatIcon, MatTooltip, SummaryComponent],
 })
-export class EnumerableInfoComponent implements OnInit {
+export class EnumerableInfoComponent {
   @Input() enumerable: Enumerable;
 
   @Input() ctx: Ctx;
@@ -53,8 +57,6 @@ export class EnumerableInfoComponent implements OnInit {
     const source: Source = enumerable as Source;
     return source.getHunkFilename();
   }
-
-  ngOnInit(): void {}
 
   getStat(e: Enumerable, status: string): number {
     return e.getStats()[status] as number;

@@ -1,22 +1,23 @@
-<td
-  (click)="onToggleClick()"
-  class="xcov-source-row-line-no unselectable xcov-source-line-number"
->
+<td class="xcov-source-row-line-no unselectable xcov-source-line-number">
   <div class="xcov-source-line-code">
-    <mat-icon
-      *ngIf="hasAttached() && !isExpanded"
-      class="xcov-source-line-mark"
-      inline="true"
-      matTooltip="Click to expand"
-      >expand_more
-    </mat-icon>
-    <mat-icon
-      *ngIf="hasAttached() && isExpanded"
-      class="xcov-source-line-mark"
-      inline="true"
-      matTooltip="Click to collapse"
-      >expand_less
-    </mat-icon>
+    @if (hasAttached() && !isExpanded) {
+      <mat-icon
+        class="xcov-source-line-mark"
+        inline="true"
+        matTooltip="Click to expand"
+        (click)="expandOrCollapse()"
+        >expand_more
+      </mat-icon>
+    }
+    @if (hasAttached() && isExpanded) {
+      <mat-icon
+        class="xcov-source-line-mark"
+        inline="true"
+        matTooltip="Click to collapse"
+        (click)="expandOrCollapse()"
+        >expand_less
+      </mat-icon>
+    }
     <pre class="xcov-source-line-code">{{ mapping.line.lineNumber }}</pre>
   </div>
 </td>
@@ -31,27 +32,28 @@
   </div>
 </td>
 <td
+  #sourceCode
   (click)="onSelectLine()"
   class="xcov-source-row-text xcov-source-line-text xcov-source-line-code"
 >
-  <ng-container *ngIf="getHTMLText | async as txt">
+  @if (getHTMLText | async; as txt) {
     <div [innerHTML]="txt"></div>
-  </ng-container>
-  <ng-container *ngIf="hasAttached() && isExpanded">
-    <ng-container *ngFor="let message of mapping.messages; index as i">
-      <ng-container *ngIf="message">
+  }
+  @if (hasAttached() && isExpanded) {
+    @for (message of mapping.messages; track $index) {
+      @if (message) {
         <app-message
           [message]="message"
           [line]="mapping.line.lineNumber"
-          [message_id]="i"
+          [message_id]="$index"
         ></app-message>
-      </ng-container>
-    </ng-container>
-    <ng-container *ngIf="mapping.instructionSet">
+      }
+    }
+    @if (mapping.instructionSet) {
       <app-instruction-set
         [hidden]="!isExpanded"
         [instructionSet]="mapping.instructionSet"
       ></app-instruction-set>
-    </ng-container>
-  </ng-container>
+    }
+  }
 </td>

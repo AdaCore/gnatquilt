@@ -40,14 +40,8 @@ with FirefoxDriver() as driver:
     # scrolls down to it).
     subp_clicked = "Not_Within"
     driver.navigate_to_subp(subp_clicked)
-    found = False
-    for source_line_td in driver.find_elements(
-        By.CLASS_NAME, "xcov-source-row-text"
-    ):
-        if source_line_td.find_elements(
-            By.XPATH, f".//span[contains(., '{subp_clicked}')]"
-        ):
-            found = True
-            break
-
-    assert found
+    assert driver.find_element(
+        By.XPATH,
+        "//td[contains(@class, 'xcov-source-row-text')]"
+        f"//span[contains(., '{subp_clicked}')]",
+    )

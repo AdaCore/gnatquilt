@@ -13,14 +13,12 @@
       <span style="float: left; display: none"></span>
       {{ getTotalLabel() }}
     </th>
-    <th
-      *ngFor="let status of ctx.properties"
-      mat-sort-header="{{ status }}"
-      arrowPosition="before"
-    >
-      <span style="float: left; display: none"></span
-      >{{ statusProperties[status].name }}
-    </th>
+    @for (status of ctx.properties; track status) {
+      <th mat-sort-header="{{ status }}" arrowPosition="before">
+        <span style="float: left; display: none"></span
+        >{{ statusProperties[status].name }}
+      </th>
+    }
     <th><span style="float: left; display: none"></span>Summary</th>
   </thead>
   <tbody>
@@ -38,34 +36,35 @@
       let-margin="margin"
       let-visible="visible"
     >
-      <ng-container *ngFor="let enumerable of enumerables">
-        <ng-container *ngIf="visible">
-          <tr
-            app-enumerable-info
-            *ngIf="visible"
-            [enumerable]="enumerable"
-            [ctx]="ctx"
-            [isSource]="isSource"
-            [projectName]="projectName"
-            [margin]="margin"
-            [isLeaf]="enumerable.getChildren().length == 0"
-            (clickedOnEnumerable)="clickOnEnumerable($event)"
-            (expanded)="expand($event)"
-            (collapsed)="collapse($event)"
-          ></tr>
+      @for (enumerable of enumerables; track enumerable) {
+        @if (visible) {
+          @if (visible) {
+            <tr
+              app-enumerable-info
+              [enumerable]="enumerable"
+              [ctx]="ctx"
+              [isSource]="isSource"
+              [projectName]="projectName"
+              [margin]="margin"
+              [isLeaf]="enumerable.getChildren().length === 0"
+              (clickedOnEnumerable)="clickOnEnumerable($event)"
+              (expanded)="expand($event)"
+              (collapsed)="collapse($event)"
+            ></tr>
+          }
           <ng-container
             *ngTemplateOutlet="
               metrics;
               context: {
                 enumerables: enumerable.getChildren(),
                 margin: margin + 20,
-                visible: visible && isExpanded(enumerable)
+                visible: visible && isExpanded(enumerable),
               }
             "
           >
           </ng-container>
-        </ng-container>
-      </ng-container>
+        }
+      }
     </ng-template>
   </tbody>
 </table>

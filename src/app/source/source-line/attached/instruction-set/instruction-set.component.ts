@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { InstructionSet } from '../../../../../interface/data.model';
 import {
   Properties,
@@ -6,17 +6,18 @@ import {
   symbolToStat,
 } from '../../../../ctx.service';
 import { Status } from '../../../../../models/app-enum';
+import { NgTemplateOutlet } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-instruction-set',
   templateUrl: './instruction-set.component.html',
   styleUrls: ['../../../style.scss'],
   encapsulation: ViewEncapsulation.None,
+  imports: [NgTemplateOutlet, MatTooltip],
 })
-export class InstructionSetComponent implements OnInit {
+export class InstructionSetComponent {
   @Input() instructionSet: InstructionSet;
-
-  constructor() {}
 
   getCoverageStatus(symbol: string): Status {
     return symbolToStat.get(symbol);
@@ -27,9 +28,6 @@ export class InstructionSetComponent implements OnInit {
   }
 
   toHex(decimal: string): string {
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     return '0x' + parseInt(decimal, 16);
   }
-
-  ngOnInit(): void {}
 }

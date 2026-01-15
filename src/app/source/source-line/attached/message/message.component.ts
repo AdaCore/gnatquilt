@@ -4,6 +4,7 @@ import {
   Input,
   OnInit,
   ViewChild,
+  inject,
 } from '@angular/core';
 import { Message, strLowOrUp } from '../../../../../interface/data.model';
 import {
@@ -14,13 +15,20 @@ import {
 } from '../../../source-file/source-file.service';
 import { Observable, take } from 'rxjs';
 import { MatTooltip } from '@angular/material/tooltip';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-message, [app-message]',
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.scss'],
+  imports: [MatTooltip, AsyncPipe],
 })
 export class MessageComponent implements OnInit {
+  private sourceFileService = inject(SourceFileService);
+  private selectSCOService = inject(SelectSCOService);
+  private selectMessageService = inject(SelectMessageService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+
   @Input() message: Message;
   @Input() line: string;
   @Input() message_id: string;
@@ -29,14 +37,7 @@ export class MessageComponent implements OnInit {
   strLowOrUp = strLowOrUp;
 
   // Suffix indicating whether the message has been selected or not
-  selectedSuffix: string = '';
-
-  constructor(
-    private sourceFileService: SourceFileService,
-    private selectSCOService: SelectSCOService,
-    private selectMessageService: SelectMessageService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  selectedSuffix = '';
 
   showText(): void {
     this.sco$.pipe(take(1)).subscribe((sco: ScoProperties) => {
@@ -76,6 +77,7 @@ export class MessageComponent implements OnInit {
     https://github.com/angular/components/issues/10306#issuecomment-1206204298 */
   @ViewChild(MatTooltip)
   set matTooltip(v: MatTooltip) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     delete (v as any)._viewContainerRef;
   }
 
