@@ -32,7 +32,8 @@ export function computePercentages(
         percentages[status] = 1;
       }
     } else {
-      percentages[status] = 0;
+      /// If total is 0, display 0% for all statuses except for covered.
+      percentages[status] = status === Status.covered ? 100 : 0;
     }
   }
   return percentages;
