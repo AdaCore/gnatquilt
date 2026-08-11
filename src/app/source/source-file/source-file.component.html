@@ -1,67 +1,74 @@
 <div class="xcov-navigation">
   <a [routerLink]="['/report']">⇪ Back to sources list</a>
 </div>
-<div class="xcov-report-content">
-  @if (source$ | async; as source) {
+<div class="xcov-report-content" #content>
+  @if (source(); as source) {
     <h2 class="xcov-section-title" id=":c">❯ {{ source.filename }}</h2>
     <app-enumerable-table
       [ctx]="ctx$ | async"
       [project]="source.getScopeMetrics()"
       [isSource]="false"
-      (clickedOnEnumerable)="clickedOnEnumerable($event, scroll)"
+      (clickedOnEnumerable)="clickedOnEnumerable($event)"
     ></app-enumerable-table>
-    <table class="xcov-source">
-      <div class="xcov-source-toolbar">
-        <mat-checkbox
-          class="example-margin"
-          [(ngModel)]="expandCollapseService.autoCollapse"
-        >
-          Auto Collapse
-        </mat-checkbox>
-      </div>
-      @if (showSearch) {
-        <div class="search-widget">
-          <input
-            #searchInput
-            type="text"
-            (input)="onSearchChange()"
-            placeholder="Search..."
-            class="search-input"
-          />
-          @if (showHits) {
-            <span class="search-hits"
-              >{{ activeIndex() + 1 }}/{{ hits() }}</span
-            >
-          }
-          <button (click)="prevMatch()">
-            <mat-icon>keyboard_arrow_up</mat-icon>
-          </button>
-          <button (click)="nextMatch()">
-            <mat-icon>keyboard_arrow_down</mat-icon>
-          </button>
-          <button (click)="closeSearch()"><mat-icon>close</mat-icon></button>
-        </div>
-      }
-      <virtual-scroller
-        id="scroll"
-        #scroll
-        [items]="source.mappings"
-        [parentScroll]="scroll.window"
-        [childHeight]="20"
-        [bufferAmount]="20"
-        [enableUnequalChildrenSizes]="true"
+
+    <!-- The toolbar and the search widget sit outside the table on purpose. A
+    div between <table> and <tbody> is not valid markup, and the browser lays
+    the rows out around it in ways that shift them. -->
+    <div class="xcov-source-toolbar">
+      <mat-checkbox
+        class="example-margin"
+        [(ngModel)]="expandCollapseService.autoCollapse"
       >
-        <tbody #container class="xcov-source-content">
-          @for (mapping of scroll.viewPortItems; track mapping) {
-            <tr
-              class="{{ getClass(mapping) }}"
-              app-source-line
-              [mapping]="mapping"
-              [language]="source.language"
-            ></tr>
-          }
-        </tbody>
-      </virtual-scroller>
+        Auto Collapse
+      </mat-checkbox>
+    </div>
+
+    @if (showSearch) {
+      <div class="search-widget">
+        <input
+          #searchInput
+          type="text"
+          (input)="onSearchChange()"
+          placeholder="Search..."
+          class="search-input"
+        />
+        @if (showHits) {
+          <span class="search-hits">{{ activeIndex() + 1 }}/{{ hits() }}</span>
+        }
+        <button (click)="prevMatch()">
+          <mat-icon>keyboard_arrow_up</mat-icon>
+        </button>
+        <button (click)="nextMatch()">
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+        <button (click)="closeSearch()"><mat-icon>close</mat-icon></button>
+      </div>
+    }
+
+    <table class="xcov-source">
+      <tbody #rows class="xcov-source-content">
+        <!-- Spacer rows stand in for the rows that are not rendered. They keep
+        the tbody in normal flow, so the column widths stay shared with the real
+        rows. Positioning the rows absolutely instead would need a fixed table
+        layout and explicit column widths. -->
+        <!-- The height sits on a cell, not on the row: a row with no cells has
+        nothing to size, and table layout is free to collapse it. -->
+        <tr class="xcov-source-spacer">
+          <td colspan="3" [style.height.px]="paddingTop()"></td>
+        </tr>
+        @for (row of virtualizer.getVirtualItems(); track row.key) {
+          <tr
+            class="{{ getClass(source.mappings[row.index]) }}"
+            app-source-line
+            [index]="row.index"
+            [mapping]="source.mappings[row.index]"
+            [language]="source.language"
+          ></tr>
+        }
+        <tr class="xcov-source-spacer">
+          <td colspan="3" [style.height.px]="paddingBottom()"></td>
+        </tr>
+      </tbody>
     </table>
   }
 </div>

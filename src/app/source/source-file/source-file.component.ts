@@ -1,18 +1,20 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   HostListener,
   OnDestroy,
   OnInit,
-  QueryList,
   ViewChild,
-  ViewChildren,
   ViewEncapsulation,
-  AfterViewInit,
+  computed,
+  effect,
   inject,
+  signal,
+  viewChild,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { injectWindowVirtualizer } from '@tanstack/angular-virtual';
 import { Mapping } from '../../../interface/data.model';
 import {
   Ctx,
@@ -21,7 +23,6 @@ import {
   symbolToStat,
 } from '../../ctx.service';
 import {
-  AnnotatedSource,
   ExpandCollapseService,
   SourceFileService,
   ScopeMetrics,
@@ -30,10 +31,10 @@ import {
   SelectMessageService,
   SearchService,
 } from './source-file.service';
-import { Observable, Subscription, take } from 'rxjs';
+import { COLLAPSED_ROW_HEIGHT, RowHeights } from './row-heights';
+import { Observable, Subscription } from 'rxjs';
 import { ReportService } from '../../report.service';
 import { Enumerable } from '../../../interface/report.model';
-import { VirtualScrollerComponent } from './virtual-scroller';
 import { EnumerableTableComponent } from '../../enumerable_table/enumerable-table.component';
 import { SourceLineComponent } from '../source-line/source-line.component';
 import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
@@ -42,6 +43,12 @@ import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { SourceFileModule } from '../source-file.module';
 import { AsyncPipe } from '@angular/common';
+
+/** Rows kept rendered beyond each edge of the viewport. */
+const OVERSCAN = 20;
+
+/** Not exported by @tanstack/virtual-core, so restated here. */
+type ScrollAlignment = 'start' | 'center' | 'end' | 'auto';
 
 @Component({
   selector: 'app-source',
@@ -54,6 +61,12 @@ import { AsyncPipe } from '@angular/common';
     SelectLineService,
     SelectMessageService,
     SearchService,
+    // The collapsed height is a constructor argument, so the model cannot be
+    // provided by class alone.
+    {
+      provide: RowHeights,
+      useFactory: () => new RowHeights(COLLAPSED_ROW_HEIGHT),
+    },
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,38 +76,70 @@ import { AsyncPipe } from '@angular/common';
     MatCheckbox,
     FormsModule,
     MatIcon,
-    VirtualScrollerComponent,
     SourceLineComponent,
     SourceFileModule,
     AsyncPipe,
   ],
 })
-export class SourceFileComponent implements OnInit, OnDestroy, AfterViewInit {
+export class SourceFileComponent implements OnInit, OnDestroy {
   private ctxService = inject(CtxService);
   private reportService = inject(ReportService);
   private sourceService = inject(SourceFileService);
   private expandCollapseService = inject(ExpandCollapseService);
   private selectLineService = inject(SelectLineService);
   private searchService = inject(SearchService);
-  private changeDetectorRef = inject(ChangeDetectorRef);
+  private heights = inject(RowHeights);
   private _route = inject(ActivatedRoute);
   private _router = inject(Router);
 
   @ViewChild(EnumerableTableComponent) enumerable!: EnumerableTableComponent;
-  @ViewChild(VirtualScrollerComponent) scroller!: VirtualScrollerComponent;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
-  @ViewChildren('scroll')
-  scrollerAvailable!: QueryList<VirtualScrollerComponent>;
 
-  source$: Observable<AnnotatedSource>;
+  // Both live under the @if on the source, so they appear only once the report
+  // has been loaded, which is well after ngAfterViewInit. Signal queries report
+  // that arrival; a plain @ViewChild read once would still be undefined.
+  private rowsRef = viewChild<ElementRef<HTMLElement>>('rows');
+  private contentRef = viewChild<ElementRef<HTMLElement>>('content');
+
+  source = toSignal(this.sourceService.getSource());
   ctx$: Observable<Ctx>;
-  selectedLine = -1;
+  selectedLine = signal(NaN);
   showSearch = false;
   showHits = false;
 
+  private rowCount = computed(() => this.source()?.mappings.length ?? 0);
+
+  /**
+   * Distance from the top of the document to the first row.
+   *
+   * Everything above the rows scrolls normally, so the virtualizer has to know
+   * how much of the window scroll happens before the list starts. Re-read
+   * whenever the content above changes height, the scope metrics tree being
+   * expandable.
+   */
+  private scrollMargin = signal(0);
+
+  /** Set when a row has to be reached but the rows are not laid out yet. */
+  private pendingScroll = signal<{
+    index: number;
+    align: ScrollAlignment;
+  } | null>(null);
+
+  protected virtualizer = injectWindowVirtualizer(() => ({
+    count: this.rowCount(),
+    // Exact, not an estimate. See RowHeights: an estimate that turns out wrong
+    // makes the virtualizer lay the rows out twice, and the second layout is
+    // what the user sees as flicker.
+    estimateSize: (index: number) => this.heights.heightOf(index),
+    overscan: OVERSCAN,
+    scrollMargin: this.scrollMargin(),
+  }));
+
+  private lastWidth = 0;
+
   private updateLevelSubscription: Subscription;
-  private expandSubscription: Subscription;
   private collapseSubscription: Subscription;
+  private heightsSubscription: Subscription;
 
   isNumeric(value: string) {
     return /^-?\d+$/.test(value);
@@ -105,7 +150,6 @@ export class SourceFileComponent implements OnInit, OnDestroy, AfterViewInit {
     const reportService = this.reportService;
     const sourceService = this.sourceService;
 
-    this.source$ = sourceService.getSource();
     this.ctx$ = ctxService.getCtx();
     sourceService.computeLevelStats(reportService.getLevelStats());
     this.updateLevelSubscription = reportService.levelStatsUpdated.subscribe(
@@ -114,21 +158,21 @@ export class SourceFileComponent implements OnInit, OnDestroy, AfterViewInit {
         sourceService.computeLevelStats(levels);
       }
     );
-    this.selectedLine = parseInt(this._route.snapshot.params['line']);
+    this.selectedLine.set(parseInt(this._route.snapshot.params['line']));
 
     // Subscribe to URL parameter changes. The user can link to a specific line
     // or a message.
     this._route.queryParams.subscribe((params: Params) => {
-      this.selectedLine = parseInt(params['line']);
+      this.selectedLine.set(parseInt(params['line']));
 
       // Check if the user also selected a message, in which case we need to
       // expand the line message contents.
       if (params['message']) {
-        this.expandCollapseService.expandLine(this.selectedLine);
+        this.expandCollapseService.expandLine(this.selectedLine());
       }
 
       // Scroll to the specific line
-      if (this.selectedLine) {
+      if (this.selectedLine()) {
         this.scrollLineno();
       }
     });
@@ -139,33 +183,79 @@ export class SourceFileComponent implements OnInit, OnDestroy, AfterViewInit {
     this.searchService
       .activeMatchEventListener()
       .subscribe((lineno: number) => this.scrollToMatch(lineno));
-  }
 
-  ngAfterViewInit() {
-    this.scrollerAvailable.changes.pipe(take(1)).subscribe((_) => {
-      // If we don't detach this view from the change detection, the
-      // scroller flickers and brings us to the top of the page. So we
-      // do things manually: we scroll to the line (if it was specified)
-      // and reattach the view only afterwards.
-      this.changeDetectorRef.detach();
-      this.scrollLineno();
+    // Watch the whole content block, not just the table: what moves the first
+    // row is the header above it changing height, the scope metrics tree being
+    // expandable.
+    effect((onCleanup) => {
+      const rows = this.rowsRef();
+      const content = this.contentRef();
+      if (!rows || !content) {
+        return;
+      }
+      const observer = new ResizeObserver(() =>
+        this.measureGeometry(rows.nativeElement)
+      );
+      observer.observe(content.nativeElement);
+      this.measureGeometry(rows.nativeElement);
+      onCleanup(() => observer.disconnect());
+    });
+
+    // A pending scroll waits for the rows to exist: the offset it targets only
+    // becomes reachable once the spacers have given the document its height.
+    // The frame delay is for that layout, not a correction of one. It happens
+    // on a navigation, never while scrolling.
+    effect(() => {
+      const target = this.pendingScroll();
+      if (target === null || this.rowCount() === 0) {
+        return;
+      }
+      this.pendingScroll.set(null);
+      requestAnimationFrame(() =>
+        this.virtualizer.scrollToIndex(target.index, { align: target.align })
+      );
     });
   }
 
+  ngOnInit(): void {
+    // Collapsing restores a row to the height of a plain line, which is known
+    // without measuring. Expanding does not: the row reports itself once it has
+    // rendered, from SourceLineComponent.
+    this.collapseSubscription = this.expandCollapseService
+      .collapseEventListener()
+      .subscribe((lineno: number) => this.heights.collapsed(lineno - 1));
+
+    this.heightsSubscription = this.heights
+      .changedEventListener()
+      .subscribe(() => this.virtualizer.measure());
+  }
+
+  /**
+   * Re-reads where the rows start and how wide they are.
+   *
+   * Only a width change rewraps the message bodies. Dropping the measured
+   * heights on a height change as well would throw them away whenever the
+   * window merely got shorter, or whenever expanding a line made the page
+   * taller, which is every time one is expanded.
+   */
+  private measureGeometry(rows: HTMLElement): void {
+    this.scrollMargin.set(rows.getBoundingClientRect().top + window.scrollY);
+
+    const width = rows.clientWidth;
+    if (width !== this.lastWidth) {
+      this.lastWidth = width;
+      this.heights.invalidate();
+    }
+  }
+
   scrollLineno() {
-    setTimeout(() => {
-      for (const scroll of this.scrollerAvailable.toArray()) {
-        if (this.selectedLine) {
-          // Offset the scroll index to properly center the selected line
-          scroll.scrollToIndex(this.selectedLine - 30, true, 0, 0, undefined);
-          this.changeDetectorRef.reattach();
-          this.changeDetectorRef.markForCheck();
-        } else {
-          this.changeDetectorRef.reattach();
-          this.changeDetectorRef.markForCheck();
-        }
-      }
-    }, 0);
+    const line = this.selectedLine();
+    if (!line || Number.isNaN(line)) {
+      return;
+    }
+    // The mappings array is 0-indexed. Centring the row replaces the previous
+    // trick of aiming thirty lines above it.
+    this.pendingScroll.set({ index: line - 1, align: 'center' });
   }
 
   parseInt(str: string): number {
@@ -190,7 +280,7 @@ export class SourceFileComponent implements OnInit, OnDestroy, AfterViewInit {
       coverageClass += '-expanded';
     } else {
       // Check whether the line is selected or not
-      if (mapping.line.lineNumber == this.selectedLine) {
+      if (mapping.line.lineNumber == this.selectedLine()) {
         coverageClass += '-selected';
       }
     }
@@ -201,28 +291,13 @@ export class SourceFileComponent implements OnInit, OnDestroy, AfterViewInit {
     return mapping.messages.length !== 0;
   }
 
-  ngOnInit(): void {
-    this.expandSubscription = this.expandCollapseService
-      .expandEventListener()
-      .subscribe((lineno: number) => {
-        this.scroller.invalidateCachedMeasurementAtIndex(lineno - 1);
-      });
-    this.collapseSubscription = this.expandCollapseService
-      .collapseEventListener()
-      .subscribe((lineno: number) => {
-        this.scroller.invalidateCachedMeasurementAtIndex(lineno - 1);
-      });
-  }
-
   selectFirstViolation() {
-    this.source$.subscribe((source: AnnotatedSource) => {
-      for (const mapping of source.mappings) {
-        if (this.sourceService.hasViolation(mapping)) {
-          this.selectLine(mapping.line.lineNumber);
-          return;
-        }
+    for (const mapping of this.source()?.mappings ?? []) {
+      if (this.sourceService.hasViolation(mapping)) {
+        this.selectLine(mapping.line.lineNumber);
+        return;
       }
-    });
+    }
   }
 
   // Handling of keyboard shortcuts:
@@ -258,53 +333,56 @@ export class SourceFileComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Navigation to next violation
   onNext() {
-    if (!this.selectedLine) {
+    const mappings = this.source()?.mappings;
+    if (!mappings) {
+      return;
+    }
+    if (!this.selectedLine()) {
       this.selectFirstViolation();
-    } else {
-      this.source$.subscribe((source: AnnotatedSource) => {
-        // Note: the source.mappings line array is 0-indexed, so
-        // source.mappings[selectedLine] corresponds to the line right after
-        // the selected line, thus no need to adjust the offset here.
-        for (let i = this.selectedLine; i < source.mappings.length; i++) {
-          if (this.sourceService.hasViolation(source.mappings[i])) {
-            this.selectLine(source.mappings[i].line.lineNumber);
-            return;
-          }
-        }
-      });
+      return;
+    }
+    // Note: the mappings line array is 0-indexed, so mappings[selectedLine]
+    // corresponds to the line right after the selected line, thus no need to
+    // adjust the offset here.
+    for (let i = this.selectedLine(); i < mappings.length; i++) {
+      if (this.sourceService.hasViolation(mappings[i])) {
+        this.selectLine(mappings[i].line.lineNumber);
+        return;
+      }
     }
   }
 
   // Navigation to previous violation
   onPrevious() {
-    if (!this.selectedLine) {
+    const mappings = this.source()?.mappings;
+    if (!mappings) {
+      return;
+    }
+    if (!this.selectedLine()) {
       this.selectFirstViolation();
-    } else {
-      this.source$.subscribe((source: AnnotatedSource) => {
-        // See the comment in onNext for the offset adjustment.
-        for (let i = this.selectedLine - 2; i >= 0; i--) {
-          if (this.sourceService.hasViolation(source.mappings[i])) {
-            this.selectLine(source.mappings[i].line.lineNumber);
-            return;
-          }
-        }
-      });
+      return;
+    }
+    // See the comment in onNext for the offset adjustment.
+    for (let i = this.selectedLine() - 2; i >= 0; i--) {
+      if (this.sourceService.hasViolation(mappings[i])) {
+        this.selectLine(mappings[i].line.lineNumber);
+        return;
+      }
     }
   }
 
   ngOnDestroy(): void {
     // Remove all subscriptions
     this.updateLevelSubscription.unsubscribe();
-    this.expandSubscription.unsubscribe();
     this.collapseSubscription.unsubscribe();
+    this.heightsSubscription.unsubscribe();
   }
 
-  clickedOnEnumerable(
-    enumerable: Enumerable,
-    scroller: VirtualScrollerComponent
-  ): void {
+  clickedOnEnumerable(enumerable: Enumerable): void {
     if (enumerable instanceof ScopeMetrics) {
-      scroller.scrollToIndex(enumerable.scopeLine, true, 0, 0, undefined);
+      // scopeLine is used as an index, unlike the line numbers elsewhere. Kept
+      // as it was, rather than corrected blind.
+      this.pendingScroll.set({ index: enumerable.scopeLine, align: 'center' });
     }
   }
 
@@ -356,23 +434,25 @@ export class SourceFileComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.searchService.activeIndex();
   }
 
-  scrollToMatch(index: number) {
-    // If the element is already visible, do not use the virtual
-    // scroller but native scrolling. This avoids flickering.
-    //
-    // Note that this also means that when using the native scroller
-    // after using the virtual scrolling (e.g. when going to the next
-    // match which is on the same line), it will scroll again: this is
-    // deemed as a minor inconvenience.
-    const indexStr = index.toString();
-    const elements = document.querySelectorAll('.xcov-source-line-code');
-    const el = Array.from(elements).find(
-      (el) => el.textContent?.trim() === indexStr
-    );
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } else {
-      this.scroller.scrollToIndex(index, false, 100, 0, undefined);
+  scrollToMatch(lineno: number) {
+    // 'auto' leaves the scroll alone when the match is already on screen, which
+    // is what the previous code reached for native scrolling to obtain.
+    this.pendingScroll.set({ index: lineno - 1, align: 'auto' });
+  }
+
+  /** Height of the rows scrolled past, held by a spacer row. */
+  protected paddingTop(): number {
+    const items = this.virtualizer.getVirtualItems();
+    return items.length ? items[0].start - this.scrollMargin() : 0;
+  }
+
+  /** Height of the rows not reached yet, held by a spacer row. */
+  protected paddingBottom(): number {
+    const items = this.virtualizer.getVirtualItems();
+    if (!items.length) {
+      return 0;
     }
+    const last = items[items.length - 1];
+    return this.virtualizer.getTotalSize() - (last.end - this.scrollMargin());
   }
 }
