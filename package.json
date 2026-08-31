@@ -14,7 +14,6 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-devkit/build-angular": "^21.0.2",
     "@angular/animations": "^21.0.3",
     "@angular/cdk": "^21.0.2",
     "@angular/common": "^21.0.3",
@@ -39,7 +38,7 @@
     "@angular/build": "^21.0.2",
     "@angular/cli": "^21.0.2",
     "@angular/compiler-cli": "^21.0.3",
-    "@compodoc/compodoc": "^1.1.23",
+    "@compodoc/compodoc": "^2.0.0",
     "angular-eslint": "21.1.0",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
