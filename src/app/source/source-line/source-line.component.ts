@@ -20,6 +20,7 @@ import {
   SelectLineService,
   SelectSCOService,
 } from '../source-file/source-file.service';
+import { RowHeights } from '../source-file/row-heights';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -48,9 +49,12 @@ export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
   private expandCollapseService = inject(ExpandCollapseService);
   private selectLineService = inject(SelectLineService);
   private searchService = inject(SearchService);
+  private heights = inject(RowHeights);
 
   @Input() mapping: Mapping;
   @Input() language: string;
+  /** Index of this row in the mappings array, one below the line number. */
+  @Input() index: number;
   @ViewChild('sourceCode') sourceCode!: ElementRef<HTMLTableCellElement>;
 
   isExpanded: boolean;
@@ -66,6 +70,7 @@ export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private selectSubscription: Subscription;
   private expandSubscription: Subscription;
+  private invalidatedSubscription: Subscription;
   private searchSubscription: Subscription;
   private activeMatchSubscription: Subscription;
 
@@ -118,6 +123,17 @@ export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
+    // A width change rewraps the message bodies, so a height measured before it
+    // is worthless. The row is on screen and already relaid out by the time this
+    // fires, so it can be read straight away.
+    this.invalidatedSubscription = this.heights
+      .invalidatedEventListener()
+      .subscribe(() => {
+        if (this.isExpanded) {
+          this.reportHeight();
+        }
+      });
+
     // Subscribe to search changes
     this.searchSubscription = this.searchService
       .searchEventListener()
@@ -147,6 +163,23 @@ export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
       this.host.nativeElement,
       this.getLineno()
     );
+    // A row that comes into view already expanded has a height nobody measured
+    // yet: it was expanded from the query parameter, or its measurement was
+    // dropped by a resize while it was out of view.
+    if (this.isExpanded) {
+      this.reportHeight();
+    }
+  }
+
+  /**
+   * Tells the height model what this row occupies.
+   *
+   * Only ever called on a discrete change: an expansion, a resize, or the row
+   * appearing. Never on a scroll, which is what keeps the rows from being laid
+   * out twice per frame.
+   */
+  private reportHeight(): void {
+    this.heights.expanded(this.index, this.host.nativeElement.offsetHeight);
   }
 
   ngOnDestroy(): void {
@@ -156,6 +189,7 @@ export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.selectSubscription) {
       this.selectSubscription.unsubscribe();
     }
+    this.invalidatedSubscription.unsubscribe();
     this.searchSubscription.unsubscribe();
     this.activeMatchSubscription.unsubscribe();
   }
@@ -170,6 +204,9 @@ export class SourceLineComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isExpanded = true;
     this.classExpanded = 'xcov-source-line-expanded';
     this.expandCollapseService.expandLine(this.getLineno());
+    // Wait for the next frame and for the click to render prior to measuring
+    // the height of the expanded item.
+    requestAnimationFrame(() => this.reportHeight());
   }
 
   expandOrCollapse(): void {

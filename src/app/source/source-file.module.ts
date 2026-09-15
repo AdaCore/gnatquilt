@@ -12,7 +12,6 @@ import { FormsModule } from '@angular/forms';
 import { EnumerableTableModule } from '../enumerable_table/enumerable-table.module';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { VirtualScrollerModule } from './source-file/virtual-scroller';
 
 @NgModule({
   imports: [
@@ -22,7 +21,6 @@ import { VirtualScrollerModule } from './source-file/virtual-scroller';
     MatExpansionModule,
     MatCheckboxModule,
     FormsModule,
-    VirtualScrollerModule,
     EnumerableTableModule,
     MatIconModule,
     RouterModule,
